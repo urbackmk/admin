@@ -71,7 +71,8 @@ class Events extends Component {
                 </Nav>
                 <TabContent activeTab={this.state.activeTab}>
                   <TabPane tabId="Pending">
-                    Card based view of all events that need approval.  The complete event data is shown, and can be edited and approved/rejected/archived.  Very similar to the existing approval workflow in the current admin site.
+                    Card based view of all events that need approval.  The complete event data is shown, and can be edited and approved/rejected/archived.  Very similar to the existing approval workflow in the current admin site. 
+                    <br /><a href="https://github.com/townhallproject/admin/issues/5" target="_blank">https://github.com/townhallproject/admin/issues/5</a>
                   </TabPane>
                   <TabPane tabId="Active">
                     Tabular view of all current active events.
@@ -79,6 +80,8 @@ class Events extends Component {
                     Clicking on an individual event will bring you to the event detail modal (this is a master-detail view).
                       
                     Filters include: Date ranges, member name, event type, map icon, party, etc
+
+                    <br /><a href="https://github.com/townhallproject/admin/issues/6" target="_blank">https://github.com/townhallproject/admin/issues/6</a>
                   </TabPane>
                   <TabPane tabId="Archived">
                     This page starts off with no results.  Once the admin searches it's populated with a card view of all matching archived events.
@@ -86,6 +89,8 @@ class Events extends Component {
                     We may wish to allow inline editing of events, since in practice we'll only have one event at a time.
                       
                     Filters include: Date ranges, member name, event type, map icon, party, etc
+
+                    <br /><a href="https://github.com/townhallproject/admin/issues/7" target="_blank">https://github.com/townhallproject/admin/issues/7</a>
                   </TabPane>
                 </TabContent>
               </CardBody>
