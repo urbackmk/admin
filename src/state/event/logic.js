@@ -1,5 +1,4 @@
 import { createLogic } from "redux-logic"
-import { firebaseUrl } from '../constants';
 import { GET_EVENTS, GET_EVENTS_SUCCESS, GET_EVENTS_FAILED } from "./actions";
 
 const fetchEvents = createLogic({
@@ -8,11 +7,11 @@ const fetchEvents = createLogic({
     successType: GET_EVENTS_SUCCESS,
     failType: GET_EVENTS_FAILED,
   },
-  process() {
-    return httpClient.get(`${firebaseUrl}/townHalls.json`)
-      .then((events) => events)
-      .catch((err) => err);
+  process(deps) {
+    return deps.httpClient.get(`${deps.firebaseUrl}/townHalls.json`);
   }
 });
 
-export default fetchEvents;
+export default [
+  fetchEvents,
+];

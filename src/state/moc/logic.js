@@ -8,10 +8,8 @@ const fetchMocs = createLogic({
     successType: GET_MOCS_SUCCESS,
     failType: GET_MOCS_FAILED,
   },
-  process() {
-    return httpClient.get(`${firebaseUrl}/mocData.json`)
-      .then((mocs) => mocs)
-      .catch((err) => err);
+  process(deps) {
+    return deps.httpClient.get(`${deps.firebaseUrl}/mocData.json`);
   }
 });
 

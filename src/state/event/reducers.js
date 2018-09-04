@@ -10,11 +10,11 @@ const eventReducer = (state = initialState, action) => {
     case GET_EVENTS_SUCCESS:
       return {
         ...state,
-        allEvents: action.payload,
+        allEvents: action.payload.data,
         error: null
       };
     case GET_EVENTS_FAILED:
-      console.log(action.payload);
+      console.log(`GET_EVENTS_FAILED: ${action.payload}`);
       return {
         ...state,
         error: action.payload

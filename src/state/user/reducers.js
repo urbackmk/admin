@@ -10,11 +10,11 @@ const userReducer = (state = initialState, action) => {
     case GET_USERS_SUCCESS:
       return {
         ...state,
-        allUsers: action.payload,
+        allUsers: action.payload.data,
         error: null
       };
     case GET_USERS_FAILED:
-      console.log(action.payload);
+      console.log(`GET_USERS_FAILED: ${action.payload}`);
       return {
         ...state,
         error: action.payload

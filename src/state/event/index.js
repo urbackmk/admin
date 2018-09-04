@@ -1,12 +1,11 @@
 import * as actions from "./actions";
-import reducers from "./reducer";
+import reducers from "./reducers";
 import * as selectors from "./selectors";
-import * as types from "./types";
+import logics from "./logic";
 
 export default {
     actions,
-    logic,
+    logics,
     reducers,
     selectors,
-    types,
 };

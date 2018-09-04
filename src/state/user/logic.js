@@ -8,10 +8,8 @@ const fetchUsers = createLogic({
     successType: GET_USERS_SUCCESS,
     failType: GET_USERS_FAILED,
   },
-  process() {
-    return httpClient.get(`${firebaseUrl}/users.json`)
-      .then((users) => users)
-      .catch((err) => err);
+  process(deps) {
+    return deps.httpClient.get(`${deps.firebaseUrl}/users.json`);
   }
 });
 

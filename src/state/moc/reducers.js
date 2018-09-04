@@ -10,11 +10,11 @@ const mocReducer = (state = initialState, action) => {
     case GET_MOCS_SUCCESS:
       return {
         ...state,
-        allMocs: action.payload,
+        allMocs: action.payload.data,
         error: null
       };
     case GET_MOCS_FAILED:
-      console.log(action.payload);
+      console.log(`GET_MOCS_FAILED: ${action.payload}`);
       return {
         ...state,
         error: action.payload
