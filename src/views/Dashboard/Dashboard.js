@@ -1,31 +1,37 @@
 import React, { Component } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
+import { connect } from 'react-redux';
+
+// import { Bar, Line } from 'react-chartjs-2';
+
 import {
-  Badge,
-  Button,
-  ButtonDropdown,
-  ButtonGroup,
-  ButtonToolbar,
+  // Badge,
+  // Button,
+  // ButtonDropdown,
+  // ButtonGroup,
+  // ButtonToolbar,
   Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+  // CardBody,
+  // CardFooter,
+  // CardHeader,
+  // CardTitle,
   Col,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Progress,
+  // Dropdown,
+  // DropdownItem,
+  // DropdownMenu,
+  // DropdownToggle,
+  // Progress,
   Row,
-  Table,
+  // Table,
 } from 'reactstrap';
+
+import { getEvents } from '../../state/event/actions';
+
 class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-    };
+    this.props.getInitialEvents();
+
   }
 
   render() {
@@ -35,7 +41,7 @@ class Dashboard extends Component {
           <Col xs="12">
             <Card>
               Homepage
-              <br /><a href="https://github.com/townhallproject/admin/issues/3" target="_blank">https://github.com/townhallproject/admin/issues/3</a>
+              <br /><a href="https://github.com/townhallproject/admin/issues/3" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/3</a>
             </Card>
           </Col>
         </Row>
@@ -44,4 +50,13 @@ class Dashboard extends Component {
   };
 }
 
-export default Dashboard;
+const mapStateToProps = state => ({
+  events: state.allEvents,
+});
+
+const mapDispatchToProps = dispatch => ({
+  getInitialEvents: () => dispatch(getEvents()),
+});
+
+// export default Dashboard;
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
