@@ -72,7 +72,7 @@ class Events extends Component {
                 <TabContent activeTab={this.state.activeTab}>
                   <TabPane tabId="Pending">
                     Card based view of all events that need approval.  The complete event data is shown, and can be edited and approved/rejected/archived.  Very similar to the existing approval workflow in the current admin site. 
-                    <br /><a href="https://github.com/townhallproject/admin/issues/5" target="_blank">https://github.com/townhallproject/admin/issues/5</a>
+                    <br /><a href="https://github.com/townhallproject/admin/issues/5" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/5</a>
                   </TabPane>
                   <TabPane tabId="Active">
                     Tabular view of all current active events.
@@ -81,7 +81,7 @@ class Events extends Component {
                       
                     Filters include: Date ranges, member name, event type, map icon, party, etc
 
-                    <br /><a href="https://github.com/townhallproject/admin/issues/6" target="_blank">https://github.com/townhallproject/admin/issues/6</a>
+                    <br /><a href="https://github.com/townhallproject/admin/issues/6" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/6</a>
                   </TabPane>
                   <TabPane tabId="Archived">
                     This page starts off with no results.  Once the admin searches it's populated with a card view of all matching archived events.
@@ -90,7 +90,7 @@ class Events extends Component {
                       
                     Filters include: Date ranges, member name, event type, map icon, party, etc
 
-                    <br /><a href="https://github.com/townhallproject/admin/issues/7" target="_blank">https://github.com/townhallproject/admin/issues/7</a>
+                    <br /><a href="https://github.com/townhallproject/admin/issues/7" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/7</a>
                   </TabPane>
                 </TabContent>
               </CardBody>

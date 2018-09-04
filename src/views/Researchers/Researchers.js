@@ -10,7 +10,7 @@ class Researchers extends Component {
         <Row>
           <Col xs="12" sm="6" lg="3">
             Researchers
-            <br /><a href="https://github.com/townhallproject/admin/issues/12" target="_blank">https://github.com/townhallproject/admin/issues/12</a>
+            <br /><a href="https://github.com/townhallproject/admin/issues/12" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/12</a>
           </Col>
         </Row>
       </div>
