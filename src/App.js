@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import configureStore from './state/store';
 import './App.css';
-// Styles
+
 // CoreUI Icons Set
 import '@coreui/icons/css/coreui-icons.min.css';
 // Import Flag Icons Set
@@ -16,16 +18,19 @@ import './scss/style.css'
 // Containers
 import { DefaultLayout } from './containers';
 
-// import { renderRoutes } from 'react-router-config';
+// Bootstrap the store
+var Store = configureStore();
 
 class App extends Component {
   render() {
     return (
-      <HashRouter>
-        <Switch>
-          <Route path="/" name="Home" component={DefaultLayout} />
-        </Switch>
-      </HashRouter>
+      <Provider store={Store}>
+        <HashRouter>
+          <Switch>
+            <Route path="/" name="Home" component={DefaultLayout} />
+          </Switch>
+        </HashRouter>
+      </Provider>
     );
   }
 }
