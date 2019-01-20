@@ -8,27 +8,27 @@ function Loading() {
 }
 
 const Dashboard = Loadable({
-  loader: () => import('./views/Dashboard'),
+  loader: () => import('./routes/Dashboard'),
   loading: Loading,
 });
 
 const Events = Loadable({
-  loader: () => import('./views/Events'),
+  loader: () => import('./routes/Events'),
   loading: Loading,
 });
 
 const MoCs = Loadable({
-  loader: () => import('./views/MoCs'),
+  loader: () => import('./routes/MoCs'),
   loading: Loading,
 });
 
 const Researchers = Loadable({
-  loader: () => import('./views/Researchers'),
+  loader: () => import('./routes/Researchers'),
   loading: Loading,
 });
 
 const Resources = Loadable({
-  loader: () => import('./views/Resources'),
+  loader: () => import('./routes/Resources'),
   loading: Loading,
 });
 

@@ -2,5 +2,5 @@
   "name": "Researchers",
   "version": "0.0.0",
   "private": true,
-  "main": "./Researchers.js"
+  "main": "./index.js"
 }

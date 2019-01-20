@@ -1,6 +1,6 @@
 {
-  "name": "MoCs",
+  "name": "Events",
   "version": "0.0.0",
   "private": true,
-  "main": "./MoCs.js"
+  "main": "./index.js"
 }

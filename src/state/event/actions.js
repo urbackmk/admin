@@ -1,17 +1,36 @@
-export const GET_EVENTS = "GET_EVENTS";
-export const GET_EVENTS_SUCCESS = "GET_EVENTS_SUCCESS";
-export const GET_EVENTS_FAILED = "GET_EVENTS_FAILED";
+import {
+  REQUEST_EVENTS,
+  REQUEST_PENDING_EVENTS_SUCCESS,
+  REQUEST_EVENTS_FAILED,
+  REQUEST_PENDING_EVENTS,
+  REQUEST_PENDING_EVENTS_FAILED,
+} from "./constants";
 
-export const getEvents = () => ({
-  type: GET_EVENTS
+
+export const requestEvents = () => ({
+  type: REQUEST_EVENTS
 });
 
 export const getEventsSuccess = events => ({
-  type: GET_EVENTS_SUCCESS,
+  type: REQUEST_PENDING_EVENTS_SUCCESS,
   payload: events
 });
 
 export const getEventsFailed = err => ({
-  type: GET_EVENTS_FAILED,
+  type: REQUEST_EVENTS_FAILED,
+  payload: err
+});
+
+export const requestPendingEvents = () => ({
+  type: REQUEST_PENDING_EVENTS
+});
+
+export const requestPendingEventsSuccess = events => ({
+  type: REQUEST_PENDING_EVENTS_SUCCESS,
+  payload: events
+});
+
+export const requestPendingEventsFailed = err => ({
+  type: REQUEST_PENDING_EVENTS_FAILED,
   payload: err
 });
