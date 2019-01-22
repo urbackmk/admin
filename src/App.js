@@ -16,7 +16,7 @@ import 'simple-line-icons/css/simple-line-icons.css';
 import './scss/style.css'
 
 // Containers
-import { DefaultLayout } from './containers';
+import DefaultLayout from './containers/DefaultLayout';
 
 // Bootstrap the store
 var Store = configureStore();
