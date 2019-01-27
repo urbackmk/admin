@@ -1,4 +1,5 @@
 import {
+  DELETE_EVENT,
   REQUEST_EVENTS,
   REQUEST_PENDING_EVENTS_SUCCESS,
   REQUEST_EVENTS_FAILED,
@@ -34,3 +35,11 @@ export const requestPendingEventsFailed = err => ({
   type: REQUEST_PENDING_EVENTS_FAILED,
   payload: err
 });
+
+export const deleteEvent = (id, path) => ({
+  type: DELETE_EVENT, 
+  payload: {
+    id,
+    path,
+  }
+})

@@ -2,26 +2,29 @@ import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { createLogicMiddleware } from 'redux-logic';
 import axios from "axios";
 
-import event from './event';
-import moc from './moc';
-import user from './user';
+import events from './events';
+import mocs from './mocs';
+import users from './users';
 
 import { firebaseUrl } from '../state/constants';
+import {
+  firebasedb,
+} from '../utils/firebaseinit';
 
 const reducers = {
-  event: event.reducers,
-  moc: moc.reducers,
-  user: user.reducers
+  events: events.reducers,
+  mocs: mocs.reducers,
+  users: users.reducers
 };
 
 const logics = [
-  ...event.logics,
-  // ...moc.logics,
-  // ...user.logics,
+  ...events.logics,
+  ...users.logics,
 ];
 
 const reduxLogicDependencies = {
   firebaseUrl: firebaseUrl,
+  firebasedb,
   httpClient: axios,
 };
 

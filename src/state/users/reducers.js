@@ -1,4 +1,4 @@
-import { GET_USERS_SUCCESS, GET_USERS_FAILED } from "./actions";
+import { GET_USERS_SUCCESS, GET_USERS_FAILED, RECEIVE_USER } from "./actions";
 
 const initialState = {
   allUsers: null,
@@ -19,6 +19,13 @@ const userReducer = (state = initialState, action) => {
         ...state,
         error: action.payload
       };
+    case RECEIVE_USER: 
+      console.log(action.payload)
+      return {
+        ...state, 
+        user: action.payload,
+        error: null
+      }
     default:
       return state;
   }

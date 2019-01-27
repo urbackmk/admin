@@ -1,5 +1,7 @@
 import { createLogic } from "redux-logic"
 import { 
+  DELETE_EVENT,
+  DELETE_EVENT_SUCCESS,
   REQUEST_PENDING_EVENTS, 
   REQUEST_PENDING_EVENTS_SUCCESS, 
   REQUEST_PENDING_EVENTS_FAILED, 
@@ -29,6 +31,25 @@ const fetchPendingEvents = createLogic({
     return deps.httpClient.get(`${deps.firebaseUrl}/UserSubmissions.json`);
   }
 });
+
+const deleteEvent = createLogic({
+  type: DELETE_EVENT,
+  processOptions: {
+    successType: DELETE_EVENT_SUCCESS,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const { id, path } = action.payload;
+    const oldTownHall = firebasedb.ref(path + '/' + id);
+    if (action.payload.path === 'TownHalls') {
+      firebasedb.ref('/townHallIds/' + id + '/lastUpdated').set(Date.now());
+    }
+    return oldTownHall.remove();
+  }
+})
 
 export default [
   fetchEvents,
