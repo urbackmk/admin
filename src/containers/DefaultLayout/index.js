@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {
+  connect
+} from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
@@ -7,9 +10,9 @@ import {
   AppFooter,
   AppHeader,
 } from '@coreui/react';
-// sidebar nav config
-// import navigation from '../../_nav';
-// routes config
+
+import userStateBranch from '../../state/users'
+
 import routes from '../../routes';
 import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
@@ -22,32 +25,61 @@ import firebase, {
 class DefaultLayout extends Component {
   constructor() {
       super();
-      this.login = this.login.bind(this); // <-- add this line
-      this.logout = this.logout.bind(this); // <-- add this line
+      this.login = this.login.bind(this); 
+      this.logout = this.logout.bind(this); 
       this.state = {
         currentItem: '',
         username: '',
         items: [],
-        user: null 
+        user: null,
       }
     }
+
+    componentDidMount() {
+      const {
+        getUserById
+      } = this.props;
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            this.setState({
+              user
+            });
+            getUserById(user.uid)
+          }
+      });
+    }
+
     handleChange(e) {
       /* ... */
     }
+
     logout() {
-      // we will add the code for this in a moment, but need to add the method now or the bind will throw an error
+      auth.signOut()
+        .then(() => {
+          this.setState({
+            user: null
+          });
+        });
     }
+
     login() {
+         const {
+           getUserById
+         } = this.props;
       auth.signInWithPopup(provider)
         .then((result) => {
           const user = result.user;
           this.setState({
             user
           });
+          getUserById(user.id)
         });
     }
 
   render() {
+    const {
+      user
+    } = this.props;
     return (
       <div className="app">
         <AppHeader fixed>
@@ -62,6 +94,8 @@ class DefaultLayout extends Component {
           }
         </div>
           <main className="main">
+            {user && user.isAdmin ?
+            
             <Container fluid>
               <Switch>
                 {routes.map((route, idx) => {
@@ -73,7 +107,8 @@ class DefaultLayout extends Component {
                 )}
                 <Redirect from="/" to="/dashboard" />
               </Switch>
-            </Container>
+            </Container> : null
+            }
           </main>
           <AppAside fixed>
             <DefaultAside />
@@ -87,4 +122,12 @@ class DefaultLayout extends Component {
   }
 }
 
-export default DefaultLayout;
+const mapStateToProps = state => ({
+  user: userStateBranch.selectors.getUser(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
