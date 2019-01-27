@@ -6,7 +6,8 @@ import {
   CardBody,
   CardTitle,
   CardSubtitle,
-  Button
+  Button,
+  ButtonGroup,
 } from 'reactstrap';
 
 export default class EventCard extends React.Component {
@@ -18,7 +19,17 @@ export default class EventCard extends React.Component {
             <CardTitle>{townHall.eventType} {townHall.displayName} {townHall.party} {townHall.state} {townHall.district}</CardTitle>
             <CardSubtitle>{townHall.dateString} at {townHall.Time} {townHall.timeZone}</CardSubtitle>
             <CardText>{townHall.address}</CardText>
-            <Button>Edit</Button>
+            <ButtonGroup>
+                <Button
+                     color="info"
+                >Edit</Button>
+                <Button
+                    color="warning"
+                >Archive</Button>
+                <Button
+                    color="danger"
+                >Delete</Button>
+            </ButtonGroup>
             </CardBody>
       </Card>)
     }
