@@ -17,7 +17,7 @@ import routes from '../../routes';
 import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
 import DefaultHeader from './DefaultHeader';
-import firebase, {
+import {
   auth,
   provider
 } from '../../utils/firebaseinit';
@@ -80,6 +80,7 @@ class DefaultLayout extends Component {
     const {
       user
     } = this.props;
+    console.log(this.state.user)
     return (
       <div className="app">
         <AppHeader fixed>

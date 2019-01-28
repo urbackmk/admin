@@ -2,6 +2,7 @@ import { createLogic } from "redux-logic"
 import { 
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
+  DELETE_EVENT_FAIL,
   REQUEST_PENDING_EVENTS, 
   REQUEST_PENDING_EVENTS_SUCCESS, 
   REQUEST_PENDING_EVENTS_FAILED, 
@@ -36,22 +37,30 @@ const deleteEvent = createLogic({
   type: DELETE_EVENT,
   processOptions: {
     successType: DELETE_EVENT_SUCCESS,
+    failType: DELETE_EVENT_FAIL,
   },
   process(deps) {
     const {
       action,
       firebasedb,
     } = deps;
-    const { id, path } = action.payload;
-    const oldTownHall = firebasedb.ref(path + '/' + id);
-    if (action.payload.path === 'TownHalls') {
-      firebasedb.ref('/townHallIds/' + id + '/lastUpdated').set(Date.now());
-    }
-    return oldTownHall.remove();
+    const { townHall, path } = action.payload;
+    console.log(`${path}/${townHall.eventId}`)
+    const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
+    // if (path === 'townHalls') {
+    //   firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
+    //     eventId: townHall.eventId,
+    //     lastUpdated: (Date.now()),
+    //     status: 'cancelled',
+    //   })
+    // }
+    return oldTownHall.remove()
+      .then(() => townHall.eventId);
   }
 })
 
 export default [
   fetchEvents,
   fetchPendingEvents,
+  deleteEvent,
 ];

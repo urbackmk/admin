@@ -2,12 +2,13 @@
 // Initialize Firebase
 import firebase from 'firebase'
 
-var config = {
-  apiKey: 'AIzaSyCXyjAOvBKDEX5pckTwuI7LODWKNlL21gc',
-  authDomain: 'townhallproject-86312.firebaseapp.com',
-  databaseURL: 'https://townhallproject-86312.firebaseio.com',
-  storageBucket: 'townhallproject-86312.appspot.com',
-  messagingSenderId: '208752196071',
+const PREFIX = process.env.NODE_ENV === "production" ? "APP_CLIENT" : "APP_TESTING";
+const config = {
+  apiKey: process.env[`${PREFIX}_FIREBASE_API_KEY`],
+  authDomain: process.env[`${PREFIX}_FIREBASE_AUTH_DOMAIN`],
+  databaseURL: process.env[`${PREFIX}_DATABASE_URL`],
+  storageBucket: process.env[`${PREFIX}_STORAGE_BUCKET`],
+  messagingSenderId: process.env[`${PREFIX}_MESSAGING_SENDER_ID`],
 };
 
 firebase.initializeApp(config);

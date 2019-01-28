@@ -36,10 +36,10 @@ export const requestPendingEventsFailed = err => ({
   payload: err
 });
 
-export const deleteEvent = (id, path) => ({
+export const deleteEvent = (townHall, path) => ({
   type: DELETE_EVENT, 
   payload: {
-    id,
+    townHall,
     path,
   }
 })

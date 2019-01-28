@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Card,
-  CardImg,
   CardText,
   CardBody,
   CardTitle,
@@ -12,7 +11,10 @@ import {
 
 export default class EventCard extends React.Component {
     render() {
-        const {townHall} = this.props;
+        const {
+          townHall,
+          deleteEvent,
+        } = this.props;
         return (
             <Card key={townHall.eventId}>
             <CardBody>
@@ -28,6 +30,7 @@ export default class EventCard extends React.Component {
                 >Archive</Button>
                 <Button
                     color="danger"
+                    onClick={deleteEvent}
                 >Delete</Button>
             </ButtonGroup>
             </CardBody>

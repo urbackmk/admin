@@ -1,5 +1,4 @@
 import { createLogic } from "redux-logic"
-import { firebaseUrl } from '../constants';
 import { GET_MOCS, GET_MOCS_SUCCESS, GET_MOCS_FAILED } from "./actions";
 
 const fetchMocs = createLogic({
