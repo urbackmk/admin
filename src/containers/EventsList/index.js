@@ -6,7 +6,7 @@ import {
   ListGroupItem
 } from 'reactstrap';
 
-import eventsStateBranch from '../../state/event/index.js';
+import eventsStateBranch from '../../state/events';
 
 import EventCard from '../../components/EventCard';
 
