@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { map } from 'lodash';
 import {
   ListGroup,
-  ListGroupItem
 } from 'reactstrap';
 
 import eventsStateBranch from '../../state/events';

@@ -4,7 +4,6 @@ import {
   Row,
   Card,
   CardBody,
-  CardFooter,
   CardHeader,
   CardTitle,
   Nav,
@@ -86,7 +85,7 @@ class Events extends Component {
                       
                     Filters include: Date ranges, member name, event type, map icon, party, etc
 
-                    <br /><a href="https://github.com/townhallproject/admin/issues/7" target="_blank">https://github.com/townhallproject/admin/issues/7</a>
+                    <br /><a href="https://github.com/townhallproject/admin/issues/7" target="_blank" rel="noopener noreferrer">https://github.com/townhallproject/admin/issues/7</a>
                   </TabPane>
                 </TabContent>
               </CardBody>
