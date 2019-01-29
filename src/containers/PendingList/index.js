@@ -14,7 +14,6 @@ class PendingList extends React.Component {
         const {
           getCurrentPendingEvents
         } = this.props;
-        console.log('get pending')
         getCurrentPendingEvents();
     }
     render () {

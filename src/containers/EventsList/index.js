@@ -11,7 +11,6 @@ import EventCard from '../../components/EventCard';
 class EventList extends React.Component {
     componentWillMount() {
         const { getCurrentLiveEvents } = this.props;
-        console.log('get active')
         getCurrentLiveEvents();
     }
     render () {

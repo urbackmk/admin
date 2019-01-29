@@ -80,7 +80,6 @@ class DefaultLayout extends Component {
     const {
       user
     } = this.props;
-    console.log(this.state.user)
     return (
       <div className="app">
         <AppHeader fixed>
