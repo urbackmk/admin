@@ -47,13 +47,13 @@ const deleteEvent = createLogic({
     const { townHall, path } = action.payload;
     console.log(`${path}/${townHall.eventId}`)
     const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
-    // if (path === 'townHalls') {
-    //   firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
-    //     eventId: townHall.eventId,
-    //     lastUpdated: (Date.now()),
-    //     status: 'cancelled',
-    //   })
-    // }
+    if (path === 'townHalls') {
+      firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
+        eventId: townHall.eventId,
+        lastUpdated: (Date.now()),
+        status: 'cancelled',
+      })
+    }
     return oldTownHall.remove()
       .then(() => townHall.eventId);
   }

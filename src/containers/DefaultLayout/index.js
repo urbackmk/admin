@@ -6,6 +6,14 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 import {
+  Button,
+  Layout,
+  Modal,
+} from 'antd';
+
+
+
+import {
   AppAside,
   AppFooter,
   AppHeader,
@@ -16,11 +24,18 @@ import userStateBranch from '../../state/users'
 import routes from '../../routes';
 import DefaultAside from './DefaultAside';
 import DefaultFooter from './DefaultFooter';
-import DefaultHeader from './DefaultHeader';
+import DefaultHeader from './Nav';
 import {
   auth,
   provider
 } from '../../utils/firebaseinit';
+
+const {
+  Header,
+  Footer,
+  Sider,
+  Content,
+} = Layout;
 
 class DefaultLayout extends Component {
   constructor() {
@@ -32,6 +47,7 @@ class DefaultLayout extends Component {
         username: '',
         items: [],
         user: null,
+        confirmLoading: true,
       }
     }
 
@@ -42,11 +58,22 @@ class DefaultLayout extends Component {
         auth.onAuthStateChanged((user) => {
           if (user) {
             this.setState({
-              user
+              user,
+              confirmLoading: false,
             });
             getUserById(user.uid)
+          } else {
+            this.setState({
+              confirmLoading: false,
+            });
           }
       });
+      // if no user after 3 seconds, stop loading icon
+      setTimeout(() => {
+        this.setState({
+          confirmLoading: false,
+        });
+      }, 5000);
     }
 
     handleChange(e) {
@@ -66,37 +93,29 @@ class DefaultLayout extends Component {
          const {
            getUserById
          } = this.props;
-      auth.signInWithPopup(provider)
+      this.setState({
+        loading: true,
+      })
+      auth.signInWithRedirect(provider)
+      auth.getRedirectResult()
         .then((result) => {
           const user = result.user;
-          this.setState({
-            user
-          });
-          getUserById(user.id)
+          if (user) {
+            this.setState({
+              user
+            });
+            getUserById(user.id)
+          }
         });
     }
 
-  render() {
-    const {
-      user
-    } = this.props;
-    return (
-      <div className="app">
-        <AppHeader fixed>
-          <DefaultHeader />
-        </AppHeader>
-        <div className="app-body">
-        <div className="wrapper">
-        {this.state.user ?
-            <button onClick={this.logout}>Log Out</button>                
-            :
-            <button onClick={this.login}>Log In</button>              
-          }
-        </div>
-          <main className="main">
-            {user && user.isAdmin ?
-            
-            <Container fluid>
+    renderAdminApp() {
+      return (
+        <Layout>
+          <Sider> <DefaultHeader /></Sider>
+          <Layout>
+            <Header>Header</Header>
+            <Content>       
               <Switch>
                 {routes.map((route, idx) => {
                     return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
@@ -107,16 +126,62 @@ class DefaultLayout extends Component {
                 )}
                 <Redirect from="/" to="/dashboard" />
               </Switch>
-            </Container> : null
+            </Content>
+            <Footer>Footer</Footer>
+          </Layout>
+        </Layout>
+      )
+    }
+
+    renderModal() {
+      return (<Modal
+              title="Town Hall Project Admin"
+              visible={!this.state.user}
+              onOk={this.login}
+              okType="Log In"
+              onCancel={this.handleCancel}
+              confirmLoading={this.state.confirmLoading}
+            >
+            </Modal>
+            )
+    }
+
+    renderLoadingApp() {
+      return  (<Modal
+              title="Town Hall Project Admin"
+              visible={!this.state.user}
+              onOk={this.login}
+              okText="Log In"
+              onCancel={this.handleCancel}
+              confirmLoading={this.state.confirmLoading}
+            >
+              {this.state.confirmLoading ? <p>Checking login status</p> : <p>Login in to view admin site</p>}
+            </Modal>
+            )
+         
+    }
+
+  render() {
+    const {
+      user
+    } = this.props;
+    return (
+      <div className="app">
+        <div className="app-body">
+        <div className="wrapper">
+        {this.state.user ?
+            <button onClick={this.logout}>Log Out</button>                
+            :  <button onClick={this.login}>Log In</button>       
+          }
+        </div>
+          <main className="main">
+           {this.state.user && user && user.isAdmin ?
+            
+            this.renderAdminApp() : this.renderLoadingApp()
             }
           </main>
-          <AppAside fixed>
-            <DefaultAside />
-          </AppAside>
+  
         </div>
-        <AppFooter>
-          <DefaultFooter />
-        </AppFooter>
       </div>
     );
   }

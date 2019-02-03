@@ -1,7 +1,10 @@
 'use strict';
 
-const autoprefixer = require('autoprefixer');
 const path = require('path');
+const fs = require('fs');
+const lessToJs = require('less-vars-to-js');
+
+const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -21,6 +24,8 @@ const publicPath = '/';
 const publicUrl = '';
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../src/styles/ant-vars.less'), 'utf8'));
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -144,6 +149,12 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
+               plugins: [
+                 ['import', {
+                   libraryName: 'antd',
+                   style: true
+                 }],
+               ],
               
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -184,6 +195,23 @@ module.exports = {
                       flexbox: 'no-2009',
                     }),
                   ],
+                },
+              },
+            ],
+          },
+          {
+            test: /\.less$/,
+            use: [
+
+             require.resolve('style-loader'),
+              {
+                loader: 'css-loader',
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  javascriptEnabled: true,
+                  modifyVars: themeVariables,
                 },
               },
             ],
