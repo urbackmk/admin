@@ -1,18 +1,4 @@
 import React, { Component } from 'react';
-import {
-  Col,
-  Row,
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
-} from 'reactstrap';
-import classnames from 'classnames';
 
 import EventsList from '../../containers/EventsList';
 

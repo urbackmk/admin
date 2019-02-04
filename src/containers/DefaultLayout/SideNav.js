@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import {
   Menu,
-  Icon
 } from 'antd';
 
 import PropTypes from 'prop-types';
 
-import { AppNavbarBrand } from '@coreui/react';
-import logo from '../../assets/img/brand/logo.png'
 import { PENDING_EVENTS_TAB, LIVE_EVENTS_TAB, ARCHIVED_EVENTS_TAB } from '../../constants';
 
 const propTypes = {
@@ -23,7 +21,7 @@ class SideNav extends Component {
     rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources'];
 
     state = {
-      openKeys: [],
+      openKeys: ['events'],
     };
 
     onOpenChange = (openKeys) => {
@@ -40,33 +38,34 @@ class SideNav extends Component {
     }
   render() {
     const {
-      handleChangeTab
+      handleChangeTab,
+      activeEventTab,
     } = this.props;
     return (
       <React.Fragment>
-        <AppNavbarBrand
-          full={{ src: logo, width: 125, alt: 'Town Hall Project Logo' }}
-        />
           <Menu
             mode="inline"
             openKeys={this.state.openKeys}
             onOpenChange={this.onOpenChange}
+            selectedKeys={[activeEventTab]}
             style={{ width: 256 }}
           >
-            <SubMenu key="events" title={<a href="/#/events"><span><Icon type="mail" />Events</span></a>}>
-              <Menu.Item key="1" onClick={() => handleChangeTab(PENDING_EVENTS_TAB)}><a href="/#/events">Pending</a></Menu.Item>
-              <Menu.Item key="2" onClick={() => handleChangeTab(LIVE_EVENTS_TAB)}><a href="/#/events">Live</a></Menu.Item>
-              <Menu.Item key="3" onClick={() => handleChangeTab(ARCHIVED_EVENTS_TAB)}><a href="/#/events">Archived</a></Menu.Item>
+            <Menu.Item key="home">
+              <Link to="/dashboard">Dashboard</Link>
+            </Menu.Item>
+            <SubMenu key="events" title={<Link to="/events"><span>Events</span></Link>}>
+              <Menu.Item key={PENDING_EVENTS_TAB} onClick={() => handleChangeTab(PENDING_EVENTS_TAB)}><Link to="/events">Pending</Link></Menu.Item>
+              <Menu.Item key={LIVE_EVENTS_TAB} onClick={() => handleChangeTab(LIVE_EVENTS_TAB)}><Link to="/events">Live</Link></Menu.Item>
+              <Menu.Item key={ARCHIVED_EVENTS_TAB} onClick={() => handleChangeTab(ARCHIVED_EVENTS_TAB)}><a href="/#/events">Archived</a></Menu.Item>
             </SubMenu>
-            
             <Menu.Item key="mocs">
-              <a href="/#/mocs" >Members of Congress</a>
+              <Link to="/mocs">Members of Congress</Link>
             </Menu.Item>
             <Menu.Item key="researchers">
-              <a href="/#/researchers">Researchers</a>
+              <Link to="/researchers">Researchers</Link>
             </Menu.Item>
             <Menu.Item key="resources">
-                <a href="/#/resources">Resources</a>
+              <Link to="/resources">Resources</Link>
             </Menu.Item>
           </Menu>
       </React.Fragment>

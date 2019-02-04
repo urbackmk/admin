@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   connect
 } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import {
   Layout,
@@ -14,7 +14,6 @@ import selectionStateBranch from '../../state/selections'
 
 import routes from '../../routes';
 import AppHeader from './Header';
-import DefaultFooter from './DefaultFooter';
 import SideNav from './SideNav';
 import {
   auth,
@@ -27,6 +26,7 @@ const {
   Sider,
   Content,
 } = Layout;
+
 
 class DefaultLayout extends Component {
   constructor() {
@@ -103,34 +103,43 @@ class DefaultLayout extends Component {
     renderAdminApp() {
       const {
         user,
+        activeEventTab,
         changeActiveEventTab,
       } = this.props;
       return (
         <Layout>
-          <Sider> 
-            <SideNav 
-              handleChangeTab={changeActiveEventTab}
-            />
-          </Sider>
-          <Layout>
-            <Header>
+          <Header>
               <AppHeader 
                 userName={user.username}
                 logout={this.logout}
-              /></Header>
+              />
+            </Header>
+          <Layout>
+              <Sider
+                width={300}
+              > 
+                <SideNav 
+                    handleChangeTab={changeActiveEventTab}
+                    activeEventTab={activeEventTab}
+                />
+              </Sider>
               <Switch>
-              <Content>       
-                {routes.map((route, idx) => {
-                    return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
-                        <route.component {...props} />
-                      )} />)
-                      : null
-                  },
-                )}
-                {/* <Redirect from="/" to="/dashboard" /> */}
-              </Content>
+                <Content>       
+                  {routes.map((route, idx) => {
+                      return route.component ? (
+                      <Route 
+                        key={idx} 
+                        path={route.path} 
+                        exact={route.exact} 
+                        name={route.name} 
+                        render={props => (
+                          <route.component {...props} />
+                        )} />)
+                        : null
+                    },
+                  )}
+                </Content>
               </Switch>
-            <Footer>Footer</Footer>
           </Layout>
         </Layout>
       )
@@ -174,7 +183,7 @@ class DefaultLayout extends Component {
 
 const mapStateToProps = state => ({
   user: userStateBranch.selectors.getUser(state),
-  activeEventTab: selectionStateBranch.selectors.getActiveEventTab(state)
+  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state)
 });
 
 const mapDispatchToProps = dispatch => ({
