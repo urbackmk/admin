@@ -1,16 +1,17 @@
-import { GET_MOCS_SUCCESS, GET_MOCS_FAILED } from "./actions";
+import { GET_MOCS_SUCCESS, GET_MOCS_FAILED } from "./constants";
 
 const initialState = {
-  allMocs: null,
+  allMocIds: null,
   error: null,
 };
 
 const mocReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_MOCS_SUCCESS:
+    console.log(action.payload.data)
       return {
         ...state,
-        allMocs: action.payload.data,
+        allMocIds: action.payload.data,
         error: null
       };
     case GET_MOCS_FAILED:
@@ -19,6 +20,7 @@ const mocReducer = (state = initialState, action) => {
         ...state,
         error: action.payload
       };
+    
     default:
       return state;
   }

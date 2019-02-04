@@ -1,4 +1,7 @@
 import { createSelector } from 'reselect';
+import { map } from 'lodash';
 
 export const getAllEvents = state => state.events.allEvents;
-export const getAllPendingEvents = state => state.events.allPendingEvents;
+export const allEventsAsList = createSelector([getAllEvents], (allEvents) => {
+    return map(allEvents);
+})

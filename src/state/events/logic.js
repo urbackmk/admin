@@ -1,15 +1,17 @@
 import { createLogic } from "redux-logic"
+import moment from 'moment';
 import { 
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
   DELETE_EVENT_FAIL,
-  REQUEST_PENDING_EVENTS, 
-  REQUEST_PENDING_EVENTS_SUCCESS, 
-  REQUEST_PENDING_EVENTS_FAILED, 
+
   REQUEST_EVENTS, 
   REQUEST_EVENTS_SUCCESS, 
   REQUEST_EVENTS_FAILED,
+  ARCHIVE_EVENT_SUCCESS,
+  ARCHIVE_EVENT,
 } from "./constants";
+import { ARCHIVED_EVENTS_TAB } from "../../constants";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,
@@ -18,20 +20,47 @@ const fetchEvents = createLogic({
     failType: REQUEST_EVENTS_FAILED,
   },
   process(deps) {
-    return deps.httpClient.get(`${deps.firebaseUrl}/townHalls.json`);
+      const {
+      action,
+    } = deps;
+    const { payload } = action;
+    return deps.httpClient.get(`${deps.firebaseUrl}/${payload}.json`);
   }
 });
 
-const fetchPendingEvents = createLogic({
-  type: REQUEST_PENDING_EVENTS,
+const archiveEventLogic = createLogic({
+  type: ARCHIVE_EVENT,
   processOptions: {
-    successType: REQUEST_PENDING_EVENTS_SUCCESS,
-    failType: REQUEST_PENDING_EVENTS_FAILED,
+    successType: ARCHIVE_EVENT_SUCCESS,
   },
   process(deps) {
-    return deps.httpClient.get(`${deps.firebaseUrl}/UserSubmissions.json`);
-  }
-});
+      const {
+        action,
+        firebasedb,
+      } = deps;
+
+      const {
+        townHall,
+        path,
+        archivePath
+      } = action.payload;
+      const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
+      const oldTownHallID = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
+      const dateKey = townHall.dateObj ? moment(townHall.dateObj).format('YYYY-MM') : 'no_date';
+      console.log(`${archivePath}/${dateKey}/${townHall.eventId}`)
+      return firebasedb.ref(`${archivePath}/${dateKey}/${townHall.eventId}`).update(townHall)
+        .then(() => {
+            const removed = oldTownHall.remove();
+            if (removed) {
+              oldTownHallID.remove()
+              return townHall.eventId;
+            }
+        })
+        .catch(e => {
+          console.log(e)
+        })
+      }
+})
 
 const deleteEvent = createLogic({
   type: DELETE_EVENT,
@@ -45,22 +74,21 @@ const deleteEvent = createLogic({
       firebasedb,
     } = deps;
     const { townHall, path } = action.payload;
-    console.log(`${path}/${townHall.eventId}`)
     const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
-    // if (path === 'townHalls') {
-    //   firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
-    //     eventId: townHall.eventId,
-    //     lastUpdated: (Date.now()),
-    //     status: 'cancelled',
-    //   })
-    // }
+    if (path === 'townHalls') {
+      firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
+        eventId: townHall.eventId,
+        lastUpdated: (Date.now()),
+        status: 'cancelled',
+      })
+    }
     return oldTownHall.remove()
       .then(() => townHall.eventId);
   }
 })
 
 export default [
+  archiveEventLogic,
   fetchEvents,
-  fetchPendingEvents,
   deleteEvent,
 ];

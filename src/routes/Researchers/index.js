@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Col,
   Row,
-} from 'reactstrap';
+} from 'antd';
 class Researchers extends Component {
   render() {
     return (

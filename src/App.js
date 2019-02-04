@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import configureStore from './state/store';
-import './App.css';
 
 // CoreUI Icons Set
 import '@coreui/icons/css/coreui-icons.min.css';
@@ -13,7 +12,6 @@ import 'font-awesome/css/font-awesome.min.css';
 // Import Simple Line Icons Set
 import 'simple-line-icons/css/simple-line-icons.css';
 // Import Main styles for this application
-import './scss/style.css'
 
 // Containers
 import DefaultLayout from './containers/DefaultLayout';

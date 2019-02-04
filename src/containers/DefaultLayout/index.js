@@ -2,25 +2,31 @@ import React, { Component } from 'react';
 import {
   connect
 } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { Container } from 'reactstrap';
+import { Route, Switch } from 'react-router-dom';
 
 import {
-  AppAside,
-  AppFooter,
-  AppHeader,
-} from '@coreui/react';
+  Layout,
+  Modal,
+} from 'antd';
 
 import userStateBranch from '../../state/users'
+import selectionStateBranch from '../../state/selections'
 
 import routes from '../../routes';
-import DefaultAside from './DefaultAside';
-import DefaultFooter from './DefaultFooter';
-import DefaultHeader from './DefaultHeader';
+import AppHeader from './Header';
+import SideNav from './SideNav';
 import {
   auth,
   provider
 } from '../../utils/firebaseinit';
+
+const {
+  Header,
+  Footer,
+  Sider,
+  Content,
+} = Layout;
+
 
 class DefaultLayout extends Component {
   constructor() {
@@ -32,6 +38,7 @@ class DefaultLayout extends Component {
         username: '',
         items: [],
         user: null,
+        confirmLoading: true,
       }
     }
 
@@ -42,11 +49,22 @@ class DefaultLayout extends Component {
         auth.onAuthStateChanged((user) => {
           if (user) {
             this.setState({
-              user
+              user,
+              confirmLoading: false,
             });
             getUserById(user.uid)
+          } else {
+            this.setState({
+              confirmLoading: false,
+            });
           }
       });
+      // if no user after 3 seconds, stop loading icon
+      setTimeout(() => {
+        this.setState({
+          confirmLoading: false,
+        });
+      }, 5000);
     }
 
     handleChange(e) {
@@ -66,68 +84,111 @@ class DefaultLayout extends Component {
          const {
            getUserById
          } = this.props;
-      auth.signInWithPopup(provider)
+      this.setState({
+        loading: true,
+      })
+      auth.signInWithRedirect(provider)
+      auth.getRedirectResult()
         .then((result) => {
           const user = result.user;
-          this.setState({
-            user
-          });
-          getUserById(user.id)
+          if (user) {
+            this.setState({
+              user
+            });
+            getUserById(user.id)
+          }
         });
+    }
+
+    renderAdminApp() {
+      const {
+        user,
+        activeEventTab,
+        changeActiveEventTab,
+      } = this.props;
+      return (
+        <Layout>
+          <Header>
+              <AppHeader 
+                userName={user.username}
+                logout={this.logout}
+              />
+            </Header>
+          <Layout>
+              <Sider
+                width={300}
+              > 
+                <SideNav 
+                    handleChangeTab={changeActiveEventTab}
+                    activeEventTab={activeEventTab}
+                />
+              </Sider>
+              <Switch>
+                <Content>       
+                  {routes.map((route, idx) => {
+                      return route.component ? (
+                      <Route 
+                        key={idx} 
+                        path={route.path} 
+                        exact={route.exact} 
+                        name={route.name} 
+                        render={props => (
+                          <route.component {...props} />
+                        )} />)
+                        : null
+                    },
+                  )}
+                </Content>
+              </Switch>
+          </Layout>
+        </Layout>
+      )
+    }
+
+    renderModal() {
+      return (<Modal
+              title="Town Hall Project Admin"
+              visible={!this.state.user}
+              onOk={this.login}
+              okType="Log In"
+              onCancel={this.handleCancel}
+              confirmLoading={this.state.confirmLoading}
+            >
+            </Modal>
+            )
+    }
+
+    renderLoadingApp() {
+      return  (<Modal
+              title="Town Hall Project Admin"
+              visible={!this.state.user}
+              onOk={this.login}
+              okText="Log In"
+              onCancel={this.handleCancel}
+              confirmLoading={this.state.confirmLoading}
+            >
+              {this.state.confirmLoading ? <p>Checking login status</p> : <p>Login in to view admin site</p>}
+            </Modal>
+            )
+         
     }
 
   render() {
     const {
       user
     } = this.props;
-    return (
-      <div className="app">
-        <AppHeader fixed>
-          <DefaultHeader />
-        </AppHeader>
-        <div className="app-body">
-        <div className="wrapper">
-        {this.state.user ?
-            <button onClick={this.logout}>Log Out</button>                
-            :
-            <button onClick={this.login}>Log In</button>              
-          }
-        </div>
-          <main className="main">
-            {user && user.isAdmin ?
-            
-            <Container fluid>
-              <Switch>
-                {routes.map((route, idx) => {
-                    return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
-                        <route.component {...props} />
-                      )} />)
-                      : (null);
-                  },
-                )}
-                <Redirect from="/" to="/dashboard" />
-              </Switch>
-            </Container> : null
-            }
-          </main>
-          <AppAside fixed>
-            <DefaultAside />
-          </AppAside>
-        </div>
-        <AppFooter>
-          <DefaultFooter />
-        </AppFooter>
-      </div>
-    );
+    return this.state.user && user && user.isAdmin ? this.renderAdminApp() : this.renderLoadingApp();
   }
 }
 
 const mapStateToProps = state => ({
   user: userStateBranch.selectors.getUser(state),
+  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state)
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
+  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

@@ -1,5 +1,5 @@
 import { createLogic } from "redux-logic"
-import { GET_MOCS, GET_MOCS_SUCCESS, GET_MOCS_FAILED } from "./actions";
+import { GET_MOCS, GET_MOCS_SUCCESS, GET_MOCS_FAILED } from "./constants";
 
 const fetchMocs = createLogic({
   type: GET_MOCS,
@@ -8,8 +8,11 @@ const fetchMocs = createLogic({
     failType: GET_MOCS_FAILED,
   },
   process(deps) {
-    return deps.httpClient.get(`${deps.firebaseUrl}/mocData.json`);
+    console.log('requesting')
+    return deps.httpClient.get(`${deps.firebaseUrl}/mocID.json`);
   }
 });
 
-export default fetchMocs;
+export default [
+  fetchMocs
+];
