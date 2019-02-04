@@ -31,7 +31,7 @@ const env = getClientEnvironment(publicUrl);
 
 // Over rides of antd default theme
 const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../src/styles/ant-vars.less'), 'utf8'));
-
+console.log('using production config')
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
@@ -120,6 +120,7 @@ module.exports = {
       {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
+        
         use: [
           {
             options: {
@@ -153,8 +154,17 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              
+              plugins: [
+                ['import', {
+                  libraryName: 'antd',
+                  style: true
+                }],
+              ],
               compact: true,
+              // This is a feature of `babel-loader` for webpack (not Babel itself).
+              // It enables caching results in ./node_modules/.cache/babel-loader/
+              // directory for faster rebuilds.
+              cacheDirectory: true,
             },
           },
           // The notation here is somewhat confusing.
