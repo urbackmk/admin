@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Col,
   Row,
-} from 'reactstrap';
+} from 'antd';
 class MoCs extends Component {
   render() {
     return (

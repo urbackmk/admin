@@ -3,28 +3,19 @@ import {
   connect
 } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Container } from 'reactstrap';
 
 import {
-  Button,
   Layout,
   Modal,
 } from 'antd';
 
-
-
-import {
-  AppAside,
-  AppFooter,
-  AppHeader,
-} from '@coreui/react';
-
 import userStateBranch from '../../state/users'
+import selectionStateBranch from '../../state/selections'
 
 import routes from '../../routes';
-import DefaultAside from './DefaultAside';
+import AppHeader from './Header';
 import DefaultFooter from './DefaultFooter';
-import DefaultHeader from './Nav';
+import SideNav from './SideNav';
 import {
   auth,
   provider
@@ -110,23 +101,35 @@ class DefaultLayout extends Component {
     }
 
     renderAdminApp() {
+      const {
+        user,
+        changeActiveEventTab,
+      } = this.props;
       return (
         <Layout>
-          <Sider> <DefaultHeader /></Sider>
+          <Sider> 
+            <SideNav 
+              handleChangeTab={changeActiveEventTab}
+            />
+          </Sider>
           <Layout>
-            <Header>Header</Header>
-            <Content>       
+            <Header>
+              <AppHeader 
+                userName={user.username}
+                logout={this.logout}
+              /></Header>
               <Switch>
+              <Content>       
                 {routes.map((route, idx) => {
                     return route.component ? (<Route key={idx} path={route.path} exact={route.exact} name={route.name} render={props => (
                         <route.component {...props} />
                       )} />)
-                      : (null);
+                      : null
                   },
                 )}
-                <Redirect from="/" to="/dashboard" />
+                {/* <Redirect from="/" to="/dashboard" /> */}
+              </Content>
               </Switch>
-            </Content>
             <Footer>Footer</Footer>
           </Layout>
         </Layout>
@@ -165,34 +168,18 @@ class DefaultLayout extends Component {
     const {
       user
     } = this.props;
-    return (
-      <div className="app">
-        <div className="app-body">
-        <div className="wrapper">
-        {this.state.user ?
-            <button onClick={this.logout}>Log Out</button>                
-            :  <button onClick={this.login}>Log In</button>       
-          }
-        </div>
-          <main className="main">
-           {this.state.user && user && user.isAdmin ?
-            
-            this.renderAdminApp() : this.renderLoadingApp()
-            }
-          </main>
-  
-        </div>
-      </div>
-    );
+    return this.state.user && user && user.isAdmin ? this.renderAdminApp() : this.renderLoadingApp();
   }
 }
 
 const mapStateToProps = state => ({
   user: userStateBranch.selectors.getUser(state),
+  activeEventTab: selectionStateBranch.selectors.getActiveEventTab(state)
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
+  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

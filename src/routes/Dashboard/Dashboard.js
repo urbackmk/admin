@@ -3,7 +3,7 @@ import {
   Card,
   Col,
   Row,
-} from 'reactstrap';
+} from 'antd';
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,6 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div className="animated fadeIn">
         <Row>
           <Col xs="12">
             <Card>
@@ -23,7 +22,6 @@ class Dashboard extends Component {
             </Card>
           </Col>
         </Row>
-      </div>
     );
   };
 }

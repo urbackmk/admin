@@ -7,8 +7,9 @@ import {
 
 import PropTypes from 'prop-types';
 
-import { AppHeaderDropdown, AppNavbarBrand } from '@coreui/react';
+import { AppNavbarBrand } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.png'
+import { PENDING_EVENTS_TAB, LIVE_EVENTS_TAB, ARCHIVED_EVENTS_TAB } from '../../constants';
 
 const propTypes = {
   children: PropTypes.node,
@@ -18,11 +19,11 @@ const SubMenu = Menu.SubMenu;
 
 const defaultProps = {};
 
-class NavMenu extends Component {
+class SideNav extends Component {
     rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources'];
 
     state = {
-      openKeys: ['events'],
+      openKeys: [],
     };
 
     onOpenChange = (openKeys) => {
@@ -38,7 +39,9 @@ class NavMenu extends Component {
       }
     }
   render() {
-
+    const {
+      handleChangeTab
+    } = this.props;
     return (
       <React.Fragment>
         <AppNavbarBrand
@@ -50,10 +53,10 @@ class NavMenu extends Component {
             onOpenChange={this.onOpenChange}
             style={{ width: 256 }}
           >
-            <SubMenu key="events" title={<span><Icon type="mail" /><span>Events</span></span>}>
-              <Menu.Item key="1">Pending</Menu.Item>
-              <Menu.Item key="2">Live</Menu.Item>
-              <Menu.Item key="3">Archived</Menu.Item>
+            <SubMenu key="events" title={<a href="/#/events"><span><Icon type="mail" />Events</span></a>}>
+              <Menu.Item key="1" onClick={() => handleChangeTab(PENDING_EVENTS_TAB)}><a href="/#/events">Pending</a></Menu.Item>
+              <Menu.Item key="2" onClick={() => handleChangeTab(LIVE_EVENTS_TAB)}><a href="/#/events">Live</a></Menu.Item>
+              <Menu.Item key="3" onClick={() => handleChangeTab(ARCHIVED_EVENTS_TAB)}><a href="/#/events">Archived</a></Menu.Item>
             </SubMenu>
             
             <Menu.Item key="mocs">
@@ -66,14 +69,12 @@ class NavMenu extends Component {
                 <a href="/#/resources">Resources</a>
             </Menu.Item>
           </Menu>
-        );
-      }
       </React.Fragment>
     );
   }
 }
 
-NavMenu.propTypes = propTypes;
-NavMenu.defaultProps = defaultProps;
+SideNav.propTypes = propTypes;
+SideNav.defaultProps = defaultProps;
 
-export default NavMenu;
+export default SideNav;
