@@ -5,11 +5,13 @@ import {
   REQUEST_EVENTS_FAILED,
   REQUEST_PENDING_EVENTS,
   REQUEST_PENDING_EVENTS_FAILED,
+  ARCHIVE_EVENT,
 } from "./constants";
 
 
-export const requestEvents = () => ({
-  type: REQUEST_EVENTS
+export const requestEvents = (path) => ({
+  type: REQUEST_EVENTS,
+  payload: path,
 });
 
 export const getEventsSuccess = events => ({
@@ -43,3 +45,13 @@ export const deleteEvent = (townHall, path) => ({
     path,
   }
 })
+
+export const archiveEvent = (townHall, path, archivePath) => ({
+  type: ARCHIVE_EVENT,
+  payload: {
+    townHall,
+    path,
+    archivePath,
+  }
+})
+

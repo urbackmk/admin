@@ -1,8 +1,10 @@
-export const GET_MOCS = "GET_MOCS";
-export const GET_MOCS_SUCCESS = "GET_MOCS_SUCCESS";
-export const GET_MOCS_FAILED = "GET_MOCS_FAILED";
+import {
+  GET_MOCS, 
+  GET_MOCS_SUCCESS,
+  GET_MOCS_FAILED,
+} from './constants';
 
-export const getMocs = () => ({
+export const requestMocIds = () => ({
   type: GET_MOCS
 });
 

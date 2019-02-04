@@ -1,20 +1,61 @@
 import { createSelector } from 'reselect';
-import { map } from 'lodash';
 import {
-  getAllEvents,
-  getAllPendingEvents,
-} from '../events/selectors';
-import { LIVE_EVENTS_TAB, PENDING_EVENTS_TAB, ARCHIVED_EVENTS_TAB } from '../../constants';
+  includes,
+  map
+} from 'lodash';
 
-export const getActiveEventTab = state => state.selections.selectedEventTab;
+import { LIVE_EVENTS_TAB, PENDING_EVENTS_TAB, STATES_LEGS } from '../../constants';
 
-export const getEventsForTab = createSelector([getActiveEventTab, getAllEvents, getAllPendingEvents], 
-    (activeTab, liveEvents, pendingEvents) => {
-        const mapping = {
-            [LIVE_EVENTS_TAB]: map(liveEvents),
-            [PENDING_EVENTS_TAB]: map(pendingEvents),
-            [ARCHIVED_EVENTS_TAB]: [],
+export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
+export const getActiveFederalOrState = state => state.selections.federalOrState;
+export const getMode = state => state.selections.mode;
+
+export const getEventUrl = createSelector([getPendingOrLiveTab, getActiveFederalOrState], (liveOrPending, federalOrState) => {
+    if (liveOrPending === LIVE_EVENTS_TAB) {
+        if (includes(STATES_LEGS, federalOrState)) {
+            return `state_townhalls/${federalOrState}`;
         }
-        console.log(activeTab, mapping[activeTab])
-        return mapping[activeTab];
-})
+        return 'townHalls';
+    } else if (liveOrPending === PENDING_EVENTS_TAB) {
+        if (includes(STATES_LEGS, federalOrState)) {
+        return `state_legislators_user_submission/${federalOrState}`;
+        }
+        return 'UserSubmissions';
+    }
+    return null;
+  
+});
+
+export const getPeopleNameUrl = createSelector([getActiveFederalOrState, getMode], (federalOrState, mode) => {
+  if (mode === 'candidate') {
+    return 'candidate_keys';
+  }
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_legislators_id/${federalOrState}`;
+  }
+  return 'mocID';
+});
+
+export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode], (federalOrState, mode) => {
+  if (mode === 'candidate') {
+    return 'candidate_data';
+  }
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_legislators_data/${federalOrState}`;
+  }
+  return 'mocData';
+});
+
+export const getSaveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_legislators_user_submission/${federalOrState}`;
+  }
+  return 'UserSubmission';
+});
+
+export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_townhalls_archive/${federalOrState}`;
+  }
+  return 'archive_116th_congress';
+});

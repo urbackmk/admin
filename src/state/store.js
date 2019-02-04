@@ -22,6 +22,7 @@ const reducers = {
 const logics = [
   ...events.logics,
   ...users.logics,
+  ...mocs.logics,
 ];
 
 const reduxLogicDependencies = {
