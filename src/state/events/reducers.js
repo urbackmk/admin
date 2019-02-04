@@ -35,7 +35,7 @@ const eventReducer = (state = initialState, action) => {
       };
     case DELETE_EVENT_SUCCESS:
       return {
-        ... state,
+        ...state,
         allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
       }
     case ARCHIVE_EVENT_SUCCESS:

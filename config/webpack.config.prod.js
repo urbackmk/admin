@@ -1,5 +1,6 @@
 'use strict';
-
+const fs = require('fs');
+const lessToJs = require('less-vars-to-js');
 const autoprefixer = require('autoprefixer');
 const path = require('path');
 const webpack = require('webpack');
@@ -27,6 +28,9 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
 const publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 const env = getClientEnvironment(publicUrl);
+
+// Over rides of antd default theme
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../src/styles/ant-vars.less'), 'utf8'));
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
@@ -211,6 +215,23 @@ module.exports = {
               )
             ),
             // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+          },
+          {
+            test: /\.less$/,
+            use: [
+
+              require.resolve('style-loader'),
+              {
+                loader: 'css-loader',
+              },
+              {
+                loader: 'less-loader',
+                options: {
+                  javascriptEnabled: true,
+                  modifyVars: themeVariables,
+                },
+              },
+            ],
           },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.

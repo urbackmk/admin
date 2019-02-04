@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import {
   includes,
-  map
 } from 'lodash';
 
 import { LIVE_EVENTS_TAB, PENDING_EVENTS_TAB, STATES_LEGS } from '../../constants';

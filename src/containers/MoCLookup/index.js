@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { map } from 'lodash';
 
 import mocStateBranch from '../../state/mocs';
 
