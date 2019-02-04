@@ -22,7 +22,6 @@ import {
 
 const {
   Header,
-  Footer,
   Sider,
   Content,
 } = Layout;

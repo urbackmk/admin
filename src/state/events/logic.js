@@ -11,7 +11,6 @@ import {
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
 } from "./constants";
-import { ARCHIVED_EVENTS_TAB } from "../../constants";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,

@@ -9,17 +9,12 @@ import {
 import logo from '../../assets/img/brand/logo.png'
 
 const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
 class AppHeader extends Component {
-  constructor() {
-      super();
-    }
 
   render() {
       const {
         userName,
-        logOut
       } = this.props;
     return (
       <Row
@@ -30,6 +25,7 @@ class AppHeader extends Component {
         <img
             width={120}
             src={logo}
+            alt="town hall project logo"
         />
         </Col>
             <Menu
