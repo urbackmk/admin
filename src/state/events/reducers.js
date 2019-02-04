@@ -5,6 +5,7 @@ import {
   REQUEST_PENDING_EVENTS_SUCCESS,
   REQUEST_EVENTS_FAILED,
   ARCHIVE_EVENT_SUCCESS,
+  APPROVE_EVENT_SUCCESS,
 } from "./constants";
 import { filter } from "lodash";
 
@@ -18,7 +19,7 @@ const eventReducer = (state = initialState, action) => {
     case REQUEST_EVENTS_SUCCESS:
       return {
         ...state,
-        allEvents: action.payload.data,
+        allEvents: action.payload,
         error: null
       };
     case REQUEST_PENDING_EVENTS_SUCCESS:
@@ -39,6 +40,11 @@ const eventReducer = (state = initialState, action) => {
         allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
       }
     case ARCHIVE_EVENT_SUCCESS:
+      return {
+        ...state,
+        allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
+      }
+    case APPROVE_EVENT_SUCCESS:
       return {
         ...state,
         allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)

@@ -9,20 +9,35 @@ export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
 export const getMode = state => state.selections.mode;
 
-export const getEventUrl = createSelector([getPendingOrLiveTab, getActiveFederalOrState], (liveOrPending, federalOrState) => {
+export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_townhalls/${federalOrState}`;
+  }
+  return 'townHalls';
+});
+
+export const getSubmissionUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_legislators_user_submission/${federalOrState}`;
+  }
+  return 'UserSubmission';
+});
+
+export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+  if (includes(STATES_LEGS, federalOrState)) {
+    return `state_townhalls_archive/${federalOrState}`;
+  }
+  return 'archive_116th_congress';
+});
+
+export const getEventsToShowUrl = createSelector([getPendingOrLiveTab, getSubmissionUrl, getLiveEventUrl], 
+    (liveOrPending, submissionUrl, liveEventUrl) => {
     if (liveOrPending === LIVE_EVENTS_TAB) {
-        if (includes(STATES_LEGS, federalOrState)) {
-            return `state_townhalls/${federalOrState}`;
-        }
-        return 'townHalls';
+        return liveEventUrl
     } else if (liveOrPending === PENDING_EVENTS_TAB) {
-        if (includes(STATES_LEGS, federalOrState)) {
-        return `state_legislators_user_submission/${federalOrState}`;
-        }
-        return 'UserSubmissions';
+        return submissionUrl
     }
     return null;
-  
 });
 
 export const getPeopleNameUrl = createSelector([getActiveFederalOrState, getMode], (federalOrState, mode) => {
@@ -43,18 +58,4 @@ export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode
     return `state_legislators_data/${federalOrState}`;
   }
   return 'mocData';
-});
-
-export const getSaveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
-  if (includes(STATES_LEGS, federalOrState)) {
-    return `state_legislators_user_submission/${federalOrState}`;
-  }
-  return 'UserSubmission';
-});
-
-export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
-  if (includes(STATES_LEGS, federalOrState)) {
-    return `state_townhalls_archive/${federalOrState}`;
-  }
-  return 'archive_116th_congress';
 });
