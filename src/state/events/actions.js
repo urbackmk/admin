@@ -6,6 +6,7 @@ import {
   REQUEST_PENDING_EVENTS,
   REQUEST_PENDING_EVENTS_FAILED,
   ARCHIVE_EVENT,
+  APPROVE_EVENT,
 } from "./constants";
 
 
@@ -52,6 +53,15 @@ export const archiveEvent = (townHall, path, archivePath) => ({
     townHall,
     path,
     archivePath,
+  }
+})
+
+export const approveEvent = (townHall, path, livePath) => ({
+  type: APPROVE_EVENT,
+  payload: {
+    townHall,
+    path,
+    livePath,
   }
 })
 

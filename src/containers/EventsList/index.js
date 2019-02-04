@@ -9,7 +9,9 @@ import eventsStateBranch from '../../state/events';
 import selectionStateBranch from '../../state/selections'
 
 import EventCard from '../../components/EventCard';
-import { FEDERAL_STATE_RADIO_BUTTONS } from '../../constants';
+import { FEDERAL_STATE_RADIO_BUTTONS, PENDING_EVENTS_TAB } from '../../constants';
+
+import './style.scss';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -18,13 +20,15 @@ class EventList extends React.Component {
     constructor(props) {
         super(props);
         this.onRadioChange = this.onRadioChange.bind(this);
+        this.renderItem = this.renderItem.bind(this);
     }
+
     componentWillMount() {
         const {
           getCurrentLiveEvents,
           pathForEvents,
         } = this.props;
-
+        console.log('path for events in component did mount', pathForEvents)
         if (pathForEvents) {
             getCurrentLiveEvents(pathForEvents);
         }
@@ -36,6 +40,7 @@ class EventList extends React.Component {
             pathForEvents,
         } = this.props;
         if (prevProps.pathForEvents !== pathForEvents && pathForEvents) {
+            console.log('path for events in component did update', pathForEvents)
             getCurrentLiveEvents(pathForEvents);
         }
     }
@@ -47,14 +52,40 @@ class EventList extends React.Component {
         changeRadioButton(target.value)
     }
 
-    render () {
+    renderItem(townHall) {
         const {
             archiveEvent,
+            approveEvent,
             pathForArchive,
             pendingOrLive,
-            eventsForList,
             deleteEvent,
             pathForEvents,
+            pathForPublishing,
+        } = this.props;
+        return (
+            <List.Item>
+                <EventCard 
+                    townHall={townHall}
+                    pending={pendingOrLive === PENDING_EVENTS_TAB}
+                    approveEvent={() => {
+                        return approveEvent(townHall, pathForEvents, pathForPublishing)
+                    }}
+                    archiveEvent={() => {
+                        console.log('archiving')
+                        return archiveEvent(townHall, pathForEvents, pathForArchive)
+                    }}
+                    deleteEvent={() => {
+                        console.log('deleting')
+                        return deleteEvent(townHall, pathForEvents)
+                    }}
+                />
+            </List.Item>
+        )
+    }
+
+    render () {
+        const {
+            eventsForList,
         } = this.props;
         return (
             <React.Fragment>
@@ -70,22 +101,10 @@ class EventList extends React.Component {
                     })
                     }
                 </RadioGroup>
-                <List
+                <List   
+                    className='event-list'              
                     dataSource={eventsForList}
-                    renderItem={townHall => (
-                            <EventCard 
-                                townHall={townHall}
-                                pending={pendingOrLive}
-                                archiveEvent={() => {
-                                    console.log('archiving')
-                                    return archiveEvent(townHall, pathForEvents, pathForArchive)
-                                }}
-                                deleteEvent={() => {
-                                    console.log('deleting')
-                                    return deleteEvent(townHall, pathForEvents)
-                                }}
-                            />
-                    )}
+                    renderItem={this.renderItem}
                 />
             </React.Fragment>
         )
@@ -95,14 +114,17 @@ class EventList extends React.Component {
 const mapStateToProps = state => ({
     pendingOrLive: selectionStateBranch.selectors.getPendingOrLiveTab(state),
     eventsForList: eventsStateBranch.selectors.allEventsAsList(state),
-    pathForEvents: selectionStateBranch.selectors.getEventUrl(state),
+    pathForEvents: selectionStateBranch.selectors.getEventsToShowUrl(state),
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
+    pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
+    userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    archiveEvent: (townhall, path, archivePath) => dispatch(eventsStateBranch.actions.archiveEvent(townhall, path, archivePath)),
+    archiveEvent: (townHall, path, archivePath) => dispatch(eventsStateBranch.actions.archiveEvent(townHall, path, archivePath)),
+    approveEvent: (townHall, path, livePath) => dispatch(eventsStateBranch.actions.approveEvent(townHall, path, livePath)),
     getCurrentLiveEvents: (path) => dispatch(eventsStateBranch.actions.requestEvents(path)),
-    deleteEvent: (townhall, path) => dispatch(eventsStateBranch.actions.deleteEvent(townhall, path)),
+    deleteEvent: (townHall, path) => dispatch(eventsStateBranch.actions.deleteEvent(townHall, path)),
     changeRadioButton: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
 });
 

@@ -4,12 +4,14 @@ import {
   DELETE_EVENT,
   DELETE_EVENT_SUCCESS,
   DELETE_EVENT_FAIL,
-
   REQUEST_EVENTS, 
   REQUEST_EVENTS_SUCCESS, 
   REQUEST_EVENTS_FAILED,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
+  APPROVE_EVENT,
+  APPROVE_EVENT_SUCCESS,
+  APPROVE_EVENT_FAIL,
 } from "./constants";
 
 const fetchEvents = createLogic({
@@ -21,12 +23,48 @@ const fetchEvents = createLogic({
   process(deps) {
       const {
       action,
+      firebasedb,
     } = deps;
     const { payload } = action;
-    return deps.httpClient.get(`${deps.firebaseUrl}/${payload}.json`);
+    return firebasedb.ref(`${payload}`).once('value')
+      .then((snapshot) => {
+        const allData = [];
+        snapshot.forEach((ele) => {
+          allData.push(ele.val())
+        })
+        return allData;
+      })
   }
 });
 
+const approveEventLogic = createLogic({
+  type: APPROVE_EVENT,
+  processOptions: {
+    successType: APPROVE_EVENT_SUCCESS,
+    failType: APPROVE_EVENT_FAIL,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+
+    const {
+      townHall,
+      path,
+      livePath,
+    } = action.payload;
+    console.log(livePath)
+    return firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
+      .then(() => {
+        const approvedTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
+        return approvedTownHall.remove()
+          .then(() => {
+            return townHall.eventId;
+          })
+      })
+  }
+});
 const archiveEventLogic = createLogic({
   type: ARCHIVE_EVENT,
   processOptions: {
@@ -88,6 +126,7 @@ const deleteEvent = createLogic({
 
 export default [
   archiveEventLogic,
+  approveEventLogic,
   fetchEvents,
   deleteEvent,
 ];
