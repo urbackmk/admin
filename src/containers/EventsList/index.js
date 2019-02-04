@@ -56,7 +56,6 @@ class EventList extends React.Component {
             deleteEvent,
             pathForEvents,
         } = this.props;
-        console.log(pathForArchive)
         return (
             <React.Fragment>
                 <RadioGroup 
