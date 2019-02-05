@@ -27,7 +27,6 @@ const fetchUsers = createLogic({
           if (user.val().mocs && !user.val().isAdmin) {
             userData.id = user.key;
             researchers.push(userData);
-            researchers.push(userData);
             
             // get moc names
             const { mocs } = user.val();
