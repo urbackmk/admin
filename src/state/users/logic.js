@@ -1,14 +1,51 @@
 import { createLogic } from "redux-logic"
-import { GET_USERS, GET_USERS_SUCCESS, GET_USERS_FAILED, REQUEST_USER_BY_ID, RECEIVE_USER, REQUEST_USER_BY_ID_FAILED } from "./actions";
+import { map } from "lodash";
+
+import { 
+  GET_USERS, 
+  GET_USERS_SUCCESS, 
+  GET_USERS_FAILED, 
+  REQUEST_USER_BY_ID, 
+  RECEIVE_USER, 
+  REQUEST_USER_BY_ID_FAILED, 
+  REQUEST_RESEARCHER,
+} from "./constants";
+import { updateUserMocs, getUsersSuccess } from "./actions";
 
 const fetchUsers = createLogic({
-  type: GET_USERS,
-  processOptions: {
-    successType: GET_USERS_SUCCESS,
-    failType: GET_USERS_FAILED,
-  },
-  process(deps) {
-    return deps.httpClient.get(`${deps.firebaseUrl}/users.json`);
+  type: REQUEST_RESEARCHER,
+  process({
+      firebasedb
+    }, dispatch, done) {
+    return firebasedb.ref(`users`)
+      .once('value')
+      .then(usersSnap => {
+        const researchers = []
+        usersSnap.forEach((user) => {
+          const userData = user.val();
+          userData.id = user.key;
+          researchers.push(userData);
+          // get moc names
+          if (user.val().mocs) {
+            const { mocs } = user.val();
+            map(mocs, (moc) => {
+              return firebasedb.ref(`mocData/${moc.govtrack_id}`).once('value')
+                .then((mocSnap) => {
+                  if (mocSnap.exists()) {
+                    const mocData = mocSnap.val();
+                    const mocToUpdate = {
+                      name: mocData.displayName,
+                      govtrack_id: moc.govtrack_id,
+                      userId: user.key,
+                    }
+                    dispatch(updateUserMocs(mocToUpdate))
+                  }
+                })
+            })
+          }
+        })
+        return dispatch(getUsersSuccess(researchers))
+      });
   }
 });
 

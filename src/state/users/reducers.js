@@ -1,7 +1,18 @@
-import { GET_USERS_SUCCESS, GET_USERS_FAILED, RECEIVE_USER } from "./actions";
+import {
+  filter,
+  map,
+} from 'lodash';
+
+import { 
+  GET_USERS_SUCCESS, 
+  GET_USERS_FAILED, 
+  RECEIVE_USER, 
+  UPDATE_USER_MOCS,
+} from "./constants";
 
 const initialState = {
-  allUsers: null,
+  allResearchers: [],
+  allResearchedMocs: [],
   error: null,
 };
 
@@ -10,7 +21,7 @@ const userReducer = (state = initialState, action) => {
     case GET_USERS_SUCCESS:
       return {
         ...state,
-        allUsers: action.payload.data,
+        allResearchers: action.payload,
         error: null
       };
     case GET_USERS_FAILED:
@@ -19,8 +30,12 @@ const userReducer = (state = initialState, action) => {
         ...state,
         error: action.payload
       };
+    case UPDATE_USER_MOCS:
+      return {
+        ...state,
+        allResearchedMocs: [...state.allResearchedMocs, action.payload.mocData]
+      }
     case RECEIVE_USER: 
-      console.log(action.payload)
       return {
         ...state, 
         user: action.payload,

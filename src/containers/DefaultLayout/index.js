@@ -31,7 +31,7 @@ class DefaultLayout extends Component {
   constructor() {
       super();
       this.login = this.login.bind(this); 
-      this.logout = this.logout.bind(this); 
+      this.logOut = this.logOut.bind(this);
       this.state = {
         currentItem: '',
         username: '',
@@ -70,7 +70,7 @@ class DefaultLayout extends Component {
       /* ... */
     }
 
-    logout() {
+    logOut() {
       auth.signOut()
         .then(() => {
           this.setState({
@@ -110,7 +110,7 @@ class DefaultLayout extends Component {
           <Header>
               <AppHeader 
                 userName={user.username}
-                logout={this.logout}
+                logOut={this.logOut}
               />
             </Header>
           <Layout>
