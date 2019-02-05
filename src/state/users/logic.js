@@ -23,10 +23,13 @@ const fetchUsers = createLogic({
         const researchers = []
         usersSnap.forEach((user) => {
           const userData = user.val();
-          userData.id = user.key;
-          researchers.push(userData);
-          // get moc names
+  
           if (user.val().mocs) {
+            userData.id = user.key;
+            researchers.push(userData);
+            researchers.push(userData);
+            
+            // get moc names
             const { mocs } = user.val();
             map(mocs, (moc) => {
               return firebasedb.ref(`mocData/${moc.govtrack_id}`).once('value')
