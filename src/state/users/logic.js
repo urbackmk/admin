@@ -24,7 +24,7 @@ const fetchUsers = createLogic({
         usersSnap.forEach((user) => {
           const userData = user.val();
   
-          if (user.val().mocs) {
+          if (user.val().mocs && !user.val().isAdmin) {
             userData.id = user.key;
             researchers.push(userData);
             researchers.push(userData);
