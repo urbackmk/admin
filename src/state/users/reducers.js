@@ -8,6 +8,8 @@ import {
   GET_USERS_FAILED, 
   RECEIVE_USER, 
   UPDATE_USER_MOCS,
+  REMOVE_ASSIGNMENT_SUCCESS,
+  REQUEST_FAILED,
 } from "./constants";
 
 const initialState = {
@@ -24,8 +26,8 @@ const userReducer = (state = initialState, action) => {
         allResearchers: action.payload,
         error: null
       };
-    case GET_USERS_FAILED:
-      console.log(`GET_USERS_FAILED: ${action.payload}`);
+    case REQUEST_FAILED:
+      console.log(`REQUEST_FAILED: ${action.payload}`);
       return {
         ...state,
         error: action.payload
@@ -41,6 +43,27 @@ const userReducer = (state = initialState, action) => {
         user: action.payload,
         error: null
       }
+    case REMOVE_ASSIGNMENT_SUCCESS:
+    console.log('remove', action)
+      return {
+        ...state,
+        allResearchers: map(state.allResearchers, researcher => {
+          if (researcher.id === action.payload.userId) {
+            return {
+              ...researcher,
+              mocs: {
+                ...researcher.mocs,
+                [action.payload.mocId]: {
+                  ...researcher.mocs[action.payload.mocId],
+                  isAssigned: false,
+                }
+              }
+            }
+          }
+          return researcher;
+        })
+      }
+
     default:
       return state;
   }

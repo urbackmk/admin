@@ -8,7 +8,10 @@ import {
   REQUEST_USER_BY_ID, 
   RECEIVE_USER, 
   REQUEST_USER_BY_ID_FAILED, 
+  REQUEST_FAILED,
   REQUEST_RESEARCHER,
+  REMOVE_ASSIGNMENT,
+  REMOVE_ASSIGNMENT_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
 
@@ -55,7 +58,7 @@ const fetchUser = createLogic({
   type: REQUEST_USER_BY_ID,
   processOptions: {
     successType: RECEIVE_USER,
-    failType: REQUEST_USER_BY_ID_FAILED,
+    failType: REQUEST_FAILED,
   },
   process(deps) {
     return deps.firebasedb.ref(`users/${deps.action.payload}`)
@@ -68,4 +71,32 @@ const fetchUser = createLogic({
   }
 });
 
-export default [fetchUsers, fetchUser];
+const removeAssignmentLogic = createLogic({
+  type: REMOVE_ASSIGNMENT,
+  processOptions: {
+    successType: REMOVE_ASSIGNMENT_SUCCESS,
+    failType: REQUEST_FAILED,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    console.log(`users/${action.payload.userId}/${action.payload.mocId}`)
+    const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
+    return ref.update({isAssigned : false})
+      .then(() => {
+        return {
+          mocId: action.payload.mocId,
+          userId: action.payload.userId,
+        }
+      })
+    
+  }
+});
+
+export default [
+  fetchUsers, 
+  fetchUser,
+  removeAssignmentLogic,
+];

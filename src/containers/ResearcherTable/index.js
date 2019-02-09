@@ -6,18 +6,26 @@ import {
 
 import {
   Table,
+  Icon,
+  Divider,
   Button,
+  Badge,
   Tag,
+  Row,
 } from 'antd';
 
 import userStateBranch from '../../state/users'
 
 
 class ResearcherTable extends React.Component {
-  state = {
-    filteredInfo: null,
-    sortedInfo: null,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      filteredInfo: null,
+      sortedInfo: null,
+    };
+  }
 
   componentDidMount() {
       const { 
@@ -34,24 +42,55 @@ class ResearcherTable extends React.Component {
     });
   }
 
-  clearFilters() {
-    this.setState({ filteredInfo: null });
-  }
+  // clearFilters() {
+  //   this.setState({ filteredInfo: null });
+  // }
 
-  clearAll() {
-    this.setState({
-      filteredInfo: null,
-      sortedInfo: null,
-    });
-  }
+  // clearAll() {
+  //   this.setState({
+  //     filteredInfo: null,
+  //     sortedInfo: null,
+  //   });
+  // }
 
-  setAgeSort() {
-    this.setState({
-      sortedInfo: {
-        order: 'descend',
-        columnKey: 'age',
-      },
-    });
+  // setAgeSort() {
+  //   this.setState({
+  //     sortedInfo: {
+  //       order: 'descend',
+  //       columnKey: 'age',
+  //     },
+  //   });
+  // }
+
+  removeMocFromUser(userId, mocId) {
+    console.log(userId, mocId)
+    this.props.removeAssignmentFromUser(userId, mocId)
+  }
+  renderMocName(moc, include, userId){
+    let color = moment(moc.lastUpdated).isSameOrAfter(moment().subtract(7, 'days')) ? 'geekblue' : 'red';
+
+    return include && moc.name && (
+        <Row
+          type="flex"
+          justify="space-between"
+          align = "middle"
+        >
+          <Badge 
+            dot
+            color={color}
+          >
+            <span>{moc.name}</span>
+          </Badge>
+          {moc.isAssigned && 
+          <Button 
+            icon="close" 
+            onClick={() => this.removeMocFromUser(userId, moc.govtrack_id)}
+          />}
+
+        </Row>
+      )
+                
+            
   }
 
   render() {
@@ -73,13 +112,10 @@ class ResearcherTable extends React.Component {
       title: 'Assigned Mocs',
       dataIndex: 'mocs',
       key: 'assigned-mocs',
-      render: (mocs) => (
-          <span>
-            {mocs.map((moc, index) => {
-                let color = moment(moc.lastUpdated).isSameOrAfter(moment().subtract(7, 'days')) ? 'geekblue' : 'red';
-                return (moc.isAssigned && moc.name && <Tag color={color} key={moc.govtrack_id}>{moc.name}</Tag>)
-            })}
-        </span>)
+      render: (mocs, record, index) => {
+         return( <span>
+            {mocs.map((moc) => this.renderMocName(moc, moc.isAssigned, record.id))}
+        </span>)}
     },
     {
       title: 'Unassigned Mocs',
@@ -87,20 +123,15 @@ class ResearcherTable extends React.Component {
       key: 'unassigned-mocs',
       render:  (mocs) => (
           <span>
-            {mocs.map(moc => {
-                let color = moment(moc.lastUpdated).isSameOrAfter(moment().subtract(7, 'days')) ? 'geekblue' : 'red';
-                return (!moc.isAssigned && moc.name && <Tag color={color} key={moc.govtrack_id}>{moc.name}</Tag>)
-                
-            })}
+            {mocs.map((moc) => this.renderMocName(moc, !moc.isAssigned))}
         </span>)
     },
     ];
     return (
       <div>
         <div className="table-operations">
-
         </div>
-        <Table columns={columns} dataSource={researchers} onChange={this.handleChange} />
+        <Table columns={columns} dataSource={researchers}/>
       </div>
     );
   }
@@ -111,7 +142,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAllResearchers: () => dispatch(userStateBranch.actions.requestAllResearchers())
+  getAllResearchers: () => dispatch(userStateBranch.actions.requestAllResearchers()),
+  removeAssignmentFromUser: (userId, mocId) => dispatch(userStateBranch.actions.removeAssignment(userId, mocId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResearcherTable);
