@@ -67,10 +67,10 @@ const fetchUsers = createLogic({
                   if (!mocData.in_office) {
                     console.log('in office', mocData.in_office)
                     console.log(`users/${user.key}/mocs/${mocSnap.key}`)
-                    // const ref = firebasedb.ref(`users/${user.key}/mocs/${mocSnap.key}`)
-                    // return ref.update({
-                    //   isAssigned: false
-                    // })
+                    const ref = firebasedb.ref(`users/${user.key}/mocs/${mocSnap.key}`)
+                    return ref.update({
+                      isAssigned: false
+                    })
                   }
                   const mocToUpdate = {
                     name: mocData.displayName,

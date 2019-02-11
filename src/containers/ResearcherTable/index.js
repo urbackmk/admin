@@ -137,6 +137,16 @@ class ResearcherTable extends React.Component {
       title: 'Name',
       dataIndex: 'username',
       key: 'username',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => {
+        if (a.username > b.username) {
+          return -1
+        } else if (a.username < b.username) {
+          return 1
+        }
+        return 0
+      },
+      sortDirections: ['descend', 'ascend'],
     }, {
       title: 'Email',
       dataIndex: 'email',
@@ -145,6 +155,28 @@ class ResearcherTable extends React.Component {
       title: 'Assigned Mocs',
       dataIndex: 'mocs',
       key: 'assigned-mocs',
+      sorter: (a, b) => {
+        const aAssigned = a.mocs.filter(moc => moc.isAssigned)
+        const bAssigned = b.mocs.filter(moc => moc.isAssigned)
+
+          if (aAssigned.length > bAssigned.length) {
+            return -1
+          } else if (aAssigned.length < bAssigned.length) {
+            return 1
+          }
+          return 0
+        },
+      sortDirections: ['descend', 'ascend'],
+      filters: [{
+            text: 'Only researchers with assignments',
+            value: 'assigned',
+          }],
+      onFilter: (value, record) => record.mocs.reduce((acc, moc) => {
+        if (moc.isAssigned && moc.name) {
+          acc = true;
+        }
+        return acc;
+      }, false),
       render: (mocs, record) => {
          return( <span>
             {mocs.map((moc) => this.renderMocName(moc, moc.isAssigned, record.id))}
@@ -172,6 +204,18 @@ class ResearcherTable extends React.Component {
       title: 'Unassigned Mocs',
       dataIndex: 'mocs',
       key: 'unassigned-mocs',
+      sorter: (a, b) => {
+          const aNotAssigned = a.mocs.filter(moc => !moc.isAssigned)
+          const bNotAssigned = b.mocs.filter(moc => !moc.isAssigned)
+
+          if (aNotAssigned.length > bNotAssigned.length) {
+            return -1
+          } else if (aNotAssigned.length < bNotAssigned.length) {
+            return 1
+          }
+          return 0
+        },
+        sortDirections: ['descend', 'ascend'],
       render: (mocs, record) => (
           <span>
             {mocs.map((moc) => this.renderMocName(moc, !moc.isAssigned, record.id))}
