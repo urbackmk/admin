@@ -13,48 +13,48 @@ import {
 } from "./constants";
 
 const initialState = {
-  allResearchers: [],
   allResearchedMocs: [],
+  allResearchers: [],
   error: null,
 };
 
-const userReducer = (state = initialState, action) => {
-  switch (action.type) {
+const userReducer = (state = initialState, {type, payload}) => {
+  switch (type) {
     case GET_USERS_SUCCESS:
       return {
         ...state,
-        allResearchers: action.payload,
+        allResearchers: payload,
         error: null
       };
     case USER_REQUEST_FAILED:
-      console.log(`REQUEST_FAILED: ${action.payload}`);
+      console.log(`REQUEST_FAILED: ${payload}`);
       return {
         ...state,
-        error: action.payload
+        error: payload
       };
     case UPDATE_USER_MOCS:
       return {
         ...state,
-        allResearchedMocs: [...state.allResearchedMocs, ...action.payload.mocList]
+        allResearchedMocs: [...state.allResearchedMocs, ...payload.mocList]
       }
     case RECEIVE_USER: 
       return {
         ...state, 
-        user: action.payload,
-        error: null
+        error: null,
+        user: payload,
       }
     case REMOVE_ASSIGNMENT_SUCCESS:
-    console.log(action.payload)
+    console.log(payload)
       return {
         ...state,
         allResearchers: map(state.allResearchers, researcher => {
-          if (researcher.id === action.payload.userId) {
+          if (researcher.id === payload.userId) {
             return {
               ...researcher,
               mocs: {
                 ...researcher.mocs,
-                [action.payload.mocId]: {
-                  ...researcher.mocs[action.payload.mocId],
+                [payload.mocId]: {
+                  ...researcher.mocs[payload.mocId],
                   isAssigned: false,
                 }
               }
@@ -67,13 +67,13 @@ const userReducer = (state = initialState, action) => {
       return {
         ...state,
         allResearchers: map(state.allResearchers, researcher => {
-          if (researcher.id === action.payload.userId) {
+          if (researcher.id === payload.userId) {
             return {
               ...researcher,
               mocs: {
                 ...researcher.mocs,
-                [action.payload.mocId]: {
-                  ...researcher.mocs[action.payload.mocId],
+                [payload.mocId]: {
+                  ...researcher.mocs[payload.mocId],
                   isAssigned: true,
                 }
               }
@@ -85,19 +85,16 @@ const userReducer = (state = initialState, action) => {
       case ADD_AND_ASSIGN_TO_USER_SUCCESS:
         return {
           ...state,
-          allResearchedMocs: [...state.allResearchedMocs, {
-            name: action.payload.mocName,
-            id: action.payload.mocId,
-            userId: action.payload.userId,
-          }],
+          allResearchedMocs: [...state.allResearchedMocs, payload],
           allResearchers: map(state.allResearchers, researcher => {
-            if (researcher.id === action.payload.userId) {
+            if (researcher.id === payload.userId) {
               return {
                 ...researcher,
                 mocs: {
                   ...researcher.mocs,
-                  [action.payload.mocId]: {
-                    id: action.payload.mocId,
+                  [payload.id]: {
+                    id: payload.id,
+                    id_key: payload.id_key,
                     isAssigned: true,
                   }
                 }

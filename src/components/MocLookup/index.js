@@ -12,7 +12,6 @@ export default class MoCLookUp extends React.Component {
             const {
                 allMocNames,
                 onSelect,
-                onSearch,
             } = this.props;
             const children = map(uniqBy(allMocNames, 'nameEntered') , moc => (<Option key={moc.nameEntered} value={moc.id.toString()}>{moc.nameEntered}</Option>))
             return (<Form>
@@ -20,7 +19,7 @@ export default class MoCLookUp extends React.Component {
                         <AutoComplete
                             style={{ width: 200 }}
                             onSelect={onSelect}
-                            placeholder="lookup moc"
+                            placeholder="type lawmaker name then select"
                             filterOption={(inputValue, option) => option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}
                         >
                         {children}
@@ -29,4 +28,5 @@ export default class MoCLookUp extends React.Component {
                 </Form>
             );
     }
+
 }

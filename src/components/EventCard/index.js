@@ -8,7 +8,7 @@ import {
 import './style.scss';
 
 const {
-  Meta
+  Meta,
 } = Card;
 
 export default class EventCard extends React.Component {
@@ -20,9 +20,9 @@ export default class EventCard extends React.Component {
             deleteEvent,
         } = this.props;
         return [
-                    <Button ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
-                    <Button type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>,
-                    <Button type="primary" icon="check" onClick={approveEvent}>Approve</Button>
+                    <Button key="archive-button" ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
+                    <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>,
+                    <Button key="approve-button" type="primary" icon="check" onClick={approveEvent}>Approve</Button>
                 ]
     }
 
@@ -32,8 +32,8 @@ export default class EventCard extends React.Component {
             deleteEvent,
         } = this.props;
         return [
-                    <Button ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
-                    <Button type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>]
+                    <Button key="archive-button"ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
+                    <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>]
     }
 
     render() {
@@ -66,4 +66,5 @@ export default class EventCard extends React.Component {
                
       </Card>)
     }
+
 }

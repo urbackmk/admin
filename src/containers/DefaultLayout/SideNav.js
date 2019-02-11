@@ -18,6 +18,7 @@ const SubMenu = Menu.SubMenu;
 const defaultProps = {};
 
 class SideNav extends Component {
+
     rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources'];
 
     state = {
@@ -39,7 +40,6 @@ class SideNav extends Component {
   render() {
     const {
       handleChangeTab,
-      activeEventTab,
       activeMenuItem,
     } = this.props;
     return (
@@ -72,6 +72,7 @@ class SideNav extends Component {
       </React.Fragment>
     );
   }
+
 }
 
 SideNav.propTypes = propTypes;

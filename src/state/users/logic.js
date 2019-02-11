@@ -1,7 +1,6 @@
 import { createLogic } from "redux-logic"
 import {
   concat,
-  map,
   mapValues,
   reduce,
 } from "lodash";
@@ -79,10 +78,9 @@ const fetchUsers = createLogic({
                     name: mocData.displayName,
                     district: mocData.district,
                     state: mocData.state,
-                    govtrack_id: mocData.govtrack_id,
                     userId: user.key,
                     id: mocSnap.key,
-                    id_key: 'govtrack_id',
+                    id_key: mocData.govtrack_id ? 'govtrack_id' : mocData.thp_id ? 'thp_id' : null,
                   }
                   toUpdateList.push(mocToUpdate)
                 }
@@ -107,28 +105,23 @@ const fetchUsers = createLogic({
 });
 
 const fetchUser = createLogic({
-  type: REQUEST_USER_BY_ID,
-  processOptions: {
-    successType: RECEIVE_USER,
-    failType: USER_REQUEST_FAILED,
-  },
   process(deps) {
     return deps.firebasedb.ref(`users/${deps.action.payload}`)
-      .once('value')
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          return snapshot.val()
-        }
-      })
-  }
+    .once('value')
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        return snapshot.val()
+      }
+    })
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: RECEIVE_USER,
+  },
+  type: REQUEST_USER_BY_ID,
 });
 
 const removeAssignmentLogic = createLogic({
-  type: REMOVE_ASSIGNMENT,
-  processOptions: {
-    successType: REMOVE_ASSIGNMENT_SUCCESS,
-    failType: USER_REQUEST_FAILED,
-  },
   process(deps) {
     const {
       action,
@@ -137,42 +130,46 @@ const removeAssignmentLogic = createLogic({
     console.log(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     return ref.update({isAssigned : false})
-      .then(() => {
-        console.log(action.payload.mocId, action.payload.userId)
-        return {
-          mocId: action.payload.mocId,
-          userId: action.payload.userId,
-        }
-      })
+    .then(() => {
+      return {
+        mocId: action.payload.mocId,
+        userId: action.payload.userId,
+      }
+    })
     
-  }
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: REMOVE_ASSIGNMENT_SUCCESS,
+  },
+  type: REMOVE_ASSIGNMENT,
 });
 
 const addAssignmentLogic = createLogic({
-  type: ASSIGN_MOC_TO_USER,
-  processOptions: {
-    successType: ASSIGN_MOC_TO_USER_SUCCESS,
-    failType: USER_REQUEST_FAILED,
-  },
   process(deps) {
     const {
       action,
       firebasedb,
     } = deps;
-
+    
     console.log(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     return ref.update({
-        isAssigned: true
-      })
-      .then(() => {
-        return {
-          mocId: action.payload.mocId,
-          userId: action.payload.userId,
-        }
-      })
-
-  }
+      isAssigned: true
+    })
+    .then(() => {
+      return {
+        mocId: action.payload.mocId,
+        userId: action.payload.userId,
+      }
+    })
+    
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: ASSIGN_MOC_TO_USER_SUCCESS,
+  },
+  type: ASSIGN_MOC_TO_USER,
 });
 
 const addAndAssignmentLogic = createLogic({
@@ -188,17 +185,26 @@ const addAndAssignmentLogic = createLogic({
     } = deps;
 
     const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
-    console.log(action.payload.mocId, action.payload.mocName)
+    console.log(action.payload.mocId, action.payload.name)
     return ref.update({
-        isAssigned: true,
         govtrack_id: action.payload.mocId,
+        isAssigned: true,
       })
       .then(() => {
-        return {
-          mocId: action.payload.mocId,
-          userId: action.payload.userId,
+        return firebasedb.ref(`mocData/${action.payload.mocId}`).once('value')
+      })
+      .then((snapshot) => {
+        const mocInfo = snapshot.val();
+        const mocData = {
+          district: mocInfo.district,
+          id: action.payload.mocId,
+          id_key: 'govtrack_id',
           mocName: action.payload.name,
+          name: mocInfo.displayName,
+          state: mocInfo.state,
+          userId: action.payload.userId,
         }
+        return mocData
       })
 
   }
