@@ -16,6 +16,8 @@ import mocStateBranch from '../../state/mocs';
 
 import MocLookUp from '../../components/MocLookup'
 
+import './style.scss';
+
 class ResearcherTable extends React.Component {
   constructor(props) {
     super(props);
@@ -65,16 +67,20 @@ class ResearcherTable extends React.Component {
 
 
   renderMocName(moc, include, userId){
-    let color = moment(moc.lastUpdated).isSameOrAfter(moment().subtract(7, 'days')) ? 'geekblue' : 'red';
+    let color = 
+      moc.lastUpdated &&
+      moment(moc.lastUpdated).isValid() && 
+      moment(moc.lastUpdated).isSameOrAfter(moment().subtract(7, 'days')) ? 'geekblue' : 'red';
     return include && moc.name && (
         <Row
           type="flex"
           justify="space-between"
           align = "middle"
+          key={`${moc.govtrack_id}-${userId}`}
         >
           <Badge 
             dot
-            color={color}
+            style={{ backgroundColor: color}} 
           >
             <span>{moc.name}</span>
           </Badge>
@@ -105,7 +111,7 @@ class ResearcherTable extends React.Component {
 
   selectMoc(userId, mocId, name) {
     console.log(userId, mocId, name)
-    this.props.addAndAssignToUser(userId, name)
+    this.props.addAndAssignToUser(userId, mocId, name)
   }
 
   getNames(id) {
@@ -139,6 +145,24 @@ class ResearcherTable extends React.Component {
       render: (mocs, record) => {
          return( <span>
             {mocs.map((moc) => this.renderMocName(moc, moc.isAssigned, record.id))}
+             <span>
+          {allMocNamesIds.length && editing === record.id ? 
+          <MocLookUp
+            allMocNames={allMocNamesIds}
+            onSelect = {
+              (mocId, object) => this.selectMoc(record.id, mocId, object.key)
+            }
+          />
+          :
+          <Button 
+            icon="plus" 
+            type="dashed"
+            onClick={() => this.getNames(record.id)}
+          >
+              Add new
+            </Button>
+          }
+        </span>
         </span>)}
     },
     {
@@ -150,36 +174,42 @@ class ResearcherTable extends React.Component {
             {mocs.map((moc) => this.renderMocName(moc, !moc.isAssigned, record.id))}
         </span>)
     },
-    {
-      title: 'Assign Moc',
-      key: 'assign-new',
-      render: (text, record) => (
-        <span>
-          {allMocNamesIds.length && editing === record.id ? 
-          <MocLookUp
-            allMocNames={allMocNamesIds}
-            onSelect = {
-              (mocId, object) => this.selectMoc(record.id, mocId, object.key)
-            }
-          />
-          :
-          <Button 
-            icon="add"
-            onClick={() => this.getNames(record.id)}
-          >
-            Look up moc and assign
-            </Button>
-          }
-        </span>
-      ),
-    }
+    // {
+    //   title: 'Assign Moc',
+    //   key: 'assign-new',
+    //   render: (text, record) => (
+    //     <span>
+    //       {allMocNamesIds.length && editing === record.id ? 
+    //       <MocLookUp
+    //         allMocNames={allMocNamesIds}
+    //         onSelect = {
+    //           (mocId, object) => this.selectMoc(record.id, mocId, object.key)
+    //         }
+    //       />
+    //       :
+    //       <Button 
+    //         icon="plus" 
+    //         type="dashed"
+    //         onClick={() => this.getNames(record.id)}
+    //       >
+    //           Add new
+    //         </Button>
+    //       }
+    //     </span>
+    //   ),
+    // }
     
     ];
     return (
       <div>
-        <div className="table-operations">
+        <div className="researcher-table">
         </div>
-          <Table columns={columns} dataSource={researchers}/>
+          <Table 
+            columns={columns} 
+            dataSource={researchers}
+            rowKey={(record) => record.id}
+            loading={!researchers.length}
+          />
       </div>
     );
   }

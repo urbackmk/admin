@@ -46,12 +46,6 @@ const userReducer = (state = initialState, action) => {
     case REMOVE_ASSIGNMENT_SUCCESS:
       return {
         ...state,
-        allResearchedMocs: [...state.allResearchedMocs, {
-          name: action.payload.mocName,
-          govtrack_id: action.payload.mocId,
-          userId: action.payload.userId,
-        }],
-
         allResearchers: map(state.allResearchers, researcher => {
           if (researcher.id === action.payload.userId) {
             return {
@@ -88,8 +82,14 @@ const userReducer = (state = initialState, action) => {
         })
       }
       case ADD_AND_ASSIGN_TO_USER_SUCCESS:
+      console.log(action.payload)
         return {
           ...state,
+          allResearchedMocs: [...state.allResearchedMocs, {
+            name: action.payload.mocName,
+            govtrack_id: action.payload.mocId,
+            userId: action.payload.userId,
+          }],
           allResearchers: map(state.allResearchers, researcher => {
             if (researcher.id === action.payload.userId) {
               return {
@@ -99,7 +99,6 @@ const userReducer = (state = initialState, action) => {
                   [action.payload.mocId]: {
                     govtrack_id: action.payload.mocId,
                     isAssigned: true,
-                    lastUpdated: 0,
                   }
                 }
               }

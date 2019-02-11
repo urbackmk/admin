@@ -116,7 +116,6 @@ const addAssignmentLogic = createLogic({
         return {
           mocId: action.payload.mocId,
           userId: action.payload.userId,
-          mocName: action.payload.name,
         }
       })
 
@@ -136,6 +135,7 @@ const addAndAssignmentLogic = createLogic({
     } = deps;
 
     const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
+    console.log(action.payload.mocId, action.payload.mocName)
     return ref.update({
         isAssigned: true,
         govtrack_id: action.payload.mocId,
@@ -144,6 +144,7 @@ const addAndAssignmentLogic = createLogic({
         return {
           mocId: action.payload.mocId,
           userId: action.payload.userId,
+          mocName: action.payload.name,
         }
       })
 
