@@ -48,7 +48,7 @@ const fetchUsers = createLogic({
               if (moc.id_key === 'govtrack_id') {
                 acc.push(firebasedb.ref(`mocData/${moc.govtrack_id}`).once('value'))
               } else if (moc.id_key === 'thp_id') {
-                   // AZ-SD-06-00
+                // AZ-SD-06-00
                 const state = moc.thp_id.match(/^\w{2}/g) ? moc.thp_id.match(/^\w{2}/g)[0] : null;
                 if (state) {
                   acc.push(firebasedb.ref(`state_legislators_data/${state}/${moc.thp_id}`).once('value'))
@@ -65,7 +65,12 @@ const fetchUsers = createLogic({
                 if (mocSnap && mocSnap.exists()) {
                   const mocData = mocSnap.val();
                   if (!mocData.in_office) {
-                    console.log(mocData.in_office)
+                    console.log('in office', mocData.in_office)
+                    console.log(`users/${user.key}/mocs/${mocSnap.key}`)
+                    // const ref = firebasedb.ref(`users/${user.key}/mocs/${mocSnap.key}`)
+                    // return ref.update({
+                    //   isAssigned: false
+                    // })
                   }
                   const mocToUpdate = {
                     name: mocData.displayName,
