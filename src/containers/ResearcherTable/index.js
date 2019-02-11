@@ -179,7 +179,7 @@ class ResearcherTable extends React.Component {
       </div>
     ),
       filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
-      onFilter: (value, record) => record.email.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value, record) => record.email && record.email.toString().toLowerCase().includes(value.toLowerCase()),
       onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
         setTimeout(() => this.searchInput.select());
