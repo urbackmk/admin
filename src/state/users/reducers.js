@@ -7,9 +7,9 @@ import {
   RECEIVE_USER, 
   UPDATE_USER_MOCS,
   REMOVE_ASSIGNMENT_SUCCESS,
-  REQUEST_FAILED,
   ASSIGN_MOC_TO_USER_SUCCESS,
   ADD_AND_ASSIGN_TO_USER_SUCCESS,
+  USER_REQUEST_FAILED,
 } from "./constants";
 
 const initialState = {
@@ -26,7 +26,7 @@ const userReducer = (state = initialState, action) => {
         allResearchers: action.payload,
         error: null
       };
-    case REQUEST_FAILED:
+    case USER_REQUEST_FAILED:
       console.log(`REQUEST_FAILED: ${action.payload}`);
       return {
         ...state,
@@ -35,7 +35,7 @@ const userReducer = (state = initialState, action) => {
     case UPDATE_USER_MOCS:
       return {
         ...state,
-        allResearchedMocs: [...state.allResearchedMocs, action.payload.mocData]
+        allResearchedMocs: [...state.allResearchedMocs, ...action.payload.mocList]
       }
     case RECEIVE_USER: 
       return {
@@ -44,6 +44,7 @@ const userReducer = (state = initialState, action) => {
         error: null
       }
     case REMOVE_ASSIGNMENT_SUCCESS:
+    console.log(action.payload)
       return {
         ...state,
         allResearchers: map(state.allResearchers, researcher => {
@@ -82,12 +83,11 @@ const userReducer = (state = initialState, action) => {
         })
       }
       case ADD_AND_ASSIGN_TO_USER_SUCCESS:
-      console.log(action.payload)
         return {
           ...state,
           allResearchedMocs: [...state.allResearchedMocs, {
             name: action.payload.mocName,
-            govtrack_id: action.payload.mocId,
+            id: action.payload.mocId,
             userId: action.payload.userId,
           }],
           allResearchers: map(state.allResearchers, researcher => {
@@ -97,7 +97,7 @@ const userReducer = (state = initialState, action) => {
                 mocs: {
                   ...researcher.mocs,
                   [action.payload.mocId]: {
-                    govtrack_id: action.payload.mocId,
+                    id: action.payload.mocId,
                     isAssigned: true,
                   }
                 }

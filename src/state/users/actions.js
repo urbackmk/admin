@@ -1,7 +1,6 @@
 import { 
   REQUEST_RESEARCHER, 
   GET_USERS_SUCCESS, 
-  GET_USERS_FAILED, 
   REQUEST_USER_BY_ID_FAILED, 
   REQUEST_USER_BY_ID, 
   RECEIVE_USER,
@@ -20,11 +19,6 @@ export const getUsersSuccess = users => ({
   payload: users
 });
 
-export const getUsersFailed = err => ({
-  type: GET_USERS_FAILED,
-  payload: err
-});
-
 export const getUserByIdFailed = err => ({
   type: REQUEST_USER_BY_ID_FAILED,
   payload: err
@@ -40,10 +34,10 @@ export const receiveUser = user => ({
   payload: user
 })
 
-export const updateUserMocs = (mocData) => ({
+export const updateUserMocs = (mocList) => ({
   type: UPDATE_USER_MOCS,
   payload: {
-    mocData,
+    mocList,
   }
 })
 

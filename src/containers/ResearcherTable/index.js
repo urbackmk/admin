@@ -4,6 +4,7 @@ import {
   connect
 } from 'react-redux';
 import {
+  Divider,
   Table,
   Button,
   Badge,
@@ -76,22 +77,25 @@ class ResearcherTable extends React.Component {
           type="flex"
           justify="space-between"
           align = "middle"
-          key={`${moc.govtrack_id}-${userId}`}
+          key={`${moc.id || moc.thpId}-${userId}`}
         >
-          <Badge 
-            dot
-            style={{ backgroundColor: color}} 
-          >
-            <span>{moc.name}</span>
-          </Badge>
-         
+        <span>
+            {moc.district ? <span>{moc.state}-{moc.district}</span> : <span>{moc.state}</span>}
+            <Divider type="vertical" />
+            <Badge 
+              dot
+              style={{ backgroundColor: color}} 
+            >
+              <span>{moc.name}</span>
+            </Badge>
+          </span>
           {moc.isAssigned ? 
           <Tooltip placement="topRight" title="Remove this moc from this researcher" arrowPointAtCenter>
             <Button
               icon="close" 
               shape="circle"
               onClick={() => 
-                this.props.removeAssignmentFromUser(userId, moc.govtrack_id)}
+                this.props.removeAssignmentFromUser(userId, moc.id)}
             /> 
           </Tooltip>
 
@@ -100,7 +104,7 @@ class ResearcherTable extends React.Component {
             <Button
               icon="plus" 
               shape="circle"
-              onClick={() => this.props.assignToUser(userId, moc.govtrack_id)}
+              onClick={() => this.props.assignToUser(userId, moc.id)}
             />
             </Tooltip>
         }
@@ -110,7 +114,6 @@ class ResearcherTable extends React.Component {
   }
 
   selectMoc(userId, mocId, name) {
-    console.log(userId, mocId, name)
     this.props.addAndAssignToUser(userId, mocId, name)
   }
 

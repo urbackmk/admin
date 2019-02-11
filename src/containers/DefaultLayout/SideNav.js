@@ -47,7 +47,7 @@ class SideNav extends Component {
             mode="inline"
             openKeys={this.state.openKeys}
             onOpenChange={this.onOpenChange}
-            selectedKeys={[activeEventTab]}
+            defaultSelectedKeys={[activeEventTab]}
             style={{ width: 256 }}
           >
             <Menu.Item key="home">
