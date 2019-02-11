@@ -62,6 +62,9 @@ const fetchUsers = createLogic({
               snapshot.forEach(mocSnap => {
                 if (mocSnap && mocSnap.exists()) {
                   const mocData = mocSnap.val();
+                  if (!mocData.in_office) {
+                    console.log(mocData.in_office)
+                  }
                   const mocToUpdate = {
                     name: mocData.displayName,
                     district: mocData.district,
