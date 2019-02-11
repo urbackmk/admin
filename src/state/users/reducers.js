@@ -1,15 +1,15 @@
 import {
-  filter,
   map,
 } from 'lodash';
 
 import { 
   GET_USERS_SUCCESS, 
-  GET_USERS_FAILED, 
   RECEIVE_USER, 
   UPDATE_USER_MOCS,
   REMOVE_ASSIGNMENT_SUCCESS,
   REQUEST_FAILED,
+  ASSIGN_MOC_TO_USER_SUCCESS,
+  ADD_AND_ASSIGN_TO_USER_SUCCESS,
 } from "./constants";
 
 const initialState = {
@@ -44,9 +44,14 @@ const userReducer = (state = initialState, action) => {
         error: null
       }
     case REMOVE_ASSIGNMENT_SUCCESS:
-    console.log('remove', action)
       return {
         ...state,
+        allResearchedMocs: [...state.allResearchedMocs, {
+          name: action.payload.mocName,
+          govtrack_id: action.payload.mocId,
+          userId: action.payload.userId,
+        }],
+
         allResearchers: map(state.allResearchers, researcher => {
           if (researcher.id === action.payload.userId) {
             return {
@@ -63,6 +68,45 @@ const userReducer = (state = initialState, action) => {
           return researcher;
         })
       }
+      case ASSIGN_MOC_TO_USER_SUCCESS:
+      return {
+        ...state,
+        allResearchers: map(state.allResearchers, researcher => {
+          if (researcher.id === action.payload.userId) {
+            return {
+              ...researcher,
+              mocs: {
+                ...researcher.mocs,
+                [action.payload.mocId]: {
+                  ...researcher.mocs[action.payload.mocId],
+                  isAssigned: true,
+                }
+              }
+            }
+          }
+          return researcher;
+        })
+      }
+      case ADD_AND_ASSIGN_TO_USER_SUCCESS:
+        return {
+          ...state,
+          allResearchers: map(state.allResearchers, researcher => {
+            if (researcher.id === action.payload.userId) {
+              return {
+                ...researcher,
+                mocs: {
+                  ...researcher.mocs,
+                  [action.payload.mocId]: {
+                    govtrack_id: action.payload.mocId,
+                    isAssigned: true,
+                    lastUpdated: 0,
+                  }
+                }
+              }
+            }
+            return researcher;
+          })
+        }
 
     default:
       return state;

@@ -7,6 +7,8 @@ import {
   RECEIVE_USER,
   UPDATE_USER_MOCS,
   REMOVE_ASSIGNMENT,
+  ASSIGN_MOC_TO_USER,
+  ADD_AND_ASSIGN_TO_USER,
 } from "./constants";
 
 export const requestAllResearchers = () => ({
@@ -50,5 +52,22 @@ export const removeAssignment = (userId, mocId) => ({
   payload: {
     userId,
     mocId
+  }
+})
+
+export const assignMocToUser = (userId, mocId) => ({
+  type: ASSIGN_MOC_TO_USER,
+  payload: {
+    userId,
+    mocId
+  }
+})
+
+export const addAndAssignToUser = (userId, mocId, name) => ({
+  type: ADD_AND_ASSIGN_TO_USER,
+  payload: {
+    userId,
+    mocId,
+    name
   }
 })

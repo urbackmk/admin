@@ -2,16 +2,16 @@ import { createLogic } from "redux-logic"
 import { map } from "lodash";
 
 import { 
-  GET_USERS, 
-  GET_USERS_SUCCESS, 
-  GET_USERS_FAILED, 
   REQUEST_USER_BY_ID, 
   RECEIVE_USER, 
-  REQUEST_USER_BY_ID_FAILED, 
   REQUEST_FAILED,
   REQUEST_RESEARCHER,
   REMOVE_ASSIGNMENT,
   REMOVE_ASSIGNMENT_SUCCESS,
+  ASSIGN_MOC_TO_USER,
+  ASSIGN_MOC_TO_USER_SUCCESS,
+  ADD_AND_ASSIGN_TO_USER,
+  ADD_AND_ASSIGN_TO_USER_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
 
@@ -82,7 +82,7 @@ const removeAssignmentLogic = createLogic({
       action,
       firebasedb,
     } = deps;
-    console.log(`users/${action.payload.userId}/${action.payload.mocId}`)
+    console.log(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
     return ref.update({isAssigned : false})
       .then(() => {
@@ -95,8 +95,65 @@ const removeAssignmentLogic = createLogic({
   }
 });
 
+const addAssignmentLogic = createLogic({
+  type: ASSIGN_MOC_TO_USER,
+  processOptions: {
+    successType: ASSIGN_MOC_TO_USER_SUCCESS,
+    failType: REQUEST_FAILED,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+
+    console.log(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
+    const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
+    return ref.update({
+        isAssigned: true
+      })
+      .then(() => {
+        return {
+          mocId: action.payload.mocId,
+          userId: action.payload.userId,
+          mocName: action.payload.name,
+        }
+      })
+
+  }
+});
+
+const addAndAssignmentLogic = createLogic({
+  type: ADD_AND_ASSIGN_TO_USER,
+  processOptions: {
+    successType: ADD_AND_ASSIGN_TO_USER_SUCCESS,
+    failType: REQUEST_FAILED,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+
+    const ref = firebasedb.ref(`users/${action.payload.userId}/mocs/${action.payload.mocId}`)
+    return ref.update({
+        isAssigned: true,
+        govtrack_id: action.payload.mocId,
+      })
+      .then(() => {
+        return {
+          mocId: action.payload.mocId,
+          userId: action.payload.userId,
+        }
+      })
+
+  }
+});
+
 export default [
   fetchUsers, 
   fetchUser,
   removeAssignmentLogic,
+  addAssignmentLogic,
+  addAndAssignmentLogic
 ];

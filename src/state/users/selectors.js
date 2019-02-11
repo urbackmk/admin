@@ -1,10 +1,8 @@
 import { createSelector } from 'reselect';
 import {
   map,
-  reduce,
   find,
 } from 'lodash';
-import moment from 'moment';
 
 export const getAllResearchers = state => state.users.allResearchers;
 export const getUser = state => state.users.user;
