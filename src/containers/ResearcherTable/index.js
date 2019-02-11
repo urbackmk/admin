@@ -5,6 +5,8 @@ import {
 } from 'react-redux';
 import {
   Divider,
+  Icon,
+  Input,
   Table,
   Button,
   Badge,
@@ -24,6 +26,8 @@ class ResearcherTable extends React.Component {
     super(props);
     this.getNames = this.getNames.bind(this);
     this.selectMoc = this.selectMoc.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleReset = this.handleReset.bind(this);
     this.state = {
       filteredInfo: null,
       sortedInfo: null,
@@ -46,26 +50,12 @@ class ResearcherTable extends React.Component {
     });
   }
 
-  // clearFilters() {
-  //   this.setState({ filteredInfo: null });
-  // }
-
-  // clearAll() {
-  //   this.setState({
-  //     filteredInfo: null,
-  //     sortedInfo: null,
-  //   });
-  // }
-
-  // setAgeSort() {
-  //   this.setState({
-  //     sortedInfo: {
-  //       order: 'descend',
-  //       columnKey: 'age',
-  //     },
-  //   });
-  // }
-
+  handleReset (clearFilters) {
+    clearFilters();
+    this.setState({
+      searchText: ''
+    });
+  }
 
   renderMocName(moc, include, userId){
     let color = 
@@ -117,6 +107,13 @@ class ResearcherTable extends React.Component {
     this.props.addAndAssignToUser(userId, mocId, name)
   }
 
+  handleSearch (selectedKeys, confirm) {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0]
+    });
+  }
+
   getNames(id) {
       const {
         requestMocIds,
@@ -151,6 +148,43 @@ class ResearcherTable extends React.Component {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      filterDropdown: ({
+      setSelectedKeys, selectedKeys, confirm, clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => { this.searchInput = node; }}
+          placeholder={`Search email`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+      filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
+      onFilter: (value, record) => record.email.toString().toLowerCase().includes(value.toLowerCase()),
+      onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
     }, {
       title: 'Assigned Mocs',
       dataIndex: 'mocs',
@@ -158,14 +192,13 @@ class ResearcherTable extends React.Component {
       sorter: (a, b) => {
         const aAssigned = a.mocs.filter(moc => moc.isAssigned)
         const bAssigned = b.mocs.filter(moc => moc.isAssigned)
-
-          if (aAssigned.length > bAssigned.length) {
-            return -1
-          } else if (aAssigned.length < bAssigned.length) {
-            return 1
-          }
-          return 0
-        },
+        if (aAssigned.length > bAssigned.length) {
+          return -1
+        } else if (aAssigned.length < bAssigned.length) {
+          return 1
+        }
+        return 0
+      },
       sortDirections: ['descend', 'ascend'],
       filters: [{
             text: 'Only researchers with assignments',

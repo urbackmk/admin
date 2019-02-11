@@ -65,12 +65,15 @@ const fetchUsers = createLogic({
                 if (mocSnap && mocSnap.exists()) {
                   const mocData = mocSnap.val();
                   if (!mocData.in_office) {
-                    console.log('in office', mocData.in_office)
-                    console.log(`users/${user.key}/mocs/${mocSnap.key}`)
-                    const ref = firebasedb.ref(`users/${user.key}/mocs/${mocSnap.key}`)
-                    return ref.update({
-                      isAssigned: false
-                    })
+                    if (user.val().mocs[mocSnap.key].isAssigned) {
+                      console.log(`users/${user.key}/mocs/${mocSnap.key}`)
+                      const ref = firebasedb.ref(`users/${user.key}/mocs/${mocSnap.key}`)
+                      return ref.update({
+                        isAssigned: false
+                      })
+                    }
+                    console.log('not in office')
+                    return;
                   }
                   const mocToUpdate = {
                     name: mocData.displayName,
