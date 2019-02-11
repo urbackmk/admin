@@ -49,8 +49,10 @@ const fetchUsers = createLogic({
                 acc.push(firebasedb.ref(`mocData/${moc.govtrack_id}`).once('value'))
               } else if (moc.id_key === 'thp_id') {
                    // AZ-SD-06-00
-                const state = moc.thp_id.match(/^\w{2}/g)[0];
-                acc.push(firebasedb.ref(`state_legislators_data/${state}/${moc.thp_id}`).once('value'))
+                const state = moc.thp_id.match(/^\w{2}/g) ? moc.thp_id.match(/^\w{2}/g)[0] : null;
+                if (state) {
+                  acc.push(firebasedb.ref(`state_legislators_data/${state}/${moc.thp_id}`).once('value'))
+                }
               }
               return acc;
             }, [])
