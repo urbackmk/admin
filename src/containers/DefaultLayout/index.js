@@ -43,8 +43,11 @@ class DefaultLayout extends Component {
 
     componentDidMount() {
       const {
-        getUserById
+        getUserById,
+        getLocation,
       } = this.props;
+        getLocation();
+        console.log(getLocation())
         auth.onAuthStateChanged((user) => {
           if (user) {
             this.setState({
@@ -104,6 +107,7 @@ class DefaultLayout extends Component {
         user,
         activeEventTab,
         changeActiveEventTab,
+        currentHashLocation,
       } = this.props;
       return (
         <Layout>
@@ -120,6 +124,7 @@ class DefaultLayout extends Component {
                 <SideNav 
                     handleChangeTab={changeActiveEventTab}
                     activeEventTab={activeEventTab}
+                    activeMenuItem={currentHashLocation}
                 />
               </Sider>
               <Switch>
@@ -182,12 +187,14 @@ class DefaultLayout extends Component {
 
 const mapStateToProps = state => ({
   user: userStateBranch.selectors.getUser(state),
-  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state)
+  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
+  currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
-  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab))
+  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
+  getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

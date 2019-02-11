@@ -40,6 +40,7 @@ class SideNav extends Component {
     const {
       handleChangeTab,
       activeEventTab,
+      activeMenuItem,
     } = this.props;
     return (
       <React.Fragment>
@@ -47,7 +48,7 @@ class SideNav extends Component {
             mode="inline"
             openKeys={this.state.openKeys}
             onOpenChange={this.onOpenChange}
-            defaultSelectedKeys={[activeEventTab]}
+            defaultSelectedKeys={[activeMenuItem]}
             style={{ width: 256 }}
           >
             <Menu.Item key="home">

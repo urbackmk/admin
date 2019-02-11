@@ -23,6 +23,7 @@ const logics = [
   ...events.logics,
   ...users.logics,
   ...mocs.logics,
+  ...selections.logics,
 ];
 
 const reduxLogicDependencies = {
