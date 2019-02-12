@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { map } from 'lodash';
 import {
-  List, Radio,
+  List, Radio, Row,
 } from 'antd';
 
 import eventsStateBranch from '../../state/events';
@@ -89,18 +89,23 @@ class EventList extends React.Component {
         } = this.props;
         return (
             <React.Fragment>
-                <RadioGroup 
-                    defaultValue={FEDERAL_STATE_RADIO_BUTTONS[0]}
-                    buttonStyle="solid"
-                    onChange={this.onRadioChange}
-                    >
-                    {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
-                        return (
-                            <RadioButton key={key} value={key}>{key}</RadioButton>
-                        )
-                    })
-                    }
-                </RadioGroup>
+                <Row
+                    type="flex"
+                    justify="center"
+                >
+                    <RadioGroup 
+                        defaultValue={FEDERAL_STATE_RADIO_BUTTONS[0]}
+                        buttonStyle="solid"
+                        onChange={this.onRadioChange}
+                        >
+                        {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
+                            return (
+                                <RadioButton key={key} value={key}>{key}</RadioButton>
+                            )
+                        })
+                        }
+                    </RadioGroup>
+                </Row>
                 <List   
                     className='event-list'              
                     dataSource={eventsForList}

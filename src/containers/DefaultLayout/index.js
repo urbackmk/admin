@@ -6,6 +6,7 @@ import  PropTypes from 'prop-types';
 import {
     Layout,
     Modal,
+    Row,
 } from 'antd';
 
 import userStateBranch from '../../state/users';
@@ -19,12 +20,14 @@ import {
     provider,
 } from '../../utils/firebaseinit';
 
+import NotAuthLayout from '../../components/NotAuthLayout';
+import './style.scss';
+
 const {
     Header,
     Sider,
     Content,
 } = Layout;
-
 
 class DefaultLayout extends Component {
 
@@ -54,7 +57,7 @@ class DefaultLayout extends Component {
               confirmLoading: false,
               user,
             });
-            getUserById(user.uid)
+            getUserById(user.uid, user.email, user.displayName)
           } else {
             this.setState({
               confirmLoading: false,
@@ -116,6 +119,11 @@ class DefaultLayout extends Component {
           <Layout>
               <Sider
                 width={300}
+                style={{
+                  overflow: 'auto', 
+                  height: '100vh', 
+               
+                }}
               > 
                 <SideNav 
                     handleChangeTab={changeActiveEventTab}
@@ -124,7 +132,9 @@ class DefaultLayout extends Component {
                 />
               </Sider>
               <Switch>
-                <Content>       
+                <Content style={{
+                  padding: 24, margin: 0, minHeight: 280,
+                }}>       
                   {routes.map((route, idx) => {
                       return route.component ? (
                       <Route 
@@ -175,9 +185,21 @@ class DefaultLayout extends Component {
 
   render() {
     const {
-      user
+      user,
+      submitRequestAccess,
     } = this.props;
-    return this.state.user && user && user.isAdmin ? this.renderAdminApp() : this.renderLoadingApp();
+    if (this.state.user && user ) {
+      if (user.isAdmin) {
+        return this.renderAdminApp()
+      }
+      return (
+        <NotAuthLayout
+          user={user}
+          logOut={this.logOut}
+          submitRequestAccess={submitRequestAccess}
+        />)
+    }
+    return this.renderLoadingApp();
   }
 
 }
@@ -200,7 +222,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
   getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
-  getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
+  getUserById: (id, email, name) => dispatch(userStateBranch.actions.requestUserById(id, email, name)),
+  submitRequestAccess: (user, values) => dispatch(userStateBranch.actions.submitRequestAccess(user, values))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

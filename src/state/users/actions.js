@@ -8,11 +8,18 @@ import {
   REMOVE_ASSIGNMENT,
   ASSIGN_MOC_TO_USER,
   ADD_AND_ASSIGN_TO_USER,
+  SUBMIT_REQUEST_ACCESS,
+  REQUEST_PENDING_USERS,
+  APPROVE_USER_REQUEST,
 } from "./constants";
 
 export const requestAllResearchers = () => ({
   type: REQUEST_RESEARCHER
 });
+
+export const requestCurrentPendingUsers = () => ({
+  type: REQUEST_PENDING_USERS,
+})
 
 export const getUsersSuccess = users => ({
   type: GET_USERS_SUCCESS,
@@ -24,9 +31,36 @@ export const getUserByIdFailed = err => ({
   payload: err
 });
 
-export const requestUserById = (id) => ({
+export const requestUserById = (uid, email, username) => ({
   type: REQUEST_USER_BY_ID,
-  payload: id
+  payload: {
+    uid,
+    email,
+    username,
+  }
+})
+
+export const submitRequestAccess = (user, accessForm) => ({
+  type: SUBMIT_REQUEST_ACCESS,
+  payload: {
+    user,
+    accessForm,
+  }
+})
+
+export const approveUserRequest = (uid, accessLevel) => ({
+  type: APPROVE_USER_REQUEST, 
+  payload: {
+    uid,
+    accessLevel,
+  }
+})
+
+export const rejectUserRequest = (uid) => ({
+  type: APPROVE_USER_REQUEST,
+  payload: {
+    uid,
+  }
 })
 
 export const receiveUser = user => ({

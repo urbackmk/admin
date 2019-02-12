@@ -7,6 +7,7 @@ import {
 export const getAllResearchers = state => state.users.allResearchers;
 export const getUser = state => state.users.user;
 export const getAllResearchedMocData = state => state.users.allResearchedMocs;
+export const getPendingUsers = state => state.users.allPendingUsers;
 
 export const combineMocNamesWithResearchers = createSelector([getAllResearchers, getAllResearchedMocData],
   (allResearchers, allResearchedMocs) => map(allResearchers, (researcher) => {

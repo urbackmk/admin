@@ -3,6 +3,7 @@ import {
   concat,
   mapValues,
   reduce,
+  map,
 } from "lodash";
 
 import { 
@@ -16,8 +17,74 @@ import {
   ADD_AND_ASSIGN_TO_USER,
   ADD_AND_ASSIGN_TO_USER_SUCCESS,
   USER_REQUEST_FAILED,
+  SUBMIT_REQUEST_ACCESS,
+  SUBMIT_REQUEST_ACCESS_SUCCESS,
+  REQUEST_PENDING_USERS,
+  RECEIVE_PENDING_USERS,
+  APPROVE_USER_REQUEST,
+  REJECT_USER_REQUEST,
+  HANDLE_REQUEST_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
+
+const requestPendingUsersLogic = createLogic({
+    process({firebasedb}) {
+      return firebasedb.ref('pending_access_request').once('value')
+        .then(snapshot => map(snapshot.val(), (user, key) => {
+          return {
+            ...user, 
+            uid: key
+          }
+        })
+        )
+    },
+    processOptions: {
+      failType: USER_REQUEST_FAILED,
+      successType: RECEIVE_PENDING_USERS,
+    },
+  type: REQUEST_PENDING_USERS,
+});
+
+const approveUserRequestLogic = createLogic({
+  process({
+    action,
+    firebasedb
+  }) {
+      const { payload } = action;
+      const ref = firebasedb.ref(`users/${payload.uid}`);
+      return ref.update({
+        [payload.accessLevel]: true,
+    }).then(() => {
+        const ref = firebasedb.ref(`pending_access_request/${payload.uid}`);
+        return ref.remove();
+    })
+    .then(() => payload)
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: HANDLE_REQUEST_SUCCESS,
+  },
+  type: APPROVE_USER_REQUEST,
+});
+
+
+const rejectUserRequestLogic = createLogic({
+  process({
+    action,
+    firebasedb
+  }) {
+    const {
+      payload
+    } = action;
+      const ref = firebasedb.ref(`pending_access_request/${payload.uid}`);
+        ref.remove().then(() => payload)
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: HANDLE_REQUEST_SUCCESS,
+  },
+  type: REJECT_USER_REQUEST,
+});
 
 const fetchUsers = createLogic({
   type: REQUEST_RESEARCHER,
@@ -105,13 +172,32 @@ const fetchUsers = createLogic({
 });
 
 const fetchUser = createLogic({
-  process(deps) {
-    return deps.firebasedb.ref(`users/${deps.action.payload}`)
+  process({
+    action,
+    firebasedb,
+    }) {
+    const { payload } = action;
+    return firebasedb.ref(`users/${payload.uid}`)
     .once('value')
     .then((snapshot) => {
       if (snapshot.exists()) {
-        return snapshot.val()
+        return {
+          ...snapshot.val(),
+          uid: snapshot.key,
+        }
       }
+      return firebasedb.ref(`users/${payload.uid}`).update({
+        email: payload.email,
+        username: payload.username,
+        uid: payload.uid,
+      }).then(() => {
+        return {
+          email: payload.email,
+          username: payload.username,
+          uid: payload.uid,
+          mocs: {},
+        }
+      })
     })
   },
   processOptions: {
@@ -173,7 +259,6 @@ const addAssignmentLogic = createLogic({
 });
 
 const addAndAssignmentLogic = createLogic({
-  type: ADD_AND_ASSIGN_TO_USER,
   processOptions: {
     successType: ADD_AND_ASSIGN_TO_USER_SUCCESS,
     failType: USER_REQUEST_FAILED,
@@ -206,14 +291,39 @@ const addAndAssignmentLogic = createLogic({
         }
         return mocData
       })
+  },
+    type: ADD_AND_ASSIGN_TO_USER,
+});
 
-  }
+const requestAccessLogic = createLogic({
+  process({
+      firebasedb, 
+      action,
+    }) {
+    const {
+      payload,
+    } = action;
+    return firebasedb.ref(`pending_access_request/${payload.user.uid}`).update({
+          email: payload.user.email,
+          username: payload.user.username,
+          ...payload.accessForm,
+        })
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: SUBMIT_REQUEST_ACCESS_SUCCESS,
+  },
+  type: SUBMIT_REQUEST_ACCESS,
 });
 
 export default [
   fetchUsers, 
   fetchUser,
+  approveUserRequestLogic,
+  rejectUserRequestLogic,
+  requestPendingUsersLogic,
   removeAssignmentLogic,
+  requestAccessLogic,
   addAssignmentLogic,
   addAndAssignmentLogic
 ];
