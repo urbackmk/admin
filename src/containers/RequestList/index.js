@@ -20,17 +20,19 @@ class RequestList extends React.Component {
         const {
           allPendingUserRequests,
           approveUserRequest,
+          rejectUserRequest,
         } = this.props;
         console.log(allPendingUserRequests)
         return (
             <ListGroup>
                 {
-                  allPendingUserRequests ?
-                  map(allPendingUserRequests, (user, uid) => (
+                  allPendingUserRequests.length ?
+                  map(allPendingUserRequests, (user) => (
                         <UserCard
-                            uid={uid}
+                            uid={user.uid}
                             user={user}
                             approve={approveUserRequest}
+                            reject={rejectUserRequest}
                         />
                 )) : <div>
                     No users to approve

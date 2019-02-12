@@ -3,6 +3,7 @@ import {
   concat,
   mapValues,
   reduce,
+  map,
 } from "lodash";
 
 import { 
@@ -21,14 +22,21 @@ import {
   REQUEST_PENDING_USERS,
   RECEIVE_PENDING_USERS,
   APPROVE_USER_REQUEST,
-  APPROVE_USER_REQUEST_SUCCESS,
+  REJECT_USER_REQUEST,
+  HANDLE_REQUEST_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
 
 const requestPendingUsersLogic = createLogic({
     process({firebasedb}) {
       return firebasedb.ref('pending_access_request').once('value')
-        .then(snapshot => snapshot.val())
+        .then(snapshot => map(snapshot.val(), (user, key) => {
+          return {
+            ...user, 
+            uid: key
+          }
+        })
+        )
     },
     processOptions: {
       failType: USER_REQUEST_FAILED,
@@ -43,20 +51,40 @@ const approveUserRequestLogic = createLogic({
     firebasedb
   }) {
       const { payload } = action;
-
       const ref = firebasedb.ref(`users/${payload.uid}`);
       return ref.update({
         [payload.accessLevel]: true,
-    }).then(() => payload
-    )
+    }).then(() => {
+        const ref = firebasedb.ref(`pending_access_request/${payload.uid}`);
+        return ref.remove();
+    })
+    .then(() => payload)
   },
   processOptions: {
     failType: USER_REQUEST_FAILED,
-    successType: APPROVE_USER_REQUEST_SUCCESS,
+    successType: HANDLE_REQUEST_SUCCESS,
   },
   type: APPROVE_USER_REQUEST,
 });
 
+
+const rejectUserRequestLogic = createLogic({
+  process({
+    action,
+    firebasedb
+  }) {
+    const {
+      payload
+    } = action;
+      const ref = firebasedb.ref(`pending_access_request/${payload.uid}`);
+        ref.remove().then(() => payload)
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: HANDLE_REQUEST_SUCCESS,
+  },
+  type: REJECT_USER_REQUEST,
+});
 
 const fetchUsers = createLogic({
   type: REQUEST_RESEARCHER,
@@ -292,6 +320,7 @@ export default [
   fetchUsers, 
   fetchUser,
   approveUserRequestLogic,
+  rejectUserRequestLogic,
   requestPendingUsersLogic,
   removeAssignmentLogic,
   requestAccessLogic,

@@ -21,12 +21,12 @@ export default class UserCard extends React.Component {
     renderPendingActions() {
         const {
             approve,
-            rejectUserRequest,
+            reject,
             user,
             uid,
         } = this.props;
         return [
-                    <Button key="delete-button" type="danger" icon="delete" onClick={rejectUserRequest}>Reject</Button>,
+                    <Button key="delete-button" type="danger" icon="delete" onClick={() => reject(uid)}>Reject</Button>,
                     <Button key="approve-button" type="primary" icon="check" onClick={() => approve(uid, user.accessLevel)}>Approve</Button>
                 ]
     }

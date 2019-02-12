@@ -1,5 +1,6 @@
 import {
   map,
+  filter,
 } from 'lodash';
 
 import { 
@@ -12,7 +13,7 @@ import {
   USER_REQUEST_FAILED,
   SUBMIT_REQUEST_ACCESS_SUCCESS,
   RECEIVE_PENDING_USERS,
-  APPROVE_USER_REQUEST_SUCCESS,
+  HANDLE_REQUEST_SUCCESS,
 } from "./constants";
 
 const initialState = {
@@ -32,7 +33,6 @@ const userReducer = (state = initialState, {type, payload}) => {
         error: null
       };
     case RECEIVE_PENDING_USERS:
-    console.log(payload)
       return {
         ...state,
         allPendingUsers: payload,
@@ -54,15 +54,12 @@ const userReducer = (state = initialState, {type, payload}) => {
         error: null,
         user: payload,
       }
-    case APPROVE_USER_REQUEST_SUCCESS:
-    console.log('approved, ', payload)
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          [payload.accessLevel]: true,
-        }
-      }
+    case HANDLE_REQUEST_SUCCESS:
+    console.log('approved or rejected', payload)
+    return {
+      ...state,
+      allPendingUsers: filter(state.allPendingUsers, (user) => user.uid !== payload.uid)
+    }
     case REMOVE_ASSIGNMENT_SUCCESS:
       return {
         ...state,

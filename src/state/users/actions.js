@@ -56,6 +56,13 @@ export const approveUserRequest = (uid, accessLevel) => ({
   }
 })
 
+export const rejectUserRequest = (uid) => ({
+  type: APPROVE_USER_REQUEST,
+  payload: {
+    uid,
+  }
+})
+
 export const receiveUser = user => ({
   type: RECEIVE_USER, 
   payload: user
