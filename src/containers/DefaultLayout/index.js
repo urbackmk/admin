@@ -6,6 +6,7 @@ import  PropTypes from 'prop-types';
 import {
     Layout,
     Modal,
+    Row,
 } from 'antd';
 
 import userStateBranch from '../../state/users';
@@ -50,7 +51,6 @@ class DefaultLayout extends Component {
 
         getLocation();
         auth.onAuthStateChanged((user) => {
-          console.log('is user', user.uid)
           if (user) {
             this.setState({
               confirmLoading: false,
@@ -145,6 +145,27 @@ class DefaultLayout extends Component {
           </Layout>
         </Layout>
       )
+    }
+
+    renderThankYou() {
+        const {
+            user
+        } = this.props;
+        return (
+            <Layout>
+              <Header>
+                <AppHeader 
+                  userName={user.username}
+                  logOut={this.logOut}
+                />
+              </Header>
+              <Row>
+                <div>
+                    <h4>Thank you {user.username}, we'll review your request ASAP</h4>
+                </div>
+            </Row>
+          </Layout>
+        )
     }
 
     renderModal() {

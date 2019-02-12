@@ -107,27 +107,29 @@ const fetchUsers = createLogic({
 });
 
 const fetchUser = createLogic({
-  process(deps) {
-    const { action } = deps;
-    return deps.firebasedb.ref(`users/${action.payload.uid}`)
+  process({
+    action,
+    firebasedb,
+    }) {
+    const { payload } = action;
+    return firebasedb.ref(`users/${payload.uid}`)
     .once('value')
     .then((snapshot) => {
-      console.log(deps.action.payload)
       if (snapshot.exists()) {
         return {
           ...snapshot.val(),
           uid: snapshot.key,
         }
       }
-      return deps.firebasedb.ref(`users/${action.payload.uid}`).update({
-        email: action.payload.email,
-        username: action.payload.username,
-        uid: action.payload.uid,
+      return firebasedb.ref(`users/${payload.uid}`).update({
+        email: payload.email,
+        username: payload.username,
+        uid: payload.uid,
       }).then(() => {
         return {
-          email: action.payload.email,
-          username: action.payload.username,
-          uid: action.payload.uid,
+          email: payload.email,
+          username: payload.username,
+          uid: payload.uid,
           mocs: {},
         }
       })
@@ -229,14 +231,17 @@ const addAndAssignmentLogic = createLogic({
 });
 
 const requestAccessLogic = createLogic({
-  process(deps) {
+  process({
+      firebasedb, 
+      action,
+    }) {
     const {
-      action
-    } = deps;
-    return deps.firebasedb.ref(`pending_access_request/${action.payload.user.uid}`).update({
-          email: action.payload.user.email,
-          username: action.payload.user.username,
-          ...action.payload.accessForm,
+      payload,
+    } = action;
+    return firebasedb.ref(`pending_access_request/${payload.user.uid}`).update({
+          email: payload.user.email,
+          username: payload.user.username,
+          ...payload.accessForm,
         })
   },
   processOptions: {

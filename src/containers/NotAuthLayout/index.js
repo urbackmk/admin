@@ -24,7 +24,7 @@ class NotAuthLayout extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-
+        this.renderThankYou = this.renderThankYou.bind(this);
     }
 
     handleSubmit (e){
@@ -38,6 +38,18 @@ class NotAuthLayout extends Component {
             submitRequestAccess(user, values)
             }
         });
+    }
+
+    renderThankYou() {
+        const {
+            user
+        } = this.props;
+        return (
+            <div>
+                <h2>Request access</h2>
+                <h4>Thank you {user.username}, we'll review your request ASAP</h4>
+            </div>
+        )
     }
 
     render() {
@@ -56,6 +68,7 @@ class NotAuthLayout extends Component {
                 <Content>
                     <Row>
                         <Col span={10} offset={8}>
+                        {user.requestedAccess ? this.renderThankYou() :
                         <Form onSubmit={this.handleSubmit} className="login-form">
                             <h2>Request access</h2>
                             <h4>Signed in with {user.email}</h4>
@@ -86,7 +99,7 @@ class NotAuthLayout extends Component {
                                     Submit
                                 </Button>
                             </Form.Item>
-                        </Form>
+                        </Form>}
                     </Col>
                 </Row>
             </Content>
