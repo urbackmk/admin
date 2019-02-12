@@ -18,8 +18,45 @@ import {
   USER_REQUEST_FAILED,
   SUBMIT_REQUEST_ACCESS,
   SUBMIT_REQUEST_ACCESS_SUCCESS,
+  REQUEST_PENDING_USERS,
+  RECEIVE_PENDING_USERS,
+  APPROVE_USER_REQUEST,
+  APPROVE_USER_REQUEST_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
+
+const requestPendingUsersLogic = createLogic({
+    process({firebasedb}) {
+      return firebasedb.ref('pending_access_request').once('value')
+        .then(snapshot => snapshot.val())
+    },
+    processOptions: {
+      failType: USER_REQUEST_FAILED,
+      successType: RECEIVE_PENDING_USERS,
+    },
+  type: REQUEST_PENDING_USERS,
+});
+
+const approveUserRequestLogic = createLogic({
+  process({
+    action,
+    firebasedb
+  }) {
+      const { payload } = action;
+
+      const ref = firebasedb.ref(`users/${payload.uid}`);
+      return ref.update({
+        [payload.accessLevel]: true,
+    }).then(() => payload
+    )
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: APPROVE_USER_REQUEST_SUCCESS,
+  },
+  type: APPROVE_USER_REQUEST,
+});
+
 
 const fetchUsers = createLogic({
   type: REQUEST_RESEARCHER,
@@ -254,6 +291,8 @@ const requestAccessLogic = createLogic({
 export default [
   fetchUsers, 
   fetchUser,
+  approveUserRequestLogic,
+  requestPendingUsersLogic,
   removeAssignmentLogic,
   requestAccessLogic,
   addAssignmentLogic,

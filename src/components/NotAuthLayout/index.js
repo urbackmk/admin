@@ -9,7 +9,7 @@ import {
   Radio,
   Layout,
 } from 'antd';
-import AppHeader from '../DefaultLayout/Header';
+import AppHeader from '../../containers/DefaultLayout/Header';
 
 const {
   Header,
@@ -54,7 +54,8 @@ class NotAuthLayout extends Component {
 
     render() {
         const {
-        user
+        user,
+        logOut
         } = this.props;
         const { getFieldDecorator } = this.props.form;
         return (
@@ -62,7 +63,7 @@ class NotAuthLayout extends Component {
                  <Header>
                     <AppHeader
                         userName={user.username}
-                        logOut={this.logOut}
+                        logOut={logOut}
                     />
                 </Header>
                 <Content>

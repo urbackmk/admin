@@ -32,6 +32,11 @@ const Resources = Loadable({
   loading: Loading,
 });
 
+const Requests = Loadable({
+  loader: () => import('./routes/Requests'),
+  loading: Loading,
+});
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
@@ -40,6 +45,8 @@ const routes = [
   { path: '/mocs', name: 'MoCs', component: MoCs },
   { path: '/researchers', name: 'Researchers', component: Researchers },
   { path: '/resources', name: 'Resources', component: Resources },
+  { path: '/requests', name: 'Pending Requests', component: Requests },
+
   // { path: '/users/:id', exact: true, name: 'User Details', component: User },
 ];
 

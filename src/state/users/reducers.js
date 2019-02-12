@@ -11,11 +11,14 @@ import {
   ADD_AND_ASSIGN_TO_USER_SUCCESS,
   USER_REQUEST_FAILED,
   SUBMIT_REQUEST_ACCESS_SUCCESS,
+  RECEIVE_PENDING_USERS,
+  APPROVE_USER_REQUEST_SUCCESS,
 } from "./constants";
 
 const initialState = {
   allResearchedMocs: [],
   allResearchers: [],
+  allPendingUsers: {},
   error: null,
   user: {},
 };
@@ -27,6 +30,12 @@ const userReducer = (state = initialState, {type, payload}) => {
         ...state,
         allResearchers: payload,
         error: null
+      };
+    case RECEIVE_PENDING_USERS:
+    console.log(payload)
+      return {
+        ...state,
+        allPendingUsers: payload,
       };
     case USER_REQUEST_FAILED:
       console.log(`REQUEST_FAILED: ${payload}`);
@@ -44,6 +53,15 @@ const userReducer = (state = initialState, {type, payload}) => {
         ...state, 
         error: null,
         user: payload,
+      }
+    case APPROVE_USER_REQUEST_SUCCESS:
+    console.log('approved, ', payload)
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          [payload.accessLevel]: true,
+        }
       }
     case REMOVE_ASSIGNMENT_SUCCESS:
       return {

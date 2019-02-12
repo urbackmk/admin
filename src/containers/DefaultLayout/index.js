@@ -19,7 +19,8 @@ import {
     auth,
     provider,
 } from '../../utils/firebaseinit';
-import NotAuthLayout from '../NotAuthLayout';
+
+import NotAuthLayout from '../../components/NotAuthLayout';
 
 const {
     Header,

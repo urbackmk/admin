@@ -9,11 +9,17 @@ import {
   ASSIGN_MOC_TO_USER,
   ADD_AND_ASSIGN_TO_USER,
   SUBMIT_REQUEST_ACCESS,
+  REQUEST_PENDING_USERS,
+  APPROVE_USER_REQUEST,
 } from "./constants";
 
 export const requestAllResearchers = () => ({
   type: REQUEST_RESEARCHER
 });
+
+export const requestCurrentPendingUsers = () => ({
+  type: REQUEST_PENDING_USERS,
+})
 
 export const getUsersSuccess = users => ({
   type: GET_USERS_SUCCESS,
@@ -39,6 +45,14 @@ export const submitRequestAccess = (user, accessForm) => ({
   payload: {
     user,
     accessForm,
+  }
+})
+
+export const approveUserRequest = (uid, accessLevel) => ({
+  type: APPROVE_USER_REQUEST, 
+  payload: {
+    uid,
+    accessLevel,
   }
 })
 
