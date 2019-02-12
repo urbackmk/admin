@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 
 import {
+  Affix,
   Menu,
 } from 'antd';
 
 import PropTypes from 'prop-types';
 
-import { PENDING_EVENTS_TAB, LIVE_EVENTS_TAB, ARCHIVED_EVENTS_TAB } from '../../constants';
+import { PENDING_EVENTS_TAB, LIVE_EVENTS_TAB, ARCHIVED_EVENTS_TAB, EVENT_MENU_ITEM } from '../../constants';
 
 const propTypes = {
   children: PropTypes.node,
@@ -41,15 +42,16 @@ class SideNav extends Component {
     const {
       handleChangeTab,
       activeMenuItem,
+      activeEventTab,
     } = this.props;
     return (
-      <React.Fragment>
+        <Affix >
+
           <Menu
             mode="inline"
             openKeys={this.state.openKeys}
             onOpenChange={this.onOpenChange}
-            defaultSelectedKeys={[activeMenuItem]}
-            style={{ width: 256 }}
+            defaultSelectedKeys={activeMenuItem === EVENT_MENU_ITEM ? [activeEventTab] : [activeMenuItem]}
           >
             <Menu.Item key="home">
               <Link to="/dashboard">Dashboard</Link>
@@ -72,7 +74,7 @@ class SideNav extends Component {
               <Link to="/resources">Resources</Link>
             </Menu.Item>
           </Menu>
-      </React.Fragment>
+          </Affix>
     );
   }
 

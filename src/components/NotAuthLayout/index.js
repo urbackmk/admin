@@ -10,6 +10,7 @@ import {
   Layout,
 } from 'antd';
 import AppHeader from '../../containers/DefaultLayout/Header';
+import './style.scss';
 
 const {
   Header,
@@ -70,9 +71,9 @@ class NotAuthLayout extends Component {
                     <Row>
                         <Col span={10} offset={8}>
                         {user.requestedAccess ? this.renderThankYou() :
-                        <Form onSubmit={this.handleSubmit} className="login-form">
+                        <Form onSubmit={this.handleSubmit} className="request-access-form">
                             <h2>Request access</h2>
-                            <h4>Signed in with {user.email}</h4>
+                            <h4>You are are signed in as {user.email}</h4>
                             <div>You aren't currently an authorized user. Please select the authorization level you want, and we'll get back to you soon. </div>
                             <Form.Item>
                             {getFieldDecorator('accessLevel', {

@@ -21,13 +21,13 @@ import {
 } from '../../utils/firebaseinit';
 
 import NotAuthLayout from '../../components/NotAuthLayout';
+import './style.scss';
 
 const {
     Header,
     Sider,
     Content,
 } = Layout;
-
 
 class DefaultLayout extends Component {
 
@@ -119,6 +119,11 @@ class DefaultLayout extends Component {
           <Layout>
               <Sider
                 width={300}
+                style={{
+                  overflow: 'auto', 
+                  height: '100vh', 
+               
+                }}
               > 
                 <SideNav 
                     handleChangeTab={changeActiveEventTab}
@@ -127,7 +132,9 @@ class DefaultLayout extends Component {
                 />
               </Sider>
               <Switch>
-                <Content>       
+                <Content style={{
+                  padding: 24, margin: 0, minHeight: 280,
+                }}>       
                   {routes.map((route, idx) => {
                       return route.component ? (
                       <Route 

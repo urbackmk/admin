@@ -1,3 +1,6 @@
 .event-list {
-    max-width: 600px;
+    margin: 0px 6em;
+    .ant-list-item-content {
+        width: 100%;
+    }
 }

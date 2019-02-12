@@ -22,7 +22,6 @@ class RequestList extends React.Component {
           approveUserRequest,
           rejectUserRequest,
         } = this.props;
-        console.log(allPendingUserRequests)
         return (
             <ListGroup>
                 {
