@@ -65,6 +65,9 @@ class SideNav extends Component {
             <Menu.Item key="researchers">
               <Link to="/researchers">Researchers</Link>
             </Menu.Item>
+              <Menu.Item key="manage-access">
+            <Link to="/manage-access">Manage Data Access</Link>
+            </Menu.Item>
             <Menu.Item key="resources">
               <Link to="/resources">Resources</Link>
             </Menu.Item>
