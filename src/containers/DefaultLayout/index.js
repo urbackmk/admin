@@ -18,6 +18,7 @@ import {
     auth,
     provider,
 } from '../../utils/firebaseinit';
+import NotAuthLayout from '../NotAuthLayout';
 
 const {
     Header,
@@ -49,12 +50,13 @@ class DefaultLayout extends Component {
 
         getLocation();
         auth.onAuthStateChanged((user) => {
+          console.log('is user', user.uid)
           if (user) {
             this.setState({
               confirmLoading: false,
               user,
             });
-            getUserById(user.uid)
+            getUserById(user.uid, user.email, user.displayName)
           } else {
             this.setState({
               confirmLoading: false,
@@ -175,9 +177,22 @@ class DefaultLayout extends Component {
 
   render() {
     const {
-      user
+      user,
+      submitRequestAccess,
     } = this.props;
-    return this.state.user && user && user.isAdmin ? this.renderAdminApp() : this.renderLoadingApp();
+    if (this.state.user && user ) {
+      if (user.isAdmin) {
+        return this.renderAdminApp()
+      }
+      return (
+        <NotAuthLayout
+          user={user}
+          logOut={this.logOut}
+          submitRequestAccess={submitRequestAccess}
+        />)
+    }
+    console.log('no user')
+    return this.renderLoadingApp();
   }
 
 }
@@ -200,7 +215,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
   getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
-  getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
+  getUserById: (id, email, name) => dispatch(userStateBranch.actions.requestUserById(id, email, name)),
+  submitRequestAccess: (user, values) => dispatch(userStateBranch.actions.submitRequestAccess(user, values))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

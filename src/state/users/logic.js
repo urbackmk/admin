@@ -16,6 +16,8 @@ import {
   ADD_AND_ASSIGN_TO_USER,
   ADD_AND_ASSIGN_TO_USER_SUCCESS,
   USER_REQUEST_FAILED,
+  SUBMIT_REQUEST_ACCESS,
+  SUBMIT_REQUEST_ACCESS_SUCCESS,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
 
@@ -106,12 +108,29 @@ const fetchUsers = createLogic({
 
 const fetchUser = createLogic({
   process(deps) {
-    return deps.firebasedb.ref(`users/${deps.action.payload}`)
+    const { action } = deps;
+    return deps.firebasedb.ref(`users/${action.payload.uid}`)
     .once('value')
     .then((snapshot) => {
+      console.log(deps.action.payload)
       if (snapshot.exists()) {
-        return snapshot.val()
+        return {
+          ...snapshot.val(),
+          uid: snapshot.key,
+        }
       }
+      return deps.firebasedb.ref(`users/${action.payload.uid}`).update({
+        email: action.payload.email,
+        username: action.payload.username,
+        uid: action.payload.uid,
+      }).then(() => {
+        return {
+          email: action.payload.email,
+          username: action.payload.username,
+          uid: action.payload.uid,
+          mocs: {},
+        }
+      })
     })
   },
   processOptions: {
@@ -173,7 +192,6 @@ const addAssignmentLogic = createLogic({
 });
 
 const addAndAssignmentLogic = createLogic({
-  type: ADD_AND_ASSIGN_TO_USER,
   processOptions: {
     successType: ADD_AND_ASSIGN_TO_USER_SUCCESS,
     failType: USER_REQUEST_FAILED,
@@ -206,14 +224,33 @@ const addAndAssignmentLogic = createLogic({
         }
         return mocData
       })
+  },
+    type: ADD_AND_ASSIGN_TO_USER,
+});
 
-  }
+const requestAccessLogic = createLogic({
+  process(deps) {
+    const {
+      action
+    } = deps;
+    return deps.firebasedb.ref(`pending_access_request/${action.payload.user.uid}`).update({
+          email: action.payload.user.email,
+          username: action.payload.user.username,
+          ...action.payload.accessForm,
+        })
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: SUBMIT_REQUEST_ACCESS_SUCCESS,
+  },
+  type: SUBMIT_REQUEST_ACCESS,
 });
 
 export default [
   fetchUsers, 
   fetchUser,
   removeAssignmentLogic,
+  requestAccessLogic,
   addAssignmentLogic,
   addAndAssignmentLogic
 ];

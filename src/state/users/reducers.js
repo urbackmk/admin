@@ -10,12 +10,14 @@ import {
   ASSIGN_MOC_TO_USER_SUCCESS,
   ADD_AND_ASSIGN_TO_USER_SUCCESS,
   USER_REQUEST_FAILED,
+  SUBMIT_REQUEST_ACCESS_SUCCESS,
 } from "./constants";
 
 const initialState = {
   allResearchedMocs: [],
   allResearchers: [],
   error: null,
+  user: {},
 };
 
 const userReducer = (state = initialState, {type, payload}) => {
@@ -44,7 +46,6 @@ const userReducer = (state = initialState, {type, payload}) => {
         user: payload,
       }
     case REMOVE_ASSIGNMENT_SUCCESS:
-    console.log(payload)
       return {
         ...state,
         allResearchers: map(state.allResearchers, researcher => {
@@ -82,6 +83,15 @@ const userReducer = (state = initialState, {type, payload}) => {
           return researcher;
         })
       }
+      case SUBMIT_REQUEST_ACCESS_SUCCESS: 
+         return {
+           ...state,
+           error: null,
+           user: {
+             ...state.user,
+             requestedAccess: true,
+           },
+         }
       case ADD_AND_ASSIGN_TO_USER_SUCCESS:
         return {
           ...state,

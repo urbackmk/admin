@@ -8,6 +8,7 @@ import {
   REMOVE_ASSIGNMENT,
   ASSIGN_MOC_TO_USER,
   ADD_AND_ASSIGN_TO_USER,
+  SUBMIT_REQUEST_ACCESS,
 } from "./constants";
 
 export const requestAllResearchers = () => ({
@@ -24,9 +25,21 @@ export const getUserByIdFailed = err => ({
   payload: err
 });
 
-export const requestUserById = (id) => ({
+export const requestUserById = (uid, email, username) => ({
   type: REQUEST_USER_BY_ID,
-  payload: id
+  payload: {
+    uid,
+    email,
+    username,
+  }
+})
+
+export const submitRequestAccess = (user, accessForm) => ({
+  type: SUBMIT_REQUEST_ACCESS,
+  payload: {
+    user,
+    accessForm,
+  }
 })
 
 export const receiveUser = user => ({
