@@ -1,5 +1,5 @@
 import {
-  CHANGE_EVENTS_TAB, CHANGE_FEDERAL_STATE_RADIO,
+  CHANGE_EVENTS_TAB, CHANGE_FEDERAL_STATE_RADIO, GET_URL_HASH_SUCCESS,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -9,6 +9,7 @@ import {
 const initialState = {
   selectedEventTab: PENDING_EVENTS_TAB,
   federalOrState: FEDERAL_RADIO_BUTTON,
+  currentHashLocation: '/',
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -23,6 +24,12 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         federalOrState: action.payload
+      }
+    case GET_URL_HASH_SUCCESS:
+    console.log('get hash success', action.payload)
+      return {
+        ...state,
+        currentHashLocation: action.payload
       }
     default:
       return state;

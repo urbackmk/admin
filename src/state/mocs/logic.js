@@ -8,7 +8,6 @@ const fetchMocs = createLogic({
     failType: GET_MOCS_FAILED,
   },
   process(deps) {
-    console.log('requesting')
     return deps.httpClient.get(`${deps.firebaseUrl}/mocID.json`);
   }
 });

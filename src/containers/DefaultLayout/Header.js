@@ -15,6 +15,7 @@ class AppHeader extends Component {
   render() {
       const {
         userName,
+        logOut,
       } = this.props;
     return (
       <Row
@@ -35,7 +36,7 @@ class AppHeader extends Component {
         >
             <SubMenu title={<span className="submenu-title-wrapper">
                 <Icon type="user"/>{userName}</span>}>
-                <Menu.Item key="logout">Log out</Menu.Item>
+                <Menu.Item key="logout" onClick={logOut}>Log out</Menu.Item>
             </SubMenu>
         </Menu>
       </Row>

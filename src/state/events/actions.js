@@ -7,10 +7,10 @@ import {
   REQUEST_PENDING_EVENTS_FAILED,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
-} from "./constants";
+} from './constants';
 
 
-export const requestEvents = (path) => ({
+export const requestEvents = path => ({
   type: REQUEST_EVENTS,
   payload: path,
 });

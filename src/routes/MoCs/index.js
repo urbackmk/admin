@@ -1,5 +1,5 @@
 import React from 'react';
-import MoCLookup from '../../containers/MoCLookup';
+import MoCLookup from '../../containers/MoCLookupDashboard';
 
 class MoCs extends React.Component {
   render() {

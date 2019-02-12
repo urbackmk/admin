@@ -1,31 +1,109 @@
-import { GET_USERS_SUCCESS, GET_USERS_FAILED, RECEIVE_USER } from "./actions";
+import {
+  map,
+} from 'lodash';
+
+import { 
+  GET_USERS_SUCCESS, 
+  RECEIVE_USER, 
+  UPDATE_USER_MOCS,
+  REMOVE_ASSIGNMENT_SUCCESS,
+  ASSIGN_MOC_TO_USER_SUCCESS,
+  ADD_AND_ASSIGN_TO_USER_SUCCESS,
+  USER_REQUEST_FAILED,
+} from "./constants";
 
 const initialState = {
-  allUsers: null,
+  allResearchedMocs: [],
+  allResearchers: [],
   error: null,
 };
 
-const userReducer = (state = initialState, action) => {
-  switch (action.type) {
+const userReducer = (state = initialState, {type, payload}) => {
+  switch (type) {
     case GET_USERS_SUCCESS:
       return {
         ...state,
-        allUsers: action.payload.data,
+        allResearchers: payload,
         error: null
       };
-    case GET_USERS_FAILED:
-      console.log(`GET_USERS_FAILED: ${action.payload}`);
+    case USER_REQUEST_FAILED:
+      console.log(`REQUEST_FAILED: ${payload}`);
       return {
         ...state,
-        error: action.payload
+        error: payload
       };
+    case UPDATE_USER_MOCS:
+      return {
+        ...state,
+        allResearchedMocs: [...state.allResearchedMocs, ...payload.mocList]
+      }
     case RECEIVE_USER: 
-      console.log(action.payload)
       return {
         ...state, 
-        user: action.payload,
-        error: null
+        error: null,
+        user: payload,
       }
+    case REMOVE_ASSIGNMENT_SUCCESS:
+    console.log(payload)
+      return {
+        ...state,
+        allResearchers: map(state.allResearchers, researcher => {
+          if (researcher.id === payload.userId) {
+            return {
+              ...researcher,
+              mocs: {
+                ...researcher.mocs,
+                [payload.mocId]: {
+                  ...researcher.mocs[payload.mocId],
+                  isAssigned: false,
+                }
+              }
+            }
+          }
+          return researcher;
+        })
+      }
+      case ASSIGN_MOC_TO_USER_SUCCESS:
+      return {
+        ...state,
+        allResearchers: map(state.allResearchers, researcher => {
+          if (researcher.id === payload.userId) {
+            return {
+              ...researcher,
+              mocs: {
+                ...researcher.mocs,
+                [payload.mocId]: {
+                  ...researcher.mocs[payload.mocId],
+                  isAssigned: true,
+                }
+              }
+            }
+          }
+          return researcher;
+        })
+      }
+      case ADD_AND_ASSIGN_TO_USER_SUCCESS:
+        return {
+          ...state,
+          allResearchedMocs: [...state.allResearchedMocs, payload],
+          allResearchers: map(state.allResearchers, researcher => {
+            if (researcher.id === payload.userId) {
+              return {
+                ...researcher,
+                mocs: {
+                  ...researcher.mocs,
+                  [payload.id]: {
+                    id: payload.id,
+                    id_key: payload.id_key,
+                    isAssigned: true,
+                  }
+                }
+              }
+            }
+            return researcher;
+          })
+        }
+
     default:
       return state;
   }

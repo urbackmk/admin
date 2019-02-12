@@ -18,6 +18,7 @@ const SubMenu = Menu.SubMenu;
 const defaultProps = {};
 
 class SideNav extends Component {
+
     rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources'];
 
     state = {
@@ -39,7 +40,7 @@ class SideNav extends Component {
   render() {
     const {
       handleChangeTab,
-      activeEventTab,
+      activeMenuItem,
     } = this.props;
     return (
       <React.Fragment>
@@ -47,7 +48,7 @@ class SideNav extends Component {
             mode="inline"
             openKeys={this.state.openKeys}
             onOpenChange={this.onOpenChange}
-            selectedKeys={[activeEventTab]}
+            defaultSelectedKeys={[activeMenuItem]}
             style={{ width: 256 }}
           >
             <Menu.Item key="home">
@@ -71,6 +72,7 @@ class SideNav extends Component {
       </React.Fragment>
     );
   }
+
 }
 
 SideNav.propTypes = propTypes;

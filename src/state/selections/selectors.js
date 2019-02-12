@@ -8,6 +8,7 @@ import { LIVE_EVENTS_TAB, PENDING_EVENTS_TAB, STATES_LEGS } from '../../constant
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
 export const getMode = state => state.selections.mode;
+export const getCurrentHashLocation = state => state.selections.currentHashLocation;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {

@@ -23,7 +23,7 @@ class EventList extends React.Component {
         this.renderItem = this.renderItem.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const {
           getCurrentLiveEvents,
           pathForEvents,

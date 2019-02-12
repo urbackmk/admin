@@ -1,55 +1,58 @@
 import React, { Component } from 'react';
-import {
-  connect
-} from 'react-redux';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import  PropTypes from 'prop-types';
 
 import {
-  Layout,
-  Modal,
+    Layout,
+    Modal,
 } from 'antd';
 
-import userStateBranch from '../../state/users'
-import selectionStateBranch from '../../state/selections'
+import userStateBranch from '../../state/users';
+import selectionStateBranch from '../../state/selections';
 
 import routes from '../../routes';
 import AppHeader from './Header';
 import SideNav from './SideNav';
 import {
-  auth,
-  provider
+    auth,
+    provider,
 } from '../../utils/firebaseinit';
 
 const {
-  Header,
-  Sider,
-  Content,
+    Header,
+    Sider,
+    Content,
 } = Layout;
 
 
 class DefaultLayout extends Component {
+
   constructor() {
       super();
       this.login = this.login.bind(this); 
-      this.logout = this.logout.bind(this); 
+      this.logOut = this.logOut.bind(this);
       this.state = {
-        currentItem: '',
-        username: '',
-        items: [],
-        user: null,
-        confirmLoading: true,
+          confirmLoading: true,
+          currentItem: '',
+          items: [],
+          user: null,
+          username: '',
       }
     }
 
     componentDidMount() {
       const {
-        getUserById
+          getUserById,
+          getLocation,
       } = this.props;
+
+        getLocation();
         auth.onAuthStateChanged((user) => {
           if (user) {
             this.setState({
-              user,
               confirmLoading: false,
+              user,
             });
             getUserById(user.uid)
           } else {
@@ -66,11 +69,7 @@ class DefaultLayout extends Component {
       }, 5000);
     }
 
-    handleChange(e) {
-      /* ... */
-    }
-
-    logout() {
+    logOut() {
       auth.signOut()
         .then(() => {
           this.setState({
@@ -104,13 +103,14 @@ class DefaultLayout extends Component {
         user,
         activeEventTab,
         changeActiveEventTab,
+        currentHashLocation,
       } = this.props;
       return (
         <Layout>
           <Header>
               <AppHeader 
                 userName={user.username}
-                logout={this.logout}
+                logOut={this.logOut}
               />
             </Header>
           <Layout>
@@ -120,6 +120,7 @@ class DefaultLayout extends Component {
                 <SideNav 
                     handleChangeTab={changeActiveEventTab}
                     activeEventTab={activeEventTab}
+                    activeMenuItem={currentHashLocation}
                 />
               </Sider>
               <Switch>
@@ -178,16 +179,28 @@ class DefaultLayout extends Component {
     } = this.props;
     return this.state.user && user && user.isAdmin ? this.renderAdminApp() : this.renderLoadingApp();
   }
+
+}
+
+DefaultLayout.propTypes = {
+  activeEventTab: PropTypes.string.isRequired,
+  changeActiveEventTab: PropTypes.func.isRequired,
+  currentHashLocation: PropTypes.string.isRequired,
+  getLocation: PropTypes.func.isRequired,
+  getUserById: PropTypes.func.isRequired,
+  user: PropTypes.shape({}),
 }
 
 const mapStateToProps = state => ({
+  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
+  currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
   user: userStateBranch.selectors.getUser(state),
-  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state)
 });
 
 const mapDispatchToProps = dispatch => ({
+  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
+  getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
   getUserById: (id) => dispatch(userStateBranch.actions.requestUserById(id)),
-  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

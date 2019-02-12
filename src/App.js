@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import configureStore from './state/store';
-
-// Import Flag Icons Set
-import 'flag-icon-css/css/flag-icon.min.css';
-
-
 // Containers
 import DefaultLayout from './containers/DefaultLayout';
 
