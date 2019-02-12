@@ -15,7 +15,6 @@ const initialState = {
 const selectionReducer = (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_EVENTS_TAB:
-    console.log(action.payload)
       return {
         ...state,
         selectedEventTab: action.payload,
@@ -26,7 +25,6 @@ const selectionReducer = (state = initialState, action) => {
         federalOrState: action.payload
       }
     case GET_URL_HASH_SUCCESS:
-    console.log('get hash success', action.payload)
       return {
         ...state,
         currentHashLocation: action.payload

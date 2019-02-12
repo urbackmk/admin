@@ -43,7 +43,6 @@ class ResearcherTable extends React.Component {
   }
 
   handleChange (pagination, filters, sorter) {
-    console.log('Various parameters', pagination, filters, sorter);
     this.setState({
       filteredInfo: filters,
       sortedInfo: sorter,
@@ -254,31 +253,6 @@ class ResearcherTable extends React.Component {
             {mocs.map((moc) => this.renderMocName(moc, !moc.isAssigned, record.id))}
         </span>)
     },
-    // {
-    //   title: 'Assign Moc',
-    //   key: 'assign-new',
-    //   render: (text, record) => (
-    //     <span>
-    //       {allMocNamesIds.length && editing === record.id ? 
-    //       <MocLookUp
-    //         allMocNames={allMocNamesIds}
-    //         onSelect = {
-    //           (mocId, object) => this.selectMoc(record.id, mocId, object.key)
-    //         }
-    //       />
-    //       :
-    //       <Button 
-    //         icon="plus" 
-    //         type="dashed"
-    //         onClick={() => this.getNames(record.id)}
-    //       >
-    //           Add new
-    //         </Button>
-    //       }
-    //     </span>
-    //   ),
-    // }
-    
     ];
     return (
       <div>

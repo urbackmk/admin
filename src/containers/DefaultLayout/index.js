@@ -148,27 +148,6 @@ class DefaultLayout extends Component {
       )
     }
 
-    renderThankYou() {
-        const {
-            user
-        } = this.props;
-        return (
-            <Layout>
-              <Header>
-                <AppHeader 
-                  userName={user.username}
-                  logOut={this.logOut}
-                />
-              </Header>
-              <Row>
-                <div>
-                    <h4>Thank you {user.username}, we'll review your request ASAP</h4>
-                </div>
-            </Row>
-          </Layout>
-        )
-    }
-
     renderModal() {
       return (<Modal
               title="Town Hall Project Admin"
@@ -213,7 +192,6 @@ class DefaultLayout extends Component {
           submitRequestAccess={submitRequestAccess}
         />)
     }
-    console.log('no user')
     return this.renderLoadingApp();
   }
 

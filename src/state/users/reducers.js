@@ -55,7 +55,6 @@ const userReducer = (state = initialState, {type, payload}) => {
         user: payload,
       }
     case HANDLE_REQUEST_SUCCESS:
-    console.log('approved or rejected', payload)
     return {
       ...state,
       allPendingUsers: filter(state.allPendingUsers, (user) => user.uid !== payload.uid)
