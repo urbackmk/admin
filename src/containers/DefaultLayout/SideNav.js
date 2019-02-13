@@ -70,6 +70,9 @@ class SideNav extends Component {
               <Menu.Item key="manage-access">
             <Link to="/manage-access">Manage Data Access</Link>
             </Menu.Item>
+            <Menu.Item key="downloads">
+              <Link to="/downloads">Download Rsvps</Link>
+            </Menu.Item>
             <Menu.Item key="resources">
               <Link to="/resources">Resources</Link>
             </Menu.Item>

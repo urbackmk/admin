@@ -194,7 +194,11 @@ class DefaultLayout extends Component {
         return this.renderAdminApp()
       }
       if (user[RSVP_DOWNLOAD_ACCESS]) {
-        return (<DownloadApp />);
+        return (
+          <DownloadApp 
+            user={user}
+            logOut={this.logOut}
+          />);
       }
       return (
         <NotAuthLayout
