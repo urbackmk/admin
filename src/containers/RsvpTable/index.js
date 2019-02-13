@@ -62,7 +62,7 @@ class RSVPTable extends React.Component {
         });
     }
 
-    expandedRowRender() {
+    expandedRowRender(record) {
         const {
           allCurrentRsvps
         } = this.props;
@@ -85,7 +85,8 @@ class RSVPTable extends React.Component {
     return (
       <Table
         columns={columns}
-        dataSource={allCurrentRsvps}
+        rowKey={(record) => `${record.email_address}-${record.eventId}`}
+        dataSource={[record]}
         pagination={false}
       />
     );
@@ -234,10 +235,9 @@ class RSVPTable extends React.Component {
                 <Table 
                     columns={columns} 
                     dataSource={allCurrentRsvps}
-                    rowKey={(record) => record.eventId}
+                    rowKey={(record) => record.email_address}
                     loading={!allCurrentRsvps.length}
-                    expandedRowRender={this.expandedRowRender}
-
+                    expandedRowRender={(record => this.expandedRowRender(record))}
                 />
             </div>
         </div>
