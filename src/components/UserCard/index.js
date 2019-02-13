@@ -2,15 +2,11 @@ import React from 'react';
 import {
   Card,
   Button,
-  Tag,
 } from 'antd';
-import {
-  reduce
-} from 'lodash';
+
 import {
   ACCESS_LEVELS_MAP
 } from '../../constants';
-// import './style.scss';
 
 const {
   Meta,

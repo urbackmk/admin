@@ -37,6 +37,11 @@ const Requests = Loadable({
   loading: Loading,
 });
 
+const Downloads = Loadable({
+  loader: () => import('./routes/Downloads'),
+  loading: Loading,
+});
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
@@ -46,6 +51,7 @@ const routes = [
   { path: '/researchers', name: 'Researchers', component: Researchers },
   { path: '/resources', name: 'Resources', component: Resources },
   { path: '/manage-access', name: 'Manage Data Access', component: Requests },
+  { path: '/downloads', name: 'Downloads', component: Downloads },
 
   // { path: '/users/:id', exact: true, name: 'User Details', component: User },
 ];

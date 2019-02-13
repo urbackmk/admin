@@ -1,6 +1,6 @@
 import Dashboard from './Dashboard';
 import Events from './Events';
-import Events from './MoCs';
+import MoCs from './MoCs';
 import Researchers from './Researchers';
 import Widgets from './Widgets';
 
