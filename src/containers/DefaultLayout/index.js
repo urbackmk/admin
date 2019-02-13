@@ -6,7 +6,6 @@ import  PropTypes from 'prop-types';
 import {
     Layout,
     Modal,
-    Row,
 } from 'antd';
 
 import userStateBranch from '../../state/users';
@@ -22,6 +21,8 @@ import {
 
 import NotAuthLayout from '../../components/NotAuthLayout';
 import './style.scss';
+import { RSVP_DOWNLOAD_ACCESS } from '../../constants';
+import DownloadApp from '../DownloadApp';
 
 const {
     Header,
@@ -191,6 +192,9 @@ class DefaultLayout extends Component {
     if (this.state.user && user ) {
       if (user.isAdmin) {
         return this.renderAdminApp()
+      }
+      if (user[RSVP_DOWNLOAD_ACCESS]) {
+        return (<DownloadApp />);
       }
       return (
         <NotAuthLayout
