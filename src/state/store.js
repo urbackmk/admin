@@ -6,6 +6,7 @@ import events from './events';
 import mocs from './mocs';
 import users from './users';
 import selections from './selections';
+import rsvps from './rsvps';
 
 import { firebaseUrl } from '../state/constants';
 import {
@@ -16,6 +17,7 @@ const reducers = {
   events: events.reducers,
   mocs: mocs.reducers,
   users: users.reducers,
+  rsvps: rsvps.reducers,
   selections: selections.reducers,
 };
 
@@ -24,6 +26,7 @@ const logics = [
   ...users.logics,
   ...mocs.logics,
   ...selections.logics,
+  ...rsvps.logics,
 ];
 
 const reduxLogicDependencies = {
