@@ -21,7 +21,7 @@ const initialState = {
   allResearchers: [],
   allPendingUsers: {},
   error: null,
-  user: {},
+  user: null,
 };
 
 const userReducer = (state = initialState, {type, payload}) => {
@@ -38,7 +38,7 @@ const userReducer = (state = initialState, {type, payload}) => {
         allPendingUsers: payload,
       };
     case USER_REQUEST_FAILED:
-      console.log(`REQUEST_FAILED: ${payload}`);
+      console.log(`USER_REQUEST_FAILED: ${payload}`);
       return {
         ...state,
         error: payload
