@@ -1,32 +1,24 @@
 import React from 'react';
-import moment from 'moment';
 import {
   connect
 } from 'react-redux';
 import {
-  Divider,
   Icon,
   Input,
   Table,
   Button,
-  Badge,
-  Row,
-  Tooltip,
   Tag,
 } from 'antd';
 import {
-  filter,
   map,
 } from 'lodash';
 import {
   CSVLink,
-  CSVDownload
 } from "react-csv";
 
 import rsvpStateBranch from '../../state/rsvps';
 
-
-// import './style.scss';
+import './style.scss';
 
 class RSVPTable extends React.Component {
 
@@ -101,8 +93,9 @@ class RSVPTable extends React.Component {
 
   render() {
     const {
-        allRsvps,
+        allRsvpsForCsv,
         allCurrentRsvps,
+        allCurrentRsvpsForCsv,
     } = this.props;
     const columns = [
         {
@@ -213,34 +206,40 @@ class RSVPTable extends React.Component {
 
     ];
     return (
-        <div className="researcher-table">
-            <Button.Group>
-                <Button>
+        <div>
+            <Button.Group
+                className="download-table-button-group"
+            >
+                <Button 
+                    icon="download"
+                >
                     <CSVLink 
-                        data={allCurrentRsvps}
+                        data={allCurrentRsvpsForCsv}
                         filename="Current_RSVPs.csv"
-                    >
-                        Download RSVPS for current events
+                    > RSVPs for current events
                     </CSVLink>
                 </Button>
-                <Button>
+                <Button
+                    icon="download"
+                >
                     <CSVLink 
-                        data={allRsvps}
+                        data={allRsvpsForCsv}
                         filename="All_RSVPs.csv"
-                    >
-                        Download all RSVPs (including past events)
+                    > All RSVPs (including past events)
                     </CSVLink>
                 </Button>
-         
+        
             </Button.Group>
-            <Table 
-                columns={columns} 
-                dataSource={allCurrentRsvps}
-                rowKey={(record) => record.eventId}
-                loading={!allRsvps.length}
-                expandedRowRender={this.expandedRowRender}
+            <div className="researcher-table">
+                <Table 
+                    columns={columns} 
+                    dataSource={allCurrentRsvps}
+                    rowKey={(record) => record.eventId}
+                    loading={!allCurrentRsvps.length}
+                    expandedRowRender={this.expandedRowRender}
 
-            />
+                />
+            </div>
         </div>
     );
   }
@@ -248,7 +247,9 @@ class RSVPTable extends React.Component {
 
 const mapStateToProps = state => ({
     allRsvps: rsvpStateBranch.selectors.getAllRsvps(state),
-    allCurrentRsvps: rsvpStateBranch.selectors.getCurrentRsvps(state),
+    allRsvpsForCsv: rsvpStateBranch.selectors.getAllRsvpsForCsv(state),
+    allCurrentRsvps: rsvpStateBranch.selectors.getAllCurrentRsvps(state),
+    allCurrentRsvpsForCsv: rsvpStateBranch.selectors.getAllCurrentRsvpsForCsv(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -13,7 +13,7 @@ import {
 import { requestAllEventsWithRSVPs, receiveRsvps } from "./actions";
 
 const getAllEventDataWithRsvpsLogic = createLogic({
-     process({ firebasedb, action }) {
+     process({ action }) {
         return Promise.all(action.payload)
                .then((snapshotList) => {
                    return concat(snapshotList)
@@ -38,9 +38,7 @@ const requestPendingUsersLogic = createLogic({
         .then(snapshot => {
           const allRsvps = [];
           const allEventPromises = [];
-          const numberOfEvents = snapshot.numChildren();
           snapshot.forEach(eventKey => {
-            console.log(`townHalls/${eventKey.key}`)
             allEventPromises.push(firebasedb.ref(`townHalls/${eventKey.key}`).once('value'))
             eventKey.forEach(rvspSnap => {
               allRsvps.push(rvspSnap.val())

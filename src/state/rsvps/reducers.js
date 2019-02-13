@@ -1,8 +1,3 @@
-import {
-  map,
-  filter,
-} from 'lodash';
-
 import { 
   REQUEST_ALL_RSVPS_SUCCESS, 
   RSVP_REQUEST_FAILED, 
@@ -18,14 +13,12 @@ const initialState = {
 const rsvpReducer = (state = initialState, {type, payload}) => {
   switch (type) {
     case REQUEST_ALL_RSVPS_SUCCESS:
-    console.log('all rsvps', payload)
       return {
         ...state,
         allRsvps: payload,
         error: null
       };
     case REQUEST_ALL_EVENTS_WITH_RSVPS_SUCCESS:
-    console.log('all events', payload)
       return {
         ...state,
         allEventsWithRsvps: payload,

@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import  PropTypes from 'prop-types';
 
 import {
     Layout,
 } from 'antd';
-
-import userStateBranch from '../../state/users';
-import selectionStateBranch from '../../state/selections';
 
 import AppHeader from '../DefaultLayout/Header';
 import RsvpTable from '../RsvpTable';
@@ -22,13 +18,14 @@ class DownloadApp extends Component {
     render() {
       const {
         user,
+        logOut,
       } = this.props;
       return (
         <Layout>
             <Header>
                 <AppHeader 
                     userName={user.username}
-                    logOut={this.logOut}
+                    logOut={logOut}
                 />
             </Header>
             <Layout>  
@@ -52,17 +49,4 @@ DownloadApp.propTypes = {
   user: PropTypes.shape({}),
 }
 
-const mapStateToProps = state => ({
-  activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
-  currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
-  user: userStateBranch.selectors.getUser(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
-  getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
-  getUserById: (id, email, name) => dispatch(userStateBranch.actions.requestUserById(id, email, name)),
-  submitRequestAccess: (user, values) => dispatch(userStateBranch.actions.submitRequestAccess(user, values))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(DownloadApp);
+export default DownloadApp;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import RequestList from '../../containers/RequestList';
-class Researchers extends Component {
+class UserRequests extends Component {
 
   render() {
     return (
@@ -13,4 +13,4 @@ class Researchers extends Component {
   
 }
 
-export default Researchers;
+export default UserRequests;
