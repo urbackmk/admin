@@ -8,9 +8,11 @@ import {
 
 export const getAllRsvps = state => state.rsvps.allRsvps;
 export const getAllEventsWithRsvps = state => state.rsvps.allEventsWithRsvps;
+
 export const getAllEventIds = createSelector([getAllEventsWithRsvps], allEvents => map(allEvents, 'eventId'))
 
-export const getCurrentRsvps = createSelector([getAllRsvps, getAllEventIds, getAllEventsWithRsvps], 
+export const getAllCurrentRsvps = createSelector(
+  [getAllRsvps, getAllEventIds, getAllEventsWithRsvps], 
     (allRsvps, allIds, allEvents) => {
     return map(filter(allRsvps, (rsvp) => includes(allIds, rsvp.eventId)), filteredRsvp => {
         const event = find(allEvents, (event) => event.eventId === filteredRsvp.eventId)
@@ -23,3 +25,25 @@ export const getCurrentRsvps = createSelector([getAllRsvps, getAllEventIds, getA
           }
         })
     });
+
+export const getAllCurrentRsvpsForCsv = createSelector([getAllCurrentRsvps], (allCurrent) => {
+  return map(allCurrent, currentRsvp => {
+    const toReturn = {
+      ...currentRsvp,
+      ...currentRsvp.can_contact
+    }
+    delete toReturn.can_contact;
+    return toReturn;
+  });
+})
+
+export const getAllRsvpsForCsv = createSelector([getAllRsvps], (allCurrent) => {
+  return map(allCurrent, currentRsvp => {
+    const toReturn = {
+      ...currentRsvp,
+      ...currentRsvp.can_contact
+    }
+    delete toReturn.can_contact;
+    return toReturn;
+  });
+})
