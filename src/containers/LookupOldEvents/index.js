@@ -43,7 +43,7 @@ class RSVPTable extends React.Component {
                             data = {
                             allOldEvents
                             }
-                            filename="archiveUrl.csv"
+                            filename={`${archiveUrl}.csv`}
                         > DownloadEvents
                         </CSVLink>
                     </Button>
