@@ -57,10 +57,9 @@ const fetchOldEventsLogic = createLogic({
     return firebasedb.ref(`${payload}`).once('value')
       .then((snapshot) => {
         const allData = [];
-        console.log(snapshot.key)
         snapshot.forEach((dataKey) => {
-          console.log(dataKey.key)
           dataKey.forEach((ele) => {
+            console.log(ele.val())
             allData.push(ele.val())
           })
         })

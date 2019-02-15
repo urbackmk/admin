@@ -12,7 +12,7 @@ import { filter } from "lodash";
 
 const initialState = {
   allEvents: {},
-  oldEvents: {},
+  allOldEvents: {},
   error: null,
 };
 
@@ -25,9 +25,10 @@ const eventReducer = (state = initialState, action) => {
         error: null
       };
     case REQUEST_OLD_EVENTS_SUCCESS:
+    console.log(action.payload)
        return {
          ...state,
-         oldEvents: action.payload,
+         allOldEvents: action.payload,
          error: null
        };
     case REQUEST_PENDING_EVENTS_SUCCESS:

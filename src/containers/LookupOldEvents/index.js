@@ -20,35 +20,22 @@ import FederalStateRadioSwitcher from '../../components/FederalStateRadioSwitche
 
 class RSVPTable extends React.Component {
 
-    componentDidMount() {
-        const { 
-            requestOldEvents,
-            archiveUrl,
-        } = this.props;
-        requestOldEvents(archiveUrl);
-    }
-
-    componentDidUpdate(preProps) {
-        const {
-          requestOldEvents,
-          archiveUrl,
-        } = this.props;
-        if (preProps.archiveUrl !== archiveUrl) {
-            requestOldEvents(archiveUrl);
-        }
-    }
-
     render() {
         const {
             changeOldEventsLookupFederalState,
-            allOldEvents
+            allOldEvents,
+            requestOldEvents,
+            archiveUrl,
         } = this.props;
         return (    
             <div>
                 <FederalStateRadioSwitcher 
                     changeRadioButton={changeOldEventsLookupFederalState}
                 />
-                {allOldEvents.length && 
+                <Button
+                    onClick={() => requestOldEvents(archiveUrl)}
+                >Request events</Button>
+                {allOldEvents.length &&
                     <Button 
                         icon="download"
                     >
@@ -56,7 +43,7 @@ class RSVPTable extends React.Component {
                             data = {
                             allOldEvents
                             }
-                            filename="Current_RSVPs.csv"
+                            filename="archiveUrl.csv"
                         > DownloadEvents
                         </CSVLink>
                     </Button>
@@ -68,7 +55,7 @@ class RSVPTable extends React.Component {
 
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
-    allOldEvents: eventStateBranch.selectors.allOldEventsAsList(state),
+    allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
 });
 
 const mapDispatchToProps = dispatch => ({
