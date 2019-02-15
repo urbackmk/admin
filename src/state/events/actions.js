@@ -7,11 +7,17 @@ import {
   REQUEST_PENDING_EVENTS_FAILED,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
+  REQUEST_OLD_EVENTS,
 } from './constants';
 
 
 export const requestEvents = path => ({
   type: REQUEST_EVENTS,
+  payload: path,
+});
+
+export const requestOldEvents = path => ({
+  type: REQUEST_OLD_EVENTS,
   payload: path,
 });
 

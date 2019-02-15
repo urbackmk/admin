@@ -9,6 +9,7 @@ export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
 export const getMode = state => state.selections.mode;
 export const getCurrentHashLocation = state => state.selections.currentHashLocation;
+export const getOldEventsActiveFederalOrState = state => state.selections.federalOrStateOldEvents;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
@@ -24,7 +25,7 @@ export const getSubmissionUrl = createSelector([getActiveFederalOrState], (feder
   return 'UserSubmission';
 });
 
-export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
+export const getArchiveUrl = createSelector([getOldEventsActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
     return `state_townhalls_archive/${federalOrState}`;
   }

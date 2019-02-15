@@ -9,9 +9,10 @@ import eventsStateBranch from '../../state/events';
 import selectionStateBranch from '../../state/selections'
 
 import EventCard from '../../components/EventCard';
-import { FEDERAL_STATE_RADIO_BUTTONS, PENDING_EVENTS_TAB } from '../../constants';
+import { FEDERAL_STATE_RADIO_BUTTONS, PENDING_EVENTS_TAB, ARCHIVED_EVENTS_TAB } from '../../constants';
 
 import './style.scss';
+import LookupOldEvents from '../LookupOldEvents';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -86,8 +87,15 @@ class EventList extends React.Component {
     render () {
         const {
             eventsForList,
+            pendingOrLive
         } = this.props;
-        return (
+        console.log(pendingOrLive)
+
+        return pendingOrLive === ARCHIVED_EVENTS_TAB ? 
+        (<LookupOldEvents
+        />)
+        :
+        (
             <React.Fragment>
                 <Row
                     type="flex"

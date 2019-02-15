@@ -7,11 +7,13 @@ import {
   REQUEST_EVENTS, 
   REQUEST_EVENTS_SUCCESS, 
   REQUEST_EVENTS_FAILED,
+  REQUEST_OLD_EVENTS_SUCCESS,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
   APPROVE_EVENT_SUCCESS,
   APPROVE_EVENT_FAIL,
+  REQUEST_OLD_EVENTS,
 } from "./constants";
 
 const fetchEvents = createLogic({
@@ -31,6 +33,36 @@ const fetchEvents = createLogic({
         const allData = [];
         snapshot.forEach((ele) => {
           allData.push(ele.val())
+        })
+        return allData;
+      })
+  }
+});
+
+const fetchOldEventsLogic = createLogic({
+  type: REQUEST_OLD_EVENTS,
+  processOptions: {
+    successType: REQUEST_OLD_EVENTS_SUCCESS,
+    failType: REQUEST_EVENTS_FAILED,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const {
+      payload
+    } = action;
+    console.log(payload)
+    return firebasedb.ref(`${payload}`).once('value')
+      .then((snapshot) => {
+        const allData = [];
+        console.log(snapshot.key)
+        snapshot.forEach((dataKey) => {
+          console.log(dataKey.key)
+          dataKey.forEach((ele) => {
+            allData.push(ele.val())
+          })
         })
         return allData;
       })
@@ -127,6 +159,7 @@ const deleteEvent = createLogic({
 export default [
   archiveEventLogic,
   approveEventLogic,
+  fetchOldEventsLogic,
   fetchEvents,
   deleteEvent,
 ];

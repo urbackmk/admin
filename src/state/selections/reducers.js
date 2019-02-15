@@ -1,5 +1,8 @@
 import {
-  CHANGE_EVENTS_TAB, CHANGE_FEDERAL_STATE_RADIO, GET_URL_HASH_SUCCESS,
+  CHANGE_EVENTS_TAB, 
+  CHANGE_FEDERAL_STATE_RADIO, 
+  GET_URL_HASH_SUCCESS, 
+  CHANGE_FEDERAL_STATE_RADIO_OLD_EVENT,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -9,6 +12,7 @@ import {
 const initialState = {
   selectedEventTab: PENDING_EVENTS_TAB,
   federalOrState: FEDERAL_RADIO_BUTTON,
+  federalOrStateOldEvents: FEDERAL_RADIO_BUTTON,
   currentHashLocation: '/',
 };
 
@@ -23,6 +27,11 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         federalOrState: action.payload
+      }
+    case CHANGE_FEDERAL_STATE_RADIO_OLD_EVENT:
+      return {
+        ...state,
+        federalOrStateOldEvents: action.payload
       }
     case GET_URL_HASH_SUCCESS:
       return {
