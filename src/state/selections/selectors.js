@@ -1,9 +1,19 @@
 import { createSelector } from 'reselect';
 import {
   includes,
+  map,
 } from 'lodash';
 
-import { LIVE_EVENTS_TAB, PENDING_EVENTS_TAB, STATES_LEGS } from '../../constants';
+import { 
+  LIVE_EVENTS_TAB, 
+  PENDING_EVENTS_TAB, 
+  STATES_LEGS 
+} from '../../constants';
+
+import {
+  getAllLiveEvents,
+  getAllPendingEvents,
+} from '../events/selectors';
 
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
@@ -25,7 +35,7 @@ export const getSubmissionUrl = createSelector([getActiveFederalOrState], (feder
   return 'UserSubmission';
 });
 
-export const getArchiveUrl = createSelector([getOldEventsActiveFederalOrState], (federalOrState) => {
+export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
     return `state_townhalls_archive/${federalOrState}`;
   }

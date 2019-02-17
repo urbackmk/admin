@@ -1,7 +1,8 @@
 import React from 'react';
 import { map } from 'lodash';
 import {
-  List, Radio, Row,
+  Radio, 
+  Row,
 } from 'antd';
 
 import EventCard from '../../components/EventCard';
@@ -14,14 +15,6 @@ const RadioGroup = Radio.Group;
 class FederalStateRadioSwitcher extends React.Component {
     constructor(props) {
         super(props);
-        this.onRadioChange = this.onRadioChange.bind(this);
-    }
-
-    onRadioChange({target}) {
-        const {
-          changeRadioButton
-        } = this.props;
-        changeRadioButton(target.value)
     }
 
     render () {
@@ -34,7 +27,7 @@ class FederalStateRadioSwitcher extends React.Component {
                     <RadioGroup 
                         defaultValue={FEDERAL_STATE_RADIO_BUTTONS[0]}
                         buttonStyle="solid"
-                        onChange={this.onRadioChange}
+                        onChange={this.props.onRadioChange}
                         >
                         {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
                             return (

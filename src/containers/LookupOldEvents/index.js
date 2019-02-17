@@ -4,11 +4,8 @@ import {
 } from 'react-redux';
 import {
   Button,
-  Tag,
+  DatePicker,
 } from 'antd';
-import {
-  map,
-} from 'lodash';
 import {
   CSVLink,
 } from "react-csv";
@@ -17,21 +14,26 @@ import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
 
 import FederalStateRadioSwitcher from '../../components/FederalStateRadioSwitcher';
+const {
+  RangePicker,
+} = DatePicker;
 
 class RSVPTable extends React.Component {
 
+    onChange(date, dateString) {
+    console.log(date, dateString);
+    }
+
     render() {
         const {
-            changeOldEventsLookupFederalState,
             allOldEvents,
             requestOldEvents,
             archiveUrl,
         } = this.props;
         return (    
             <div>
-                <FederalStateRadioSwitcher 
-                    changeRadioButton={changeOldEventsLookupFederalState}
-                />
+                <RangePicker onChange={this.onChange} />
+
                 <Button
                     onClick={() => requestOldEvents(archiveUrl)}
                 >Request events</Button>
@@ -60,7 +62,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     requestOldEvents: (path) => dispatch(eventStateBranch.actions.requestOldEvents(path)),
-    changeOldEventsLookupFederalState: (value) => dispatch(selectionStateBranch.actions.changeOldEventsLookupFederalState(value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RSVPTable);

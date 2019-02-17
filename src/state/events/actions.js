@@ -35,11 +35,6 @@ export const requestPendingEvents = () => ({
   type: REQUEST_PENDING_EVENTS
 });
 
-export const requestPendingEventsSuccess = events => ({
-  type: REQUEST_PENDING_EVENTS_SUCCESS,
-  payload: events
-});
-
 export const requestPendingEventsFailed = err => ({
   type: REQUEST_PENDING_EVENTS_FAILED,
   payload: err

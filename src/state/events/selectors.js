@@ -7,12 +7,12 @@ import {
 export const getAllEvents = state => state.events.allEvents;
 export const getAllOldEvents = state => state.events.allOldEvents;
 
-export const allEventsAsList = createSelector([getAllEvents], (allEvents) => {
+export const getAllEventsAsList = createSelector([getAllEvents], (allEvents) => {
     return map(allEvents);
 })
 
 export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvents) => {
-    
+
   return map(allEvents, eventData=> {
 
             const convertedTownHall = {};

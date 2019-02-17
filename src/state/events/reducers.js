@@ -31,12 +31,6 @@ const eventReducer = (state = initialState, action) => {
          allOldEvents: action.payload,
          error: null
        };
-    case REQUEST_PENDING_EVENTS_SUCCESS:
-      return {
-        ...state,
-        allPendingEvents: action.payload.data,
-        error: null
-      };
     case REQUEST_EVENTS_FAILED:
       console.log(`GET_EVENTS_FAILED: ${action.payload}`);
       return {
