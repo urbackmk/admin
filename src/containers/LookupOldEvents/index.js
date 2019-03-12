@@ -90,6 +90,7 @@ class LookupOldEvents extends React.Component {
             loading,
             dataForChart,
             includeLiveEventsInLookup,
+            oldEventsForDownload,
         } = this.props;
         return (    
             <div
@@ -141,7 +142,7 @@ class LookupOldEvents extends React.Component {
                         >
                             <CSVLink 
                                 data = {
-                                filteredOldEvents
+                                oldEventsForDownload
                                 }
                                 filename={`${archiveUrl}.csv`}
                             > DownloadEvents
@@ -186,6 +187,7 @@ const mapStateToProps = state => ({
     loading: eventStateBranch.selectors.getLoading(state),
     dataForChart: selectionStateBranch.selectors.getDataForArchiveChart(state),
     includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
+    oldEventsForDownload: selectionStateBranch.selectors.getEventsAsDownloadObjects(state),
 });
 
 const mapDispatchToProps = dispatch => ({

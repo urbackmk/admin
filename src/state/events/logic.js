@@ -31,6 +31,9 @@ const fetchEvents = createLogic({
       firebasedb,
     } = deps;
     const { payload } = action;
+    if (!payload) {
+      return [];
+    }
     return firebasedb.ref(`${payload}`).once('value')
       .then((snapshot) => {
         const allData = [];
