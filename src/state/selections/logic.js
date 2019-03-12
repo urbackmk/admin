@@ -1,6 +1,8 @@
 import { createLogic } from "redux-logic"
 import { GET_URL_HASH, GET_URL_HASH_SUCCESS, SELECTION_REQUEST_FAILED, CHANGE_FEDERAL_STATE_RADIO, CHANGE_DATE_LOOKUP } from "./constants";
 import { resetOldEvents } from "../events/actions";
+import { distinct } from "rxjs/operators";
+import { toggleIncludeLiveEventsInLookup } from "./actions";
 
 const getUrlLogic = createLogic({
   process() {
@@ -17,6 +19,7 @@ const getUrlLogic = createLogic({
 const onSelectionChangeLogic = createLogic({
   process(deps, dispatch, done) {
     dispatch(resetOldEvents());
+    dispatch(toggleIncludeLiveEventsInLookup(false))
     done();
   },
   type: [CHANGE_FEDERAL_STATE_RADIO, CHANGE_DATE_LOOKUP],
