@@ -136,7 +136,7 @@ export const getDataForArchiveChart = createSelector(
       return [];
     }
     return map(reduce(allEvents, (acc, cur) => {
-      const party = cur.party || false;
+      const party = cur.party ? cur.party.substring(0, 1) : 'None';
       if (acc[party] >= 0) {
         acc[party] = acc[party] + 1;
       }
@@ -145,6 +145,7 @@ export const getDataForArchiveChart = createSelector(
       D: 0,
       R: 0,
       I: 0,
+      None: 0,
     }), (value, key) => {
       return {
         party: key,

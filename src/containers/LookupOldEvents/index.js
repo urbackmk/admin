@@ -25,6 +25,12 @@ import { statesAb } from '../../assets/data/states';
 
 import "./style.scss";
 
+const colors = {
+    R: "#ff4741",
+    D: "#3facef",
+    I: 'purple',
+    None: 'gray',
+}
 const {
   RangePicker,
 } = DatePicker;
@@ -162,10 +168,7 @@ class LookupOldEvents extends React.Component {
                                 y="value"
                                  style={{
                                 data: {
-                                    fill: (d) => d.party === 'R' ? "#ff4741" : "#3facef",
-                                    stroke: (d) => d.party === 'R' ? "#ff4741" : "#3facef",
-                                    fillOpacity: 0.7,
-                                    strokeWidth: 3
+                                    fill: (d) => colors[d.party],
                                     }}
                                 }
                             />
