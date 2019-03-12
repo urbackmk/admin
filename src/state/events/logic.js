@@ -61,12 +61,18 @@ const fetchOldEventsLogic = createLogic({
     console.log(payload.dates[0], payload.dates[1], `${payload.path}/${payload.date}`)
     const ref = firebasedb.ref(`${payload.path}/${payload.date}`);
     dispatch(setLoading(true))
+    const allEvents = [];
     ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
-      dispatch(addOldEventToState(snapshot.val()));
+      allEvents.push(snapshot.val());
     })
     ref.once('value')
       .then(() => {
-        dispatch(setLoading(false))
+        dispatch(addOldEventToState(allEvents))
+      })
+      .then(() => {
+        if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-M').add(1, 'month'), 'month')) {
+          dispatch(setLoading(false))
+        }
         done()
       })
   }
