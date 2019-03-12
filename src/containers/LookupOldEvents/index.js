@@ -52,12 +52,12 @@ class LookupOldEvents extends React.Component {
 
     onIncludeLiveEvents(checked) {
         const {
-            requestLiveEvents
+            requestLiveEvents,
+            liveEventUrl
         } = this.props;
-        if(checked) {
-            requestLiveEvents('townHalls/')
+        if (checked) {
+            requestLiveEvents(liveEventUrl)
         }
-
     }
 
     handleAddState(value) {
@@ -174,6 +174,7 @@ class LookupOldEvents extends React.Component {
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
     allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
+    liveEventUrl: selectionStateBranch.selectors.getLiveEventUrl(state),
     filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
     loading: eventStateBranch.selectors.getLoading(state),
