@@ -107,7 +107,7 @@ class LookupOldEvents extends React.Component {
                     type="flex" 
                 >
                     <Select
-                        mode="tags"
+                        mode="multiple"
                         placeholder="Select a state to filter"
                         onChange={this.handleAddState}
                         style={{ width: '100%' }}
