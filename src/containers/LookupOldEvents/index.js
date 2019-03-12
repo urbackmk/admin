@@ -13,7 +13,6 @@ import {
 import {
     VictoryBar,
     VictoryChart,
-    VictoryTheme
 } from 'victory';
 import {
   CSVLink,
@@ -52,12 +51,14 @@ class LookupOldEvents extends React.Component {
 
     onIncludeLiveEvents(checked) {
         const {
-            requestLiveEvents
+            requestLiveEvents,
+            liveEventUrl,
+            toggleIncludeLiveEventsInLookup
         } = this.props;
-        if(checked) {
-            requestLiveEvents('townHalls/')
+        if (checked) {
+            requestLiveEvents(liveEventUrl)
         }
-
+        toggleIncludeLiveEventsInLookup(checked)
     }
 
     handleAddState(value) {
@@ -88,6 +89,7 @@ class LookupOldEvents extends React.Component {
             archiveUrl,
             loading,
             dataForChart,
+            includeLiveEventsInLookup,
         } = this.props;
         return (    
             <div
@@ -117,7 +119,11 @@ class LookupOldEvents extends React.Component {
                     type="flex" 
                 >
                     <label>Include live events</label>
-                    <Switch onChange={this.onIncludeLiveEvents} />
+                    <Switch 
+                        onChange={this.onIncludeLiveEvents} 
+                        checked={includeLiveEventsInLookup}
+
+                    />
                 </Row>
                 <Row
                     type="flex" 
@@ -174,10 +180,12 @@ class LookupOldEvents extends React.Component {
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
     allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
+    liveEventUrl: selectionStateBranch.selectors.getLiveEventUrl(state),
     filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
     loading: eventStateBranch.selectors.getLoading(state),
     dataForChart: selectionStateBranch.selectors.getDataForArchiveChart(state),
+    includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -185,6 +193,7 @@ const mapDispatchToProps = dispatch => ({
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
+    toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);
