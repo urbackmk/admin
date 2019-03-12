@@ -5,7 +5,7 @@ export const getDateArray = (dateRange) => {
     const end = moment(dateRange[1]);
 
     var dates = [];
-    while (current.isBefore(end)) {
+    while (current.isSameOrBefore(end)) {
         var monthZeroIndex = current.month();
         dates.push(current.format('YYYY-' + monthZeroIndex));
         current.add(1, 'month');
