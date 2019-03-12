@@ -70,6 +70,8 @@ const fetchOldEventsLogic = createLogic({
         dispatch(addOldEventToState(allEvents))
       })
       .then(() => {
+        const endDate = `${payload.date.split('-')[0]}-${Number(payload.date.split('-')[1]) + 1}`
+        console.log(moment(payload.dates[1]).format('YYYY-M'), moment(endDate, 'YYYY-M').add(1, 'month').format('YYYY-M'), endDate)
         if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-M').add(1, 'month'), 'month')) {
           dispatch(setLoading(false))
         }
