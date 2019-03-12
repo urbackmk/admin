@@ -1,5 +1,10 @@
 import {
-  CHANGE_EVENTS_TAB, CHANGE_FEDERAL_STATE_RADIO, GET_URL_HASH_SUCCESS,
+  CHANGE_EVENTS_TAB, 
+  CHANGE_FEDERAL_STATE_RADIO, 
+  GET_URL_HASH_SUCCESS,
+  CHANGE_DATE_LOOKUP,
+  CHANGE_STATE_FILTERS,
+  TOGGLE_INCLUDE_LIVE_EVENTS, 
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -10,6 +15,9 @@ const initialState = {
   selectedEventTab: PENDING_EVENTS_TAB,
   federalOrState: FEDERAL_RADIO_BUTTON,
   currentHashLocation: '/',
+  dateLookupRange: [],
+  filterByState: [],
+  includeLiveEvents: false,
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -28,6 +36,21 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         currentHashLocation: action.payload
+      }
+    case CHANGE_DATE_LOOKUP:
+      return {
+        ...state,
+        dateLookupRange: action.payload,
+      }
+    case CHANGE_STATE_FILTERS:
+      return {
+        ...state,
+        filterByState: action.payload,
+      }
+    case TOGGLE_INCLUDE_LIVE_EVENTS:
+      return {
+        ...state,
+        includeLiveEvents: action.payload,
       }
     default:
       return state;

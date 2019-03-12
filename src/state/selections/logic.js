@@ -1,5 +1,6 @@
 import { createLogic } from "redux-logic"
-import { GET_URL_HASH, GET_URL_HASH_SUCCESS, SELECTION_REQUEST_FAILED } from "./constants";
+import { GET_URL_HASH, GET_URL_HASH_SUCCESS, SELECTION_REQUEST_FAILED, CHANGE_FEDERAL_STATE_RADIO, CHANGE_DATE_LOOKUP } from "./constants";
+import { resetOldEvents } from "../events/actions";
 
 const getUrlLogic = createLogic({
   process() {
@@ -13,6 +14,16 @@ const getUrlLogic = createLogic({
   type: GET_URL_HASH,
 });
 
+const onSelectionChangeLogic = createLogic({
+  process(deps, dispatch, done) {
+    dispatch(resetOldEvents());
+    done();
+  },
+  type: [CHANGE_FEDERAL_STATE_RADIO, CHANGE_DATE_LOOKUP],
+});
+
+
 export default [
-    getUrlLogic
+    getUrlLogic,
+    onSelectionChangeLogic,
 ];

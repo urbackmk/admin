@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import EventsList from '../../containers/EventsList';
+import EventsDashboard from '../../containers/EventsDashboard';
 
 class Events extends Component {
   constructor(props) {
@@ -23,7 +23,7 @@ class Events extends Component {
   render() {
     return (
       <div className="animated fadeIn">
-        <EventsList />
+        <EventsDashboard />
       </div>
     );
   }

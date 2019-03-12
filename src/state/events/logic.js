@@ -12,7 +12,12 @@ import {
   APPROVE_EVENT,
   APPROVE_EVENT_SUCCESS,
   APPROVE_EVENT_FAIL,
+  REQUEST_OLD_EVENTS,
 } from "./constants";
+import {
+  addOldEventToState,
+  setLoading,
+} from "./actions";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,
@@ -33,6 +38,33 @@ const fetchEvents = createLogic({
           allData.push(ele.val())
         })
         return allData;
+      })
+  }
+});
+
+const fetchOldEventsLogic = createLogic({
+  type: REQUEST_OLD_EVENTS,
+  processOptions: {
+    failType: REQUEST_EVENTS_FAILED,
+  },
+  process({
+      getState,
+      action,
+      firebasedb
+    }, dispatch, done) {
+    const {
+      payload
+    } = action;
+    console.log(payload.dates[0], payload.dates[1], `${payload.path}/${payload.date}`)
+    const ref = firebasedb.ref(`${payload.path}/${payload.date}`);
+    dispatch(setLoading(true))
+    ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
+      dispatch(addOldEventToState(snapshot.val()));
+    })
+    ref.once('value')
+      .then(() => {
+        dispatch(setLoading(false))
+        done()
       })
   }
 });
@@ -65,6 +97,7 @@ const approveEventLogic = createLogic({
       })
   }
 });
+
 const archiveEventLogic = createLogic({
   type: ARCHIVE_EVENT,
   processOptions: {
@@ -111,6 +144,7 @@ const deleteEvent = createLogic({
       firebasedb,
     } = deps;
     const { townHall, path } = action.payload;
+    console.log(path)
     const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
     if (path === 'townHalls') {
       firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
@@ -127,6 +161,7 @@ const deleteEvent = createLogic({
 export default [
   archiveEventLogic,
   approveEventLogic,
+  fetchOldEventsLogic,
   fetchEvents,
   deleteEvent,
 ];

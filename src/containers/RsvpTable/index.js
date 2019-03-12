@@ -63,9 +63,6 @@ class RSVPTable extends React.Component {
     }
 
     expandedRowRender(record) {
-        const {
-          allCurrentRsvps
-        } = this.props;
         const columns = [
                 {
                   title: 'Date',
