@@ -3,7 +3,8 @@ import {
   CHANGE_FEDERAL_STATE_RADIO, 
   GET_URL_HASH_SUCCESS,
   CHANGE_DATE_LOOKUP,
-  CHANGE_STATE_FILTERS, 
+  CHANGE_STATE_FILTERS,
+  TOGGLE_INCLUDE_LIVE_EVENTS, 
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -16,6 +17,7 @@ const initialState = {
   currentHashLocation: '/',
   dateLookupRange: [],
   filterByState: [],
+  includeLiveEvents: false,
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -44,6 +46,11 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         filterByState: action.payload,
+      }
+    case TOGGLE_INCLUDE_LIVE_EVENTS:
+      return {
+        ...state,
+        includeLiveEvents: action.payload,
       }
     default:
       return state;

@@ -5,6 +5,7 @@ import {
 import { map } from 'lodash';
 import {
   Button,
+  Switch,
   DatePicker,
   Select,
   Spin, 
@@ -33,6 +34,7 @@ class LookupOldEvents extends React.Component {
         this.onDateRangeChange = this.onDateRangeChange.bind(this);
         this.handleRequestOldEvents = this.handleRequestOldEvents.bind(this);
         this.handleAddState = this.handleAddState.bind(this);
+        this.onIncludeLiveEvents = this.onIncludeLiveEvents.bind(this);
     }
 
     onDateRangeChange(date, dateString) {
@@ -40,6 +42,17 @@ class LookupOldEvents extends React.Component {
             changeDataLookupRange
         } = this.props;
         changeDataLookupRange(dateString);
+    }
+
+    onIncludeLiveEvents(checked) {
+        console.log(checked)
+        const {
+            requestLiveEvents
+        } = this.props;
+        if(checked) {
+            requestLiveEvents('townHalls/')
+        }
+
     }
 
     handleAddState(value) {
@@ -85,6 +98,8 @@ class LookupOldEvents extends React.Component {
                 >
                     {children}
                 </Select>
+                <label>Include live events</label>
+                <Switch onChange={this.onIncludeLiveEvents} />
 
                 <Button
                     onClick={this.handleRequestOldEvents}
@@ -120,6 +135,7 @@ const mapDispatchToProps = dispatch => ({
     requestOldEvents: (path, date, dates) => dispatch(eventStateBranch.actions.requestOldEvents(path, date, dates)),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
+    requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);

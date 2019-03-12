@@ -4,6 +4,7 @@ import {
   GET_URL_HASH,
   CHANGE_DATE_LOOKUP,
   CHANGE_STATE_FILTERS,
+  TOGGLE_INCLUDE_LIVE_EVENTS,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -28,4 +29,9 @@ export const changeDateLookup = (dates) => ({
 export const changeStateFilters = (states) => ({
   type: CHANGE_STATE_FILTERS,
   payload: states,
-})
+});
+
+export const toggleIncludeLiveEventsInLookup = (include) => ({
+  type: TOGGLE_INCLUDE_LIVE_EVENTS,
+  payload: include,
+});
