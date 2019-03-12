@@ -13,7 +13,6 @@ import {
 import {
     VictoryBar,
     VictoryChart,
-    VictoryTheme
 } from 'victory';
 import {
   CSVLink,
@@ -25,7 +24,6 @@ import { getDateArray } from '../../utils';
 import { statesAb } from '../../assets/data/states';
 
 import "./style.scss";
-import { toggleIncludeLiveEventsInLookup } from '../../state/selections/actions';
 
 const {
   RangePicker,
@@ -57,7 +55,6 @@ class LookupOldEvents extends React.Component {
             liveEventUrl,
             toggleIncludeLiveEventsInLookup
         } = this.props;
-        console.log(checked)
         if (checked) {
             requestLiveEvents(liveEventUrl)
         }
