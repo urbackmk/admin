@@ -2,8 +2,8 @@
 // Initialize Firebase
 import firebase from 'firebase';
 
-const PREFIX = process.env.NODE_ENV === "production" ? "REACT_APP_PROD" : "REACT_APP_TESTING";
-// const PREFIX = 'REACT_APP_PROD'
+// const PREFIX = process.env.NODE_ENV === "production" ? "REACT_APP_PROD" : "REACT_APP_TESTING";
+const PREFIX = 'REACT_APP_PROD'
 console.log(PREFIX)
 const config = {
   apiKey: process.env[`${PREFIX}_FIREBASE_API_KEY`],

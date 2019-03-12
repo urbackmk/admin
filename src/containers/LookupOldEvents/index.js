@@ -39,8 +39,8 @@ class LookupOldEvents extends React.Component {
             archiveUrl,
             dateLookupRange,
         } = this.props;
-        const dateStart = moment(dateLookupRange[0]).startOf('day').unix();
-        const dateEnd = moment(dateLookupRange[1]).endOf('day').unix();
+        const dateStart = moment(dateLookupRange[0]).startOf('day').valueOf();
+        const dateEnd = moment(dateLookupRange[1]).endOf('day').valueOf();
 
         const dateArray = getDateArray(dateLookupRange);
         dateArray.forEach(date => {
@@ -52,6 +52,7 @@ class LookupOldEvents extends React.Component {
         const {
             allOldEvents,
             archiveUrl,
+            loading,
         } = this.props;
         return (    
             <div>
@@ -63,7 +64,7 @@ class LookupOldEvents extends React.Component {
                 <Button
                     onClick={this.handleRequestOldEvents}
                 >Request events</Button>
-                {allOldEvents.length &&
+                {allOldEvents.length && !loading &&
                     <Button 
                         icon="download"
                     >
@@ -85,6 +86,7 @@ const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
     allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
+    loading: eventStateBranch.selectors.getLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({

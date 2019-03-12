@@ -7,7 +7,6 @@ import {
   REQUEST_EVENTS, 
   REQUEST_EVENTS_SUCCESS, 
   REQUEST_EVENTS_FAILED,
-  REQUEST_OLD_EVENTS_SUCCESS,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
@@ -15,8 +14,10 @@ import {
   APPROVE_EVENT_FAIL,
   REQUEST_OLD_EVENTS,
 } from "./constants";
-import { getDateArray } from "../../utils";
-import { addOldEventToState } from "./actions";
+import {
+  addOldEventToState,
+  setLoading,
+} from "./actions";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,
@@ -54,14 +55,17 @@ const fetchOldEventsLogic = createLogic({
     const {
       payload
     } = action;
-    console.log(payload.dates[0]*100, payload.dates[1]*100, `${payload.path}/${payload.date}`)
+    console.log(payload.dates[0], payload.dates[1], `${payload.path}/${payload.date}`)
     const ref = firebasedb.ref(`${payload.path}/${payload.date}`);
+    dispatch(setLoading(true))
     ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
-      console.log(snapshot.val())
       dispatch(addOldEventToState(snapshot.val()));
     })
     ref.once('value')
-      .then(() => done())
+      .then(() => {
+        dispatch(setLoading(false))
+        done()
+      })
   }
 });
 

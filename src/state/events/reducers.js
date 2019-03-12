@@ -7,6 +7,7 @@ import {
   APPROVE_EVENT_SUCCESS,
   REQUEST_OLD_EVENTS_SUCCESS,
   RESET_OLD_EVENTS,
+  SET_LOADING,
 } from "./constants";
 import { filter } from "lodash";
 
@@ -14,6 +15,7 @@ const initialState = {
   allEvents: {},
   allOldEvents: {},
   error: null,
+  loading: false,
 };
 
 const eventReducer = (state = initialState, action) => {
@@ -25,7 +27,6 @@ const eventReducer = (state = initialState, action) => {
         error: null
       };
     case REQUEST_OLD_EVENTS_SUCCESS:
-    console.log(action.payload)
        return {
          ...state,
          allOldEvents: [...state.allOldEvents, action.payload],
@@ -61,6 +62,11 @@ const eventReducer = (state = initialState, action) => {
     case DELETE_EVENT_FAIL: 
       return {
         ...state,
+      }
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       }
     default:
       return state;

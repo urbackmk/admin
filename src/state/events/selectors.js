@@ -6,6 +6,7 @@ import {
 
 export const getAllEvents = state => state.events.allEvents;
 export const getAllOldEvents = state => state.events.allOldEvents;
+export const getLoading = state => state.events.loading;
 
 export const getAllEventsAsList = createSelector([getAllEvents], (allEvents) => {
     return map(allEvents);

@@ -10,6 +10,7 @@ import {
   REQUEST_OLD_EVENTS,
   REQUEST_OLD_EVENTS_SUCCESS,
   RESET_OLD_EVENTS,
+  SET_LOADING,
 } from './constants';
 
 
@@ -20,6 +21,11 @@ export const requestEvents = path => ({
 
 export const resetOldEvents = () => ({
   type: RESET_OLD_EVENTS,
+});
+
+export const setLoading = (loading) => ({
+  type: SET_LOADING,
+  payload: loading,
 });
 
 export const requestOldEvents = (path, date, dates) => ({
