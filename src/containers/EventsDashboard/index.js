@@ -1,19 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { map } from 'lodash';
 import {
-  List, Radio, Row,
+  Radio, 
+  Row,
 } from 'antd';
 
 import eventsStateBranch from '../../state/events';
 import selectionStateBranch from '../../state/selections'
 
 import EventList from '../../components/EventList';
-import EventCard from '../../components/EventCard';
 
 import { 
-    FEDERAL_STATE_RADIO_BUTTONS, 
-    LIVE_EVENTS_TAB,
     PENDING_EVENTS_TAB, 
     ARCHIVED_EVENTS_TAB 
 } from '../../constants';
@@ -21,9 +18,6 @@ import {
 import './style.scss';
 import LookupOldEvents from '../LookupOldEvents';
 import FederalStateRadioSwitcher from '../../components/FederalStateRadioSwitcher';
-
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
 
 class EventsDashBoard extends React.Component {
     constructor(props) {
@@ -62,7 +56,13 @@ class EventsDashBoard extends React.Component {
         const {
             eventsForList,
             pendingOrLive,
-            
+            deleteEvent,
+            approveEvent,
+            archiveEvent,
+            pathForEvents,
+            pathForArchive,
+            pathForPublishing,
+            userSubmissionPath,
         } = this.props;
         return (
             <React.Fragment>
@@ -79,6 +79,13 @@ class EventsDashBoard extends React.Component {
                 <EventList  
                     pending={pendingOrLive === PENDING_EVENTS_TAB}
                     eventsForList={eventsForList}
+                    pathForEvents={pathForEvents}
+                    deleteEvent={deleteEvent}
+                    approveEvent={approveEvent}
+                    archiveEvent={archiveEvent}
+                    pathForArchive={pathForArchive}
+                    pathForPublishing={pathForPublishing}
+                    userSubmissionPath={userSubmissionPath}
                 />}
             </React.Fragment>
         )

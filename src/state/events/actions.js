@@ -8,6 +8,8 @@ import {
   ARCHIVE_EVENT,
   APPROVE_EVENT,
   REQUEST_OLD_EVENTS,
+  REQUEST_OLD_EVENTS_SUCCESS,
+  RESET_OLD_EVENTS,
 } from './constants';
 
 
@@ -16,10 +18,24 @@ export const requestEvents = path => ({
   payload: path,
 });
 
-export const requestOldEvents = path => ({
-  type: REQUEST_OLD_EVENTS,
-  payload: path,
+export const resetOldEvents = () => ({
+  type: RESET_OLD_EVENTS,
 });
+
+export const requestOldEvents = (path, date, dates) => ({
+    type: REQUEST_OLD_EVENTS,
+    payload: {
+        path,
+        date,
+        dates,
+    }
+})
+  
+export const addOldEventToState = events => ({
+  type: REQUEST_OLD_EVENTS_SUCCESS,
+  payload: events
+});
+
 
 export const getEventsSuccess = events => ({
   type: REQUEST_PENDING_EVENTS_SUCCESS,
@@ -46,7 +62,7 @@ export const deleteEvent = (townHall, path) => ({
     townHall,
     path,
   }
-})
+});
 
 export const archiveEvent = (townHall, path, archivePath) => ({
   type: ARCHIVE_EVENT,
@@ -55,7 +71,7 @@ export const archiveEvent = (townHall, path, archivePath) => ({
     path,
     archivePath,
   }
-})
+});
 
 export const approveEvent = (townHall, path, livePath) => ({
   type: APPROVE_EVENT,
@@ -64,5 +80,5 @@ export const approveEvent = (townHall, path, livePath) => ({
     path,
     livePath,
   }
-})
+});
 

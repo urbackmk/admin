@@ -13,7 +13,7 @@ export const getAllEventsAsList = createSelector([getAllEvents], (allEvents) => 
 
 export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvents) => {
 
-  return map(allEvents, eventData=> {
+  return map(allEvents, eventData => {
 
             const convertedTownHall = {};
 
@@ -42,7 +42,7 @@ export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvent
             convertedTownHall.Time_Zone = eventData.timeZone || ' ';
             convertedTownHall.Zone_ID = eventData.zoneString || ' ';
             convertedTownHall.Address = eventData.address;
-            convertedTownHall.Notes = eventData.Notes ? eventData.Notes.replace(/\"/g, '\'') : ' ';
+            convertedTownHall.Notes = eventData.Notes ? eventData.Notes.replace(/"/g, '\'') : ' ';
             convertedTownHall.Map_Icon = eventData.iconFlag;
             convertedTownHall.Link = eventData.link || 'https://townhallproject.com/?eventId=' + eventData.eventId;
             convertedTownHall.Link_Name = eventData.linkName || ' ';

@@ -5,17 +5,12 @@ import {
   Row,
 } from 'antd';
 
-import EventCard from '../../components/EventCard';
-import { FEDERAL_STATE_RADIO_BUTTONS, PENDING_EVENTS_TAB } from '../../constants';
-
+import { FEDERAL_STATE_RADIO_BUTTONS } from '../../constants';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 class FederalStateRadioSwitcher extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     render () {
         return (

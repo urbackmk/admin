@@ -8,34 +8,60 @@ import {
 } from 'antd';
 import {
   CSVLink,
-} from "react-csv";
-
+} from 'react-csv';
+import moment from 'moment';
 import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
+import { getDateArray } from '../../utils';
 
-import FederalStateRadioSwitcher from '../../components/FederalStateRadioSwitcher';
 const {
   RangePicker,
 } = DatePicker;
 
-class RSVPTable extends React.Component {
+class LookupOldEvents extends React.Component {
 
-    onChange(date, dateString) {
-    console.log(date, dateString);
+    constructor(props) {
+        super(props);
+        this.onDateRangeChange = this.onDateRangeChange.bind(this);
+        this.handleRequestOldEvents = this.handleRequestOldEvents.bind(this);
+    }
+
+    onDateRangeChange(date, dateString) {
+        const {
+            changeDataLookupRange
+        } = this.props;
+        changeDataLookupRange(dateString);
+    }
+
+    handleRequestOldEvents(){
+        const {
+            requestOldEvents,
+            archiveUrl,
+            dateLookupRange,
+        } = this.props;
+        const dateStart = moment(dateLookupRange[0]).startOf('day').unix();
+        const dateEnd = moment(dateLookupRange[1]).endOf('day').unix();
+
+        const dateArray = getDateArray(dateLookupRange);
+        dateArray.forEach(date => {
+            requestOldEvents(archiveUrl, date, [dateStart, dateEnd])
+        })
     }
 
     render() {
         const {
             allOldEvents,
-            requestOldEvents,
             archiveUrl,
         } = this.props;
         return (    
             <div>
-                <RangePicker onChange={this.onChange} />
+                <RangePicker 
+                    onChange={this.onDateRangeChange} 
+                    format = "MMM D, YYYY"
+                />
 
                 <Button
-                    onClick={() => requestOldEvents(archiveUrl)}
+                    onClick={this.handleRequestOldEvents}
                 >Request events</Button>
                 {allOldEvents.length &&
                     <Button 
@@ -58,10 +84,12 @@ class RSVPTable extends React.Component {
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
     allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
+    dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    requestOldEvents: (path) => dispatch(eventStateBranch.actions.requestOldEvents(path)),
+    requestOldEvents: (path, date, dates) => dispatch(eventStateBranch.actions.requestOldEvents(path, date, dates)),
+    changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RSVPTable);
+export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);

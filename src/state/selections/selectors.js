@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import {
   includes,
-  map,
 } from 'lodash';
 
 import { 
@@ -10,16 +9,12 @@ import {
   STATES_LEGS 
 } from '../../constants';
 
-import {
-  getAllLiveEvents,
-  getAllPendingEvents,
-} from '../events/selectors';
-
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
 export const getMode = state => state.selections.mode;
 export const getCurrentHashLocation = state => state.selections.currentHashLocation;
 export const getOldEventsActiveFederalOrState = state => state.selections.federalOrStateOldEvents;
+export const getDateRange = state => state.selections.dateLookupRange;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
@@ -39,7 +34,7 @@ export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalO
   if (includes(STATES_LEGS, federalOrState)) {
     return `state_townhalls_archive/${federalOrState}`;
   }
-  return 'archive_116th_congress';
+  return 'archive_clean';
 });
 
 export const getEventsToShowUrl = createSelector([getPendingOrLiveTab, getSubmissionUrl, getLiveEventUrl], 
