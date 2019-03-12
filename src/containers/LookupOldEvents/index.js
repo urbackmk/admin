@@ -8,9 +8,13 @@ import {
   Switch,
   DatePicker,
   Select,
-  Spin, 
-  Icon,
+  Row,
 } from 'antd';
+import {
+    VictoryBar,
+    VictoryChart,
+    VictoryTheme
+} from 'victory';
 import {
   CSVLink,
 } from 'react-csv';
@@ -19,6 +23,8 @@ import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
 import { getDateArray } from '../../utils';
 import { statesAb } from '../../assets/data/states';
+
+import "./style.scss";
 
 const {
   RangePicker,
@@ -45,7 +51,6 @@ class LookupOldEvents extends React.Component {
     }
 
     onIncludeLiveEvents(checked) {
-        console.log(checked)
         const {
             requestLiveEvents
         } = this.props;
@@ -56,7 +61,6 @@ class LookupOldEvents extends React.Component {
     }
 
     handleAddState(value) {
-        console.log(value)
         const {
           handleChangeStateFilters
         } = this.props;
@@ -83,41 +87,85 @@ class LookupOldEvents extends React.Component {
             filteredOldEvents,
             archiveUrl,
             loading,
+            dataForChart,
         } = this.props;
         return (    
-            <div>
-                <RangePicker 
-                    onChange={this.onDateRangeChange} 
-                    format = "MMM D, YYYY"
-                />
-                <Select
-                    mode="tags"
-                    placeholder="Select a state to filter"
-                    onChange={this.handleAddState}
-                    style={{ width: '100%' }}
+            <div
+                className="lookup-form"
+            >
+                <Row
+                    type="flex" 
                 >
-                    {children}
-                </Select>
-                <label>Include live events</label>
-                <Switch onChange={this.onIncludeLiveEvents} />
-
-                <Button
-                    onClick={this.handleRequestOldEvents}
-                >Request events</Button>
-                {loading && (<Icon type="loading" style={{ fontSize: 24 }} spin />)}
-                {filteredOldEvents.length && !loading &&
-                    <Button 
-                        icon="download"
+                    <RangePicker 
+                        onChange={this.onDateRangeChange} 
+                        format = "MMM D, YYYY"
+                    />
+                </Row>
+                <Row
+                    type="flex" 
+                >
+                    <Select
+                        mode="tags"
+                        placeholder="Select a state to filter"
+                        onChange={this.handleAddState}
+                        style={{ width: '100%' }}
                     >
-                        <CSVLink 
-                            data = {
-                            filteredOldEvents
-                            }
-                            filename={`${archiveUrl}.csv`}
-                        > DownloadEvents
-                        </CSVLink>
-                    </Button>
+                        {children}
+                    </Select>
+                </Row>
+                <Row
+                    type="flex" 
+                >
+                    <label>Include live events</label>
+                    <Switch onChange={this.onIncludeLiveEvents} />
+                </Row>
+                <Row
+                    type="flex" 
+                >
+                    <Button
+                        onClick={this.handleRequestOldEvents}
+                        loading={loading}
+                        type="primary"
+                    >Request events</Button>
+                
+                    {filteredOldEvents.length && !loading &&
+                    <React.Fragment>
+                        <Button 
+                            icon="download"
+                        >
+                            <CSVLink 
+                                data = {
+                                filteredOldEvents
+                                }
+                                filename={`${archiveUrl}.csv`}
+                            > DownloadEvents
+                            </CSVLink>
+                        </Button>
+                          <VictoryChart
+                            domainPadding={{ x: 20 }}
+
+                          >
+                            <VictoryBar
+                                horizontal
+                                barWidth={40}
+
+                                data={dataForChart}
+                                x="party"
+                                width={200}
+                                y="value"
+                                 style={{
+                                data: {
+                                    fill: (d) => d.party === 'R' ? "#ff4741" : "#3facef",
+                                    stroke: (d) => d.party === 'R' ? "#ff4741" : "#3facef",
+                                    fillOpacity: 0.7,
+                                    strokeWidth: 3
+                                    }}
+                                }
+                            />
+                        </VictoryChart>
+                    </React.Fragment>
                 }
+                </Row>
             </div>
         );
     }
@@ -129,6 +177,7 @@ const mapStateToProps = state => ({
     filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
     loading: eventStateBranch.selectors.getLoading(state),
+    dataForChart: selectionStateBranch.selectors.getDataForArchiveChart(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 import {
   includes,
   filter,
+  map, 
+  reduce,
 } from 'lodash';
 
 import { 
@@ -86,4 +88,29 @@ export const getFilteredArchivedEvents = createSelector(
     return filter(allEvents, (event) => {
       return includes(states, event.state);
     })
-})
+});
+
+export const getDataForArchiveChart = createSelector(
+  [getFilteredArchivedEvents],
+  (allEvents) => {
+    if (!allEvents) {
+      return [];
+    }
+    return map(reduce(allEvents, (acc, cur) => {
+      const party = cur.Party || false;
+      if (acc[party] >= 0) {
+        acc[party] = acc[party] + 1;
+      }
+      return acc;
+    }, {
+      D: 0,
+      R: 0,
+      I: 0,
+    }), (value, key) => {
+      return {
+        party: key,
+        value
+      }
+    })
+  }
+)
