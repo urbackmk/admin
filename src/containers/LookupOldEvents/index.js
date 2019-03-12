@@ -154,9 +154,12 @@ class LookupOldEvents extends React.Component {
                             > DownloadEvents
                             </CSVLink>
                         </Button>
-                          <VictoryChart
+                  
+                    </React.Fragment>
+                }
+                    {filteredOldEvents.length &&        
+                     <VictoryChart
                             domainPadding={{ x: 20 }}
-
                           >
                             <VictoryBar
                                 horizontal
@@ -172,9 +175,7 @@ class LookupOldEvents extends React.Component {
                                     }}
                                 }
                             />
-                        </VictoryChart>
-                    </React.Fragment>
-                }
+                        </VictoryChart>}
                 </Row>
             </div>
         );

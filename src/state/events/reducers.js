@@ -29,7 +29,7 @@ const eventReducer = (state = initialState, action) => {
     case REQUEST_OLD_EVENTS_SUCCESS:
        return {
          ...state,
-         allOldEvents: [...state.allOldEvents, action.payload],
+         allOldEvents: [...state.allOldEvents, ...action.payload],
          error: null
        };
     case RESET_OLD_EVENTS:
