@@ -2,9 +2,13 @@ import React from 'react';
 import {
   connect
 } from 'react-redux';
+import { map } from 'lodash';
 import {
   Button,
   DatePicker,
+  Select,
+  Spin, 
+  Icon,
 } from 'antd';
 import {
   CSVLink,
@@ -13,10 +17,14 @@ import moment from 'moment';
 import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
 import { getDateArray } from '../../utils';
+import { statesAb } from '../../assets/data/states';
 
 const {
   RangePicker,
 } = DatePicker;
+const Option = Select.Option;
+
+const children = map(statesAb, (value, key) => (<Option key={key}>{value}</Option>));
 
 class LookupOldEvents extends React.Component {
 
@@ -24,6 +32,7 @@ class LookupOldEvents extends React.Component {
         super(props);
         this.onDateRangeChange = this.onDateRangeChange.bind(this);
         this.handleRequestOldEvents = this.handleRequestOldEvents.bind(this);
+        this.handleAddState = this.handleAddState.bind(this);
     }
 
     onDateRangeChange(date, dateString) {
@@ -31,6 +40,14 @@ class LookupOldEvents extends React.Component {
             changeDataLookupRange
         } = this.props;
         changeDataLookupRange(dateString);
+    }
+
+    handleAddState(value) {
+        console.log(value)
+        const {
+          handleChangeStateFilters
+        } = this.props;
+        handleChangeStateFilters(value)
     }
 
     handleRequestOldEvents(){
@@ -50,7 +67,7 @@ class LookupOldEvents extends React.Component {
 
     render() {
         const {
-            allOldEvents,
+            filteredOldEvents,
             archiveUrl,
             loading,
         } = this.props;
@@ -60,17 +77,26 @@ class LookupOldEvents extends React.Component {
                     onChange={this.onDateRangeChange} 
                     format = "MMM D, YYYY"
                 />
+                <Select
+                    mode="tags"
+                    placeholder="Select a state to filter"
+                    onChange={this.handleAddState}
+                    style={{ width: '100%' }}
+                >
+                    {children}
+                </Select>
 
                 <Button
                     onClick={this.handleRequestOldEvents}
                 >Request events</Button>
-                {allOldEvents.length && !loading &&
+                {loading && (<Icon type="loading" style={{ fontSize: 24 }} spin />)}
+                {filteredOldEvents.length && !loading &&
                     <Button 
                         icon="download"
                     >
                         <CSVLink 
                             data = {
-                            allOldEvents
+                            filteredOldEvents
                             }
                             filename={`${archiveUrl}.csv`}
                         > DownloadEvents
@@ -85,6 +111,7 @@ class LookupOldEvents extends React.Component {
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
     allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
+    filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
     loading: eventStateBranch.selectors.getLoading(state),
 });
@@ -92,6 +119,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     requestOldEvents: (path, date, dates) => dispatch(eventStateBranch.actions.requestOldEvents(path, date, dates)),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
+    handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);

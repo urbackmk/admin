@@ -18,7 +18,7 @@ export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvent
 
             const convertedTownHall = {};
 
-            convertedTownHall.Member = eventData.displayName;
+            convertedTownHall.Member = eventData.displayName || eventData.Member;
             convertedTownHall.Event_Name = eventData.eventName ? eventData.eventName : ' ';
             convertedTownHall.Location = eventData.Location ? eventData.Location : ' ';
             convertedTownHall.Meeting_Type = eventData.meetingType;
@@ -26,8 +26,8 @@ export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvent
             convertedTownHall.District = eventData.state + district;
             convertedTownHall.govtrack_id = eventData.govtrack_id || ' ';
             convertedTownHall.Party = eventData.party;
-            convertedTownHall.state = eventData.state;
-            convertedTownHall.State = eventData.stateName ? eventData.stateName : eventData.State;
+            convertedTownHall.State = eventData.state;
+            convertedTownHall.State_name = eventData.stateName ? eventData.stateName : eventData.State;
             if (eventData.repeatingEvent) {
               convertedTownHall.Repeating_Event = eventData.repeatingEvent;
               convertedTownHall.Date = ' ';

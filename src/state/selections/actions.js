@@ -3,6 +3,7 @@ import {
   CHANGE_FEDERAL_STATE_RADIO,
   GET_URL_HASH,
   CHANGE_DATE_LOOKUP,
+  CHANGE_STATE_FILTERS,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -22,4 +23,9 @@ export const getHashLocationAndSave = () => ({
 export const changeDateLookup = (dates) => ({
   type: CHANGE_DATE_LOOKUP,
   payload: dates,
+});
+
+export const changeStateFilters = (states) => ({
+  type: CHANGE_STATE_FILTERS,
+  payload: states,
 })

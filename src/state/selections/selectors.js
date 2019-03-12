@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import {
   includes,
+  filter,
 } from 'lodash';
 
 import { 
@@ -8,6 +9,7 @@ import {
   PENDING_EVENTS_TAB, 
   STATES_LEGS 
 } from '../../constants';
+import { getAllOldEvents, getAllOldEventsAsList } from '../events/selectors';
 
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
@@ -15,6 +17,7 @@ export const getMode = state => state.selections.mode;
 export const getCurrentHashLocation = state => state.selections.currentHashLocation;
 export const getOldEventsActiveFederalOrState = state => state.selections.federalOrStateOldEvents;
 export const getDateRange = state => state.selections.dateLookupRange;
+export const getStatesToFilterArchiveBy = state => state.selections.filterByState;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
@@ -66,3 +69,12 @@ export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode
   }
   return 'mocData';
 });
+
+export const getFilteredArchivedEvents = createSelector([getStatesToFilterArchiveBy, getAllOldEventsAsList], (states, oldEvents) => {
+  if (!states.length) {
+    return oldEvents;
+  }
+  return filter(oldEvents, (event) => {
+    return includes(states, event.state);
+  })
+})
