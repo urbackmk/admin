@@ -13,6 +13,9 @@ import {
   APPROVE_EVENT_SUCCESS,
   APPROVE_EVENT_FAIL,
   REQUEST_OLD_EVENTS,
+  UPDATE_EXISTING_EVENT,
+  UPDATE_EVENT_SUCCESS,
+  UPDATE_EVENT_FAIL,
 } from "./constants";
 import {
   addOldEventToState,
@@ -169,10 +172,32 @@ const deleteEvent = createLogic({
   }
 })
 
+const updateEventLogic = createLogic({
+  type: UPDATE_EXISTING_EVENT,
+  processOptions: {
+    successType: UPDATE_EVENT_SUCCESS,
+    failType: UPDATE_EVENT_FAIL,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const { updateData, path, eventId } = action.payload;
+    if(!path || !eventId) {
+      return
+    }
+    return firebasedb.ref(`${path}/${eventId}`).update(updateData).then(() => {
+      return {...updateData, eventId}
+    })
+  }
+})
+
 export default [
   archiveEventLogic,
   approveEventLogic,
   fetchOldEventsLogic,
   fetchEvents,
   deleteEvent,
+  updateEventLogic,
 ];

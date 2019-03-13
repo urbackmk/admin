@@ -12,6 +12,7 @@ export default class MeetingTypeSelect extends React.Component {
   render() {
     const {
       meetingType,
+      selectMeetingType,
     } = this.props;
     return (
       <div>
@@ -19,6 +20,7 @@ export default class MeetingTypeSelect extends React.Component {
             defaultValue={meetingType}
             key="meetingType"
             placeholder="Meeting type"
+            onSelect={selectMeetingType}
           >
             <Option value="Town Hall">
             Town Hall

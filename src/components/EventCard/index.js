@@ -19,7 +19,8 @@ export default class EventCard extends React.Component {
         this.state = {
             editMeetingType: false,
         }
-        this.handleEditMeetingType = this.handleEditMeetingType.bind(this)
+        this.setEditMeetingTypeTrue = this.setEditMeetingTypeTrue.bind(this)
+        this.selectMeetingType = this.selectMeetingType.bind(this)
     }
 
     renderPendingActions() {
@@ -45,8 +46,16 @@ export default class EventCard extends React.Component {
                     <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>]
     }
 
-    handleEditMeetingType() {
+    setEditMeetingTypeTrue() {
         this.setState({editMeetingType: true})
+    }
+
+    selectMeetingType(value) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({meetingType: value})
+        this.setState({editMeetingType: false})
     }
 
     render() {
@@ -54,8 +63,8 @@ export default class EventCard extends React.Component {
           townHall,
           pending,
         } = this.props;
-        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.handleEditMeetingType} /></React.Fragment>)
-        const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType}/>)
+        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
+        const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>)
         return (
             <Card 
                 key={townHall.eventId}

@@ -8,8 +8,9 @@ import {
   REQUEST_OLD_EVENTS_SUCCESS,
   RESET_OLD_EVENTS,
   SET_LOADING,
+  UPDATE_EVENT_SUCCESS,
 } from "./constants";
-import { filter } from "lodash";
+import { filter, map } from "lodash";
 
 const initialState = {
   allEvents: {},
@@ -68,6 +69,16 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         loading: action.payload,
       }
+      case UPDATE_EVENT_SUCCESS:
+        return {
+          ...state,
+          allEvents: map(state.allEvents, (ele) => {
+            if(ele.eventId === action.payload.eventId) {
+              return {...ele, ...action.payload}
+            }
+            return ele
+          })
+        }
     default:
       return state;
   }
