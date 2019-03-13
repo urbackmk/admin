@@ -5,6 +5,7 @@ import {
   Tag,
 } from 'antd';
 
+import MeetingTypeSelect from './MeetingTypeSelect.js';
 import './style.scss';
 
 const {
@@ -12,6 +13,14 @@ const {
 } = Card;
 
 export default class EventCard extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            editMeetingType: false,
+        }
+        this.handleEditMeetingType = this.handleEditMeetingType.bind(this)
+    }
 
     renderPendingActions() {
         const {
@@ -36,11 +45,17 @@ export default class EventCard extends React.Component {
                     <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>]
     }
 
+    handleEditMeetingType() {
+        this.setState({editMeetingType: true})
+    }
+
     render() {
         const {
           townHall,
           pending,
         } = this.props;
+        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.handleEditMeetingType} /></React.Fragment>)
+        const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType}/>)
         return (
             <Card 
                 key={townHall.eventId}
@@ -51,7 +66,7 @@ export default class EventCard extends React.Component {
             >
                 <Meta
                     title={townHall.eventName || ''}
-                    description={townHall.meetingType}
+                    description={this.state.editMeetingType ? selectMeetingType : displayMeetingType}
                 />
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
