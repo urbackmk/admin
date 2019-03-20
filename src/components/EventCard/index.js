@@ -6,8 +6,6 @@ import {
   Input,
 } from 'antd';
 
-
-
 import MeetingTypeSelect from './MeetingTypeSelect.js';
 import IconFlagSelect from './IconFlagSelect.js';
 import './style.scss';
