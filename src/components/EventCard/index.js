@@ -6,6 +6,7 @@ import {
 } from 'antd';
 
 import MeetingTypeSelect from './MeetingTypeSelect.js';
+import IconFlagSelect from './IconFlagSelect.js';
 import './style.scss';
 
 const {
@@ -17,10 +18,12 @@ export default class EventCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            editMeetingType: false,
+            currentEditing: false,
         }
         this.setEditMeetingTypeTrue = this.setEditMeetingTypeTrue.bind(this)
         this.selectMeetingType = this.selectMeetingType.bind(this)
+        this.setEditIconFlagTrue = this.setEditIconFlagTrue.bind(this)
+        this.selectIconFlag = this.selectIconFlag.bind(this)
     }
 
     renderPendingActions() {
@@ -47,7 +50,7 @@ export default class EventCard extends React.Component {
     }
 
     setEditMeetingTypeTrue() {
-        this.setState({editMeetingType: true})
+        this.setState({currentEditing: 'meetingType'})
     }
 
     selectMeetingType(value) {
@@ -55,7 +58,19 @@ export default class EventCard extends React.Component {
             updateEvent,
         } = this.props
         updateEvent({meetingType: value})
-        this.setState({editMeetingType: false})
+        this.setState({currentEditing: false})
+    }
+
+    setEditIconFlagTrue() {
+        this.setState({currentEditing: 'iconFlag'})
+    }
+
+    selectIconFlag(value) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({iconFlag: value})
+        this.setState({currentEditing: false})
     }
 
     render() {
@@ -65,6 +80,9 @@ export default class EventCard extends React.Component {
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>)
+        const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Button icon="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
+        const selectIconFlag = (<IconFlagSelect iconFlag={townHall.iconFlag} onSelect={this.selectIconFlag}/>)
+        
         return (
             <Card 
                 key={townHall.eventId}
@@ -75,7 +93,7 @@ export default class EventCard extends React.Component {
             >
                 <Meta
                     title={townHall.eventName || ''}
-                    description={this.state.editMeetingType ? selectMeetingType : displayMeetingType}
+                    description={this.state.currentEditing === 'meetingType' ? selectMeetingType : displayMeetingType}
                 />
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
@@ -83,6 +101,7 @@ export default class EventCard extends React.Component {
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
                     <li>Chamber: {townHall.chamber}</li>
+                    <li>Icon Flag {this.state.currentEditing === 'iconFlag' ? selectIconFlag : displayIconFlag}</li>
                     <li>Entered by: {townHall.enteredBy}</li>
                     <Tag color={townHall.dateValid ? "#2db7f5" : "#f50" }>{townHall.dateValid ? 'Date Valid' : 'Date not valid' }</Tag>
                     <Tag color={townHall.lat ?  "#2db7f5" : "#f50"}>{townHall.lat ? 'has geocode' : 'needs geocode'}</Tag>
