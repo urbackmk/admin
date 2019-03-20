@@ -3,6 +3,7 @@ import {
   Card,
   Button,
   Tag,
+  Input,
 } from 'antd';
 
 import MeetingTypeSelect from './MeetingTypeSelect.js';
@@ -12,6 +13,11 @@ import './style.scss';
 const {
   Meta,
 } = Card;
+
+const { 
+    TextArea 
+} = Input;
+
 
 export default class EventCard extends React.Component {
 
@@ -24,6 +30,8 @@ export default class EventCard extends React.Component {
         this.selectMeetingType = this.selectMeetingType.bind(this)
         this.setEditIconFlagTrue = this.setEditIconFlagTrue.bind(this)
         this.selectIconFlag = this.selectIconFlag.bind(this)
+        this.setEditEventNotesTrue = this.setEditEventNotesTrue.bind(this)
+        this.selectEventNotes = this.selectEventNotes.bind(this)
     }
 
     renderPendingActions() {
@@ -73,6 +81,19 @@ export default class EventCard extends React.Component {
         this.setState({currentEditing: false})
     }
 
+    setEditEventNotesTrue() {
+        this.setState({currentEditing: 'eventNotes'})
+    }
+
+    selectEventNotes({target}) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({Notes: target.value.trim()})
+        console.log(target.value.trim())
+        this.setState({currentEditing: false})
+    }
+
     render() {
         const {
           townHall,
@@ -82,6 +103,8 @@ export default class EventCard extends React.Component {
         const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Button icon="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
         const selectIconFlag = (<IconFlagSelect iconFlag={townHall.iconFlag} onSelect={this.selectIconFlag}/>)
+        const displayEditNotes = (<React.Fragment><span>{townHall.Notes}</span><Button icon="edit" onClick={this.setEditEventNotesTrue} /></React.Fragment>)
+        const selectEventNotes = (<TextArea onPressEnter={this.selectEventNotes} defaultValue={townHall.Notes}/>)
         
         return (
             <Card 
@@ -95,6 +118,7 @@ export default class EventCard extends React.Component {
                     title={townHall.eventName || ''}
                     description={this.state.currentEditing === 'meetingType' ? selectMeetingType : displayMeetingType}
                 />
+                <p>{this.state.currentEditing === 'eventNotes' ? selectEventNotes : displayEditNotes}</p>
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
