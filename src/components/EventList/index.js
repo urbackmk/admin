@@ -21,6 +21,7 @@ class EventList extends React.Component {
             deleteEvent,
             pathForEvents,
             pathForPublishing,
+            updateEvent,
         } = this.props;
         return (
             <List.Item>
@@ -37,6 +38,10 @@ class EventList extends React.Component {
                     deleteEvent={() => {
                         console.log('deleting')
                         return deleteEvent(townHall, pathForEvents)
+                    }}
+                    updateEvent={(newData) => {
+                        console.log('updating')
+                        return updateEvent(newData, pathForEvents, townHall.eventId)
                     }}
                 />
             </List.Item>

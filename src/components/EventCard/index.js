@@ -5,6 +5,7 @@ import {
   Tag,
 } from 'antd';
 
+import MeetingTypeSelect from './MeetingTypeSelect.js';
 import './style.scss';
 
 const {
@@ -12,6 +13,15 @@ const {
 } = Card;
 
 export default class EventCard extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            editMeetingType: false,
+        }
+        this.setEditMeetingTypeTrue = this.setEditMeetingTypeTrue.bind(this)
+        this.selectMeetingType = this.selectMeetingType.bind(this)
+    }
 
     renderPendingActions() {
         const {
@@ -36,11 +46,25 @@ export default class EventCard extends React.Component {
                     <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>]
     }
 
+    setEditMeetingTypeTrue() {
+        this.setState({editMeetingType: true})
+    }
+
+    selectMeetingType(value) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({meetingType: value})
+        this.setState({editMeetingType: false})
+    }
+
     render() {
         const {
           townHall,
           pending,
         } = this.props;
+        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
+        const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>)
         return (
             <Card 
                 key={townHall.eventId}
@@ -51,7 +75,7 @@ export default class EventCard extends React.Component {
             >
                 <Meta
                     title={townHall.eventName || ''}
-                    description={townHall.meetingType}
+                    description={this.state.editMeetingType ? selectMeetingType : displayMeetingType}
                 />
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>

@@ -63,6 +63,7 @@ class EventsDashBoard extends React.Component {
             pathForArchive,
             pathForPublishing,
             userSubmissionPath,
+            updateEvent,
         } = this.props;
         return (
             <React.Fragment>
@@ -86,6 +87,7 @@ class EventsDashBoard extends React.Component {
                     pathForArchive={pathForArchive}
                     pathForPublishing={pathForPublishing}
                     userSubmissionPath={userSubmissionPath}
+                    updateEvent={updateEvent}
                 />}
             </React.Fragment>
         )
@@ -107,6 +109,7 @@ const mapDispatchToProps = dispatch => ({
     deleteEvent: (townHall, path) => dispatch(eventsStateBranch.actions.deleteEvent(townHall, path)),
     changeRadioButton: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
     requestEvents: (path) => dispatch(eventsStateBranch.actions.requestEvents(path)),
+    updateEvent: (newData, path, eventId) => dispatch(eventsStateBranch.actions.updateExistingEvent(newData, path, eventId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsDashBoard);
