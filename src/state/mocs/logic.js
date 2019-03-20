@@ -12,6 +12,17 @@ const fetchMocs = createLogic({
   }
 });
 
+const addCandidate = createLogic({
+  type: GET_MOCS,
+  processOptions: {
+    successType: GET_MOCS_SUCCESS,
+    failType: GET_MOCS_FAILED,
+  },
+  process(deps) {
+    return deps.httpClient.get(`${deps.firebaseUrl}/mocID.json`);
+  }
+});
+
 export default [
   fetchMocs
 ];

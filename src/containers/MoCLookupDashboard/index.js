@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import mocStateBranch from '../../state/mocs';
 
+import AddPersonForm from '../../components/AddPersonForm';
 import MocLookUp from '../../components/MocLookup';
 
 class MoCLookUpDashboard extends React.Component {
@@ -18,9 +19,13 @@ class MoCLookUpDashboard extends React.Component {
             allMocNamesIds
         } = this.props;
         return (
+            <div>
             <MocLookUp 
                 allMocNamesIds={allMocNamesIds}
             />
+            <h1>Add a candidate</h1>
+            <AddPersonForm />
+            </div>
         );
     }
 }
