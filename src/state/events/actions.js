@@ -11,6 +11,7 @@ import {
   REQUEST_OLD_EVENTS_SUCCESS,
   RESET_OLD_EVENTS,
   SET_LOADING,
+  UPDATE_EXISTING_EVENT,
 } from './constants';
 
 
@@ -88,3 +89,11 @@ export const approveEvent = (townHall, path, livePath) => ({
   }
 });
 
+export const updateExistingEvent = (updateData, path, eventId) => ({
+  type: UPDATE_EXISTING_EVENT,
+  payload: {
+    updateData,
+    path,
+    eventId,
+  }
+});
