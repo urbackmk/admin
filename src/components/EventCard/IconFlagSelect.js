@@ -29,6 +29,7 @@ export default class MeetingTypeSelect extends React.Component {
             key="iconFlag"
             placeholder="Meeting type"
             onSelect={onSelect}
+            style={{width: 200 }}
           >
             <Option value={IN_PERSON_ICON_FLAG}>
             In Person

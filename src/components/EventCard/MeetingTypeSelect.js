@@ -21,6 +21,7 @@ export default class MeetingTypeSelect extends React.Component {
             key="meetingType"
             placeholder="Meeting type"
             onSelect={selectMeetingType}
+            style={{width: 200 }}
           >
             <Option value="Town Hall">
             Town Hall
