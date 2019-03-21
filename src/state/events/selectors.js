@@ -27,6 +27,7 @@ export const getAllOldEventsAsList = createSelector([getAllOldEvents], (allEvent
             convertedTownHall.govtrack_id = eventData.govtrack_id || ' ';
             convertedTownHall.Party = eventData.party;
             convertedTownHall.State = eventData.state;
+            convertedTownHall.Chamber = eventData.chamber;
             convertedTownHall.State_name = eventData.stateName ? eventData.stateName : eventData.State;
             if (eventData.repeatingEvent) {
               convertedTownHall.Repeating_Event = eventData.repeatingEvent;
