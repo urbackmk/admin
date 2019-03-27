@@ -4,7 +4,8 @@ import {
   GET_URL_HASH_SUCCESS,
   CHANGE_DATE_LOOKUP,
   CHANGE_STATE_FILTERS,
-  TOGGLE_INCLUDE_LIVE_EVENTS, 
+  TOGGLE_INCLUDE_LIVE_EVENTS,
+  CHANGE_MODE, 
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -14,6 +15,7 @@ import {
 const initialState = {
   selectedEventTab: PENDING_EVENTS_TAB,
   federalOrState: FEDERAL_RADIO_BUTTON,
+  mode: '',
   currentHashLocation: '/',
   dateLookupRange: [],
   filterByState: [],
@@ -51,6 +53,11 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         includeLiveEvents: action.payload,
+      }
+    case CHANGE_MODE:
+      return {
+        ...state,
+        mode: action.payload,
       }
     default:
       return state;
