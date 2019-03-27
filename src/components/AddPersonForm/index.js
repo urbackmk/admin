@@ -32,12 +32,16 @@ class AddPersonForm extends React.Component {
   }
 
   handleSubmit(e) {
-    const { saveCandidate } = this.props;
+    const {
+      saveCandidate,
+      form
+    } = this.props;
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        saveCandidate(values)
+        saveCandidate(values);
+        form.resetFields();
       }
     });
   }

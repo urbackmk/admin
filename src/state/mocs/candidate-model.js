@@ -12,6 +12,7 @@ export default class Candidate {
     this.email = opts.email || null;
     this.in_office = false;
     this.role = opts.role || null;
+    this.incumbent = opts.incumbent || false;
     this.displayName = opts.displayName.replace(/\./g, '');
     this.lastUpdated = opts.lastUpdated || null;
     this.lastUpdatedBy = opts.lastUpdatedBy || null;
