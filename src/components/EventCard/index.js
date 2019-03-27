@@ -3,24 +3,38 @@ import {
   Card,
   Button,
   Tag,
+  Input,
+  Row,
+  Icon,
 } from 'antd';
 
 import MeetingTypeSelect from './MeetingTypeSelect.js';
+import IconFlagSelect from './IconFlagSelect.js';
 import './style.scss';
 
 const {
   Meta,
 } = Card;
 
+const { 
+    TextArea 
+} = Input;
+
+
 export default class EventCard extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            editMeetingType: false,
+            currentEditing: false,
         }
         this.setEditMeetingTypeTrue = this.setEditMeetingTypeTrue.bind(this)
         this.selectMeetingType = this.selectMeetingType.bind(this)
+        this.setEditIconFlagTrue = this.setEditIconFlagTrue.bind(this)
+        this.selectIconFlag = this.selectIconFlag.bind(this)
+        this.setEditEventNotesTrue = this.setEditEventNotesTrue.bind(this)
+        this.selectEventNotes = this.selectEventNotes.bind(this)
+        this.stopEditing = this.stopEditing.bind(this)
     }
 
     renderPendingActions() {
@@ -47,7 +61,7 @@ export default class EventCard extends React.Component {
     }
 
     setEditMeetingTypeTrue() {
-        this.setState({editMeetingType: true})
+        this.setState({currentEditing: 'meetingType'})
     }
 
     selectMeetingType(value) {
@@ -55,7 +69,36 @@ export default class EventCard extends React.Component {
             updateEvent,
         } = this.props
         updateEvent({meetingType: value})
-        this.setState({editMeetingType: false})
+        this.setState({currentEditing: false})
+    }
+
+    setEditIconFlagTrue() {
+        this.setState({currentEditing: 'iconFlag'})
+    }
+
+    selectIconFlag(value) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({iconFlag: value})
+        this.setState({currentEditing: false})
+    }
+
+    setEditEventNotesTrue() {
+        this.setState({currentEditing: 'eventNotes'})
+    }
+
+    selectEventNotes({target}) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({Notes: target.value.trim()})
+        this.setState({currentEditing: false})
+    }
+
+    stopEditing() {
+        this.setState({currentEditing: false})
+
     }
 
     render() {
@@ -63,8 +106,29 @@ export default class EventCard extends React.Component {
           townHall,
           pending,
         } = this.props;
-        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Button icon="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
-        const selectMeetingType = (<MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>)
+        const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
+        const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
+        const displayEditNotes = (<React.Fragment><span>{townHall.Notes}</span><Icon type="edit" onClick={this.setEditEventNotesTrue} /></React.Fragment>)
+        
+        const selectMeetingType = (
+            <Row type="flex" justify="start">
+                <MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>
+                <Button icon="close" shape="circle" onClick={this.stopEditing}/>
+            </Row>
+        )
+        const selectIconFlag = (
+            <Row type="flex" justify="start">
+                <IconFlagSelect iconFlag={townHall.iconFlag} onSelect={this.selectIconFlag}/>
+                <Button icon="close" shape="circle"onClick={this.stopEditing}/>
+            </Row>
+            )
+        const selectEventNotes = (
+            <Row type="flex" justify="start">
+                <Button icon="close" shape="circle" onClick={this.stopEditing}/>
+                <TextArea onPressEnter={this.selectEventNotes} defaultValue={townHall.Notes}/>
+            </Row>
+            )
+        
         return (
             <Card 
                 key={townHall.eventId}
@@ -75,14 +139,16 @@ export default class EventCard extends React.Component {
             >
                 <Meta
                     title={townHall.eventName || ''}
-                    description={this.state.editMeetingType ? selectMeetingType : displayMeetingType}
+                    description={this.state.currentEditing === 'meetingType' ? selectMeetingType : displayMeetingType}
                 />
+                <p>Notes: {this.state.currentEditing === 'eventNotes' ? selectEventNotes : displayEditNotes}</p>
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
                     <li>Chamber: {townHall.chamber}</li>
+                    <li>Icon Flag: {this.state.currentEditing === 'iconFlag' ? selectIconFlag : displayIconFlag}</li>
                     <li>Entered by: {townHall.enteredBy}</li>
                     <Tag color={townHall.dateValid ? "#2db7f5" : "#f50" }>{townHall.dateValid ? 'Date Valid' : 'Date not valid' }</Tag>
                     <Tag color={townHall.lat ?  "#2db7f5" : "#f50"}>{townHall.lat ? 'has geocode' : 'needs geocode'}</Tag>
