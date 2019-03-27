@@ -12,11 +12,32 @@ const children = map(statesAb, (value, key) => (<Option key={key}>{value}</Optio
 
 
 class AddPersonForm extends React.Component {
-  handleSubmit = (e) => {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRoleSelectChange = this.handleRoleSelectChange.bind(this);
+  }
+
+  handleRoleSelectChange(value) {
+    const mapping = {
+      Rep: 'lower',
+      Sen: 'upper',
+      Gov: 'statewide',
+      Mayor: 'citywide',
+      Pres: 'nationwide',
+    }
+    this.props.form.setFieldsValue({
+      chamber: mapping[value],
+    });
+  }
+
+  handleSubmit(e) {
+    const { saveCandidate } = this.props;
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+        saveCandidate(values)
       }
     });
   }
@@ -44,6 +65,21 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
+        <Form.Item label="Running For">
+          {getFieldDecorator('role', {
+            rules: [{ required: true, message: 'Please enter a role' }],
+          })(
+            <Select
+              onChange={this.handleRoleSelectChange}
+            >
+                <Option value="Rep">Rep</Option>
+                <Option value="Sen">Senator</Option>
+                <Option value="Gov">Gov</Option>
+                <Option value="Mayor">Mayor</Option>
+                <Option value="Pres">Pres</Option>
+            </Select>
+          )}
+        </Form.Item>
         <Form.Item label="Chamber">
           {getFieldDecorator('chamber', {
             rules: [{ required: true, message: 'Party' }],
@@ -57,22 +93,9 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="Running For">
-          {getFieldDecorator('role', {
-            rules: [{ required: true, message: 'Please enter a role' }],
-          })(
-            <Select>
-                <Option value="Rep">Rep</Option>
-                <Option value="Sen">Senator</Option>
-                <Option value="Gov">Gov</Option>
-                <Option value="Pres">Pres</Option>
-            </Select>
-          )}
-        </Form.Item>
+     
         <Form.Item label="Incumbent">
-          {getFieldDecorator('incumbent', {
-            rules: [{ required: true, message: 'incumbent' }],
-          })(
+          {getFieldDecorator('incumbent')(
             <Checkbox />
           )}
         </Form.Item>
@@ -88,7 +111,7 @@ class AddPersonForm extends React.Component {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" className="login-form-button">
-            Log in
+            Save to database
           </Button>
         </Form.Item>
       </Form>
