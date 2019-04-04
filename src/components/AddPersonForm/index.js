@@ -47,7 +47,10 @@ class AddPersonForm extends React.Component {
   }
 
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const {
+      getFieldDecorator,
+      getFieldValue,
+    } = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit} className="add-person-form" >
         <Form.Item>
@@ -97,7 +100,13 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
-     
+        {getFieldValue('chamber') === 'lower' && <Form.Item hasFeedback help="zero padded number, '09'">
+          {getFieldDecorator('district', {
+            rules: [{ required: false, message: 'need a name' }],
+          })(
+            <Input placeholder="District" />
+          )}
+        </Form.Item>}
         <Form.Item label="Incumbent">
           {getFieldDecorator('incumbent')(
             <Checkbox />
