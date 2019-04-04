@@ -96,7 +96,7 @@ class AddPersonForm extends React.Component {
                 <Option value="lower">lower</Option>
                 <Option value="statewide">Gov</Option>
                 <Option value="citywide">Mayor</Option>
-                <Option value="statewide">Pres</Option>
+                <Option value="nationwide">Pres</Option>
             </Select>
           )}
         </Form.Item>
