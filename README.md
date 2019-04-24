@@ -62,6 +62,18 @@ $ cd my-project
 # install app's dependencies
 $ npm install
 ```
+## Setup 
+
+Setup a realtime database with firebase. 
+`.env`
+REACT_APP_TESTING_FIREBASE_API_KEY=''
+REACT_APP_TESTING_FIREBASE_AUTH_DOMAIN="[TESTING APP NAME].firebaseapp.com"
+REACT_APP_TESTING_DATABASE_URL="https://[TESTING APP NAME].firebaseio.com"
+REACT_APP_TESTING_PROJECT_ID=[TESTING APP NAME]"
+REACT_APP_TESTING_STORAGE_BUCKET="[TESTING APP NAME].appspot.com"
+REACT_APP_TESTING_MESSAGING_SENDER_ID=[TESTING APP ID]
+
+NODE_ENV='dev'
 
 ## Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
