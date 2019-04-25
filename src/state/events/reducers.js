@@ -10,6 +10,7 @@ import {
   UPDATE_EVENT_SUCCESS,
   GET_USER_EMAIL_FOR_EVENT_SUCCESS,
   GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
+  RESET_OLD_EVENTS,
 } from "./constants";
 import { filter, map } from "lodash";
 
@@ -50,6 +51,12 @@ const eventReducer = (state = initialState, action) => {
           enteredBy: action.payload.email
         } : event)
       };
+    case RESET_OLD_EVENTS:
+      return {
+        ...state,
+        allOldEvents: [],
+        error: null,
+      }
     case REQUEST_EVENTS_FAILED:
       console.log(`GET_EVENTS_FAILED: ${action.payload}`);
       return {
