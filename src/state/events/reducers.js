@@ -6,9 +6,11 @@ import {
   ARCHIVE_EVENT_SUCCESS,
   APPROVE_EVENT_SUCCESS,
   REQUEST_OLD_EVENTS_SUCCESS,
-  RESET_OLD_EVENTS,
   SET_LOADING,
   UPDATE_EVENT_SUCCESS,
+  GET_USER_EMAIL_FOR_EVENT_SUCCESS,
+  GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
+  RESET_OLD_EVENTS,
 } from "./constants";
 import { filter, map } from "lodash";
 
@@ -28,17 +30,33 @@ const eventReducer = (state = initialState, action) => {
         error: null
       };
     case REQUEST_OLD_EVENTS_SUCCESS:
-       return {
-         ...state,
-         allOldEvents: [...state.allOldEvents, ...action.payload],
-         error: null
-       };
-    case RESET_OLD_EVENTS:
-    return {
-      ...state,
-      allOldEvents: [],
-      error: null
+      return {
+        ...state,
+        allOldEvents: [...state.allOldEvents, ...action.payload],
+        error: null
+      };
+    case GET_USER_EMAIL_FOR_EVENT_SUCCESS:
+      return {
+        ...state,
+        allEvents: state.allEvents.map((event) => event.eventId === action.payload.eventId ? {
+          ...event,
+          enteredBy: action.payload.email
+        } : event)
     };
+    case GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS:
+      return {
+        ...state,
+        allOldEvents: state.allOldEvents.map((event) => event.eventId === action.payload.eventId ? {
+          ...event,
+          enteredBy: action.payload.email
+        } : event)
+      };
+    case RESET_OLD_EVENTS:
+      return {
+        ...state,
+        allOldEvents: [],
+        error: null,
+      }
     case REQUEST_EVENTS_FAILED:
       console.log(`GET_EVENTS_FAILED: ${action.payload}`);
       return {

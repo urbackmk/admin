@@ -12,12 +12,19 @@ import {
   RESET_OLD_EVENTS,
   SET_LOADING,
   UPDATE_EXISTING_EVENT,
+  GET_USER_EMAIL_FOR_EVENT,
+  REQUEST_EVENTS_SUCCESS,
 } from './constants';
 
 
 export const requestEvents = path => ({
   type: REQUEST_EVENTS,
   payload: path,
+});
+
+export const storeEventsInState = events => ({
+  type: REQUEST_EVENTS_SUCCESS,
+  payload: events,
 });
 
 export const resetOldEvents = () => ({
@@ -43,6 +50,14 @@ export const addOldEventToState = events => ({
   payload: events
 });
 
+export const joinEnteredByEmailForEvents = (uid, eventId, liveEvents) => ({
+  type: GET_USER_EMAIL_FOR_EVENT,
+  payload: {
+    uid,
+    eventId,
+    liveEvents
+  }
+});
 
 export const getEventsSuccess = events => ({
   type: REQUEST_PENDING_EVENTS_SUCCESS,
