@@ -24,6 +24,7 @@ import {
   APPROVE_USER_REQUEST,
   REJECT_USER_REQUEST,
   HANDLE_REQUEST_SUCCESS,
+  GET_USER_BY_ID,
 } from "./constants";
 import { updateUserMocs, getUsersSuccess } from "./actions";
 
@@ -43,6 +44,26 @@ const requestPendingUsersLogic = createLogic({
       successType: RECEIVE_PENDING_USERS,
     },
   type: REQUEST_PENDING_USERS,
+});
+
+const getUserByIdLogic = createLogic({
+  process({
+    action,
+    firebasedb
+  }) {
+    const {
+      payload
+    } = action;
+    const ref = firebasedb.ref(`users/${payload.uid}`);
+    return ref.once('value').then((snapshot) => {
+      return { user: snapshot.val(), eventId: payload.eventId};
+    })
+  },
+  processOptions: {
+    failType: USER_REQUEST_FAILED,
+    successType: HANDLE_REQUEST_SUCCESS,
+  },
+  type: GET_USER_BY_ID,
 });
 
 const approveUserRequestLogic = createLogic({
@@ -319,6 +340,7 @@ const requestAccessLogic = createLogic({
 export default [
   fetchUsers, 
   fetchUser,
+  getUserByIdLogic,
   approveUserRequestLogic,
   rejectUserRequestLogic,
   requestPendingUsersLogic,

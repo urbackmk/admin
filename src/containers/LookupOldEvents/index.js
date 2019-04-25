@@ -184,7 +184,6 @@ class LookupOldEvents extends React.Component {
 
 const mapStateToProps = state => ({
     archiveUrl: selectionStateBranch.selectors.getArchiveUrl(state),
-    allOldEvents: eventStateBranch.selectors.getAllOldEventsAsList(state),
     liveEventUrl: selectionStateBranch.selectors.getLiveEventUrl(state),
     filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     dateLookupRange: selectionStateBranch.selectors.getDateRange(state),
