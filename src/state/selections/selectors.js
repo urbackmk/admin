@@ -11,7 +11,10 @@ import {
   PENDING_EVENTS_TAB, 
   STATES_LEGS 
 } from '../../constants';
-import { getAllEventsAsList, getAllOldEvents } from '../events/selectors';
+import {
+  getAllEventsAsList,
+  getAllOldEventsWithUserEmails,
+} from '../events/selectors';
 
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
@@ -77,7 +80,7 @@ export const getFilteredArchivedEvents = createSelector(
   [
     includeLiveEventsInLookup, 
     getStatesToFilterArchiveBy, 
-    getAllOldEvents, 
+    getAllOldEventsWithUserEmails,
     getAllEventsAsList
   ], 
   (includeLive, states, oldEvents, liveEvents) => {

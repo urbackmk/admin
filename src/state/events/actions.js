@@ -50,12 +50,11 @@ export const addOldEventToState = events => ({
   payload: events
 });
 
-export const joinEnteredByEmailForEvents = (uid, eventId, liveEvents) => ({
+export const joinEnteredByEmailForEvents = (uid, eventId) => ({
   type: GET_USER_EMAIL_FOR_EVENT,
   payload: {
     uid,
     eventId,
-    liveEvents
   }
 });
 

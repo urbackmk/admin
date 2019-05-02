@@ -1,5 +1,8 @@
 import { createLogic } from "redux-logic";
-import { includes } from 'lodash';
+import {
+  includes,
+  find
+} from 'lodash';
 import moment from 'moment';
 import { 
   DELETE_EVENT,
@@ -16,35 +19,43 @@ import {
   UPDATE_EXISTING_EVENT,
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
-  GET_USER_EMAIL_FOR_EVENT,
-  GET_USER_EMAIL_FOR_EVENT_SUCCESS,
-  GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
 } from "./constants";
 import {
   addOldEventToState,
-  joinEnteredByEmailForEvents,
   setLoading,
   storeEventsInState,
 } from "./actions";
+import {
+  requestResearcherById
+} from "../researchers/actions";
+import { getAllResearchers } from "../researchers/selectors";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,
   process(deps, dispatch, done) {
       const {
-      action,
-      firebasedb,
+        getState,
+        action,
+        firebasedb,
     } = deps;
     const { payload } = action;
     if (!payload) {
       return [];
     }
+
     return firebasedb.ref(`${payload}`).once('value')
       .then((snapshot) => {
         const allData = [];
+        const allUids = [];
         snapshot.forEach((ele) => {
           const event = ele.val();
-          if (!includes(event.enteredBy, '@')) {
-            dispatch(joinEnteredByEmailForEvents(event.enteredBy, event.eventId, true))
+          const researcher = event.enteredBy;
+          if (researcher && !includes(researcher, '@')) {
+            
+            if (!includes(allUids, researcher)) {
+              dispatch(requestResearcherById(researcher))
+            }
+            allUids.push(researcher);
           }
           allData.push(ele.val())
         })
@@ -52,38 +63,6 @@ const fetchEvents = createLogic({
       })
       .then(done)
   }
-});
-
-const getUserEmailForEventLogic = createLogic({
-  process({
-    action,
-    firebasedb
-  }, dispatch) {
-    const {
-      payload
-    } = action;
-    const ref = firebasedb.ref(`users/${payload.uid}`);
-    return ref.once('value').then((snapshot) => {
-      let newPayload
-      if (snapshot.exists()){
-         newPayload = {
-          email: snapshot.val().email,
-          eventId: payload.eventId
-        };
-      } else {
-        newPayload = {
-          email: payload.uid,
-          eventId: payload.eventId,
-        }
-      }
-      const type = payload.liveEvents ? GET_USER_EMAIL_FOR_EVENT_SUCCESS : GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS
-      dispatch({
-        type,
-        payload: newPayload
-      })
-    })
-  },
-  type: GET_USER_EMAIL_FOR_EVENT,
 });
 
 const fetchOldEventsLogic = createLogic({
@@ -106,7 +85,12 @@ const fetchOldEventsLogic = createLogic({
     ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
       const event = snapshot.val();
       if (!includes(event.enteredBy, '@')) {
-        dispatch(joinEnteredByEmailForEvents(event.enteredBy, event.eventId, false))
+        const users = getState().users;
+        const thisUser = find(users, {uid: event.enteredBy})
+        console.log('this user',thisUser)
+        if (!thisUser) {
+          dispatch(requestResearcherById(event.enteredBy))
+        }
       }
       allEvents.push(event);
     })
@@ -238,7 +222,6 @@ const updateEventLogic = createLogic({
 export default [
   archiveEventLogic,
   approveEventLogic,
-  getUserEmailForEventLogic,
   fetchOldEventsLogic,
   fetchEvents,
   deleteEvent,

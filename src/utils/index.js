@@ -1,4 +1,5 @@
 import moment from 'moment';
+export const makeConstant = (branchOfState, actionType) => `${branchOfState}-${actionType}`;
 
 export const getDateArray = (dateRange) => {
     let current = moment(dateRange[0]);
