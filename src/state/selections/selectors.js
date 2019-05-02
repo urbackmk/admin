@@ -43,7 +43,7 @@ export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalO
   if (includes(STATES_LEGS, federalOrState)) {
     return `state_townhalls_archive/${federalOrState}`;
   }
-  return 'archive_clean';
+  return 'archived_town_halls';
 });
 
 export const getEventsToShowUrl = createSelector([getPendingOrLiveTab, getSubmissionUrl, getLiveEventUrl], 

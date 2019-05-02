@@ -9,6 +9,7 @@ import {
   DatePicker,
   Select,
   Row,
+  Progress,
 } from 'antd';
 import {
     VictoryBar,
@@ -97,6 +98,7 @@ class LookupOldEvents extends React.Component {
             dataForChart,
             includeLiveEventsInLookup,
             oldEventsForDownload,
+            emailCoverage,
         } = this.props;
         return (    
             <div
@@ -140,7 +142,7 @@ class LookupOldEvents extends React.Component {
                         loading={loading}
                         type="primary"
                     >Request events</Button>
-                
+                    <Progress percent={emailCoverage} />
                     {filteredOldEvents.length && !loading &&
                     <React.Fragment>
                         <Button 
@@ -191,6 +193,7 @@ const mapStateToProps = state => ({
     dataForChart: selectionStateBranch.selectors.getDataForArchiveChart(state),
     includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
     oldEventsForDownload: selectionStateBranch.selectors.getEventsAsDownloadObjects(state),
+    emailCoverage: eventStateBranch.selectors.getEmailCoverage(state),
 });
 
 const mapDispatchToProps = dispatch => ({

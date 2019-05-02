@@ -1,7 +1,6 @@
 import { createLogic } from "redux-logic";
 import {
   includes,
-  find
 } from 'lodash';
 import moment from 'moment';
 import { 
@@ -28,13 +27,11 @@ import {
 import {
   requestResearcherById
 } from "../researchers/actions";
-import { getAllResearchers } from "../researchers/selectors";
 
 const fetchEvents = createLogic({
   type: REQUEST_EVENTS,
   process(deps, dispatch, done) {
       const {
-        getState,
         action,
         firebasedb,
     } = deps;
@@ -42,7 +39,6 @@ const fetchEvents = createLogic({
     if (!payload) {
       return [];
     }
-
     return firebasedb.ref(`${payload}`).once('value')
       .then((snapshot) => {
         const allData = [];
@@ -51,7 +47,6 @@ const fetchEvents = createLogic({
           const event = ele.val();
           const researcher = event.enteredBy;
           if (researcher && !includes(researcher, '@')) {
-            
             if (!includes(allUids, researcher)) {
               dispatch(requestResearcherById(researcher))
             }
@@ -78,19 +73,19 @@ const fetchOldEventsLogic = createLogic({
     const {
       payload
     } = action;
-    console.log(payload.dates[0], payload.dates[1], `${payload.path}/${payload.date}`)
+    console.log('startAt', payload.dates[0], 'endtAt', payload.dates[1], `${payload.path}/${payload.date}`)
     const ref = firebasedb.ref(`${payload.path}/${payload.date}`);
     dispatch(setLoading(true))
     const allEvents = [];
+    const allUids = [];
     ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
       const event = snapshot.val();
-      if (!includes(event.enteredBy, '@')) {
-        const users = getState().users;
-        const thisUser = find(users, {uid: event.enteredBy})
-        console.log('this user',thisUser)
-        if (!thisUser) {
-          dispatch(requestResearcherById(event.enteredBy))
+      const researcher = event.enteredBy;
+      if (researcher && !includes(researcher, '@')) {
+        if (!includes(allUids, researcher)) {
+          dispatch(requestResearcherById(researcher))
         }
+        allUids.push(researcher);
       }
       allEvents.push(event);
     })
@@ -99,9 +94,7 @@ const fetchOldEventsLogic = createLogic({
         dispatch(addOldEventToState(allEvents));
       })
       .then(() => {
-        const endDate = `${payload.date.split('-')[0]}-${Number(payload.date.split('-')[1]) + 1}`
-        console.log(moment(payload.dates[1]).format('YYYY-M'), moment(endDate, 'YYYY-M').add(1, 'month').format('YYYY-M'), endDate)
-        if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-M').add(1, 'month'), 'month')) {
+        if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-MM'), 'month')) {
           dispatch(setLoading(false))
         }
         done()
