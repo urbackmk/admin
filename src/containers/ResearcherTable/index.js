@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from 'antd';
 
-import userStateBranch from '../../state/users'
+import researcherStateBranch from '../../state/researchers';
 import mocStateBranch from '../../state/mocs';
 
 import MocLookUp from '../../components/MocLookup'
@@ -270,15 +270,15 @@ class ResearcherTable extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  researchers: userStateBranch.selectors.combineMocNamesWithResearchers(state),
+  researchers: researcherStateBranch.selectors.combineMocNamesWithResearchers(state),
   allMocNamesIds: mocStateBranch.selectors.getAllMocsIds(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getAllResearchers: () => dispatch(userStateBranch.actions.requestAllResearchers()),
-  removeAssignmentFromUser: (userId, mocId) => dispatch(userStateBranch.actions.removeAssignment(userId, mocId)),
-  addAndAssignToUser: (userId, mocId, name) => dispatch(userStateBranch.actions.addAndAssignToUser(userId, mocId, name)),
-  assignToUser: (userId, mocId) => dispatch(userStateBranch.actions.assignMocToUser(userId, mocId)),
+  getAllResearchers: () => dispatch(researcherStateBranch.actions.requestAllResearchers()),
+  removeAssignmentFromUser: (userId, mocId) => dispatch(researcherStateBranch.actions.removeAssignment(userId, mocId)),
+  addAndAssignToUser: (userId, mocId, name) => dispatch(researcherStateBranch.actions.addAndAssignToUser(userId, mocId, name)),
+  assignToUser: (userId, mocId) => dispatch(researcherStateBranch.actions.assignMocToUser(userId, mocId)),
   requestMocIds: () => dispatch(mocStateBranch.actions.requestMocIds()),
 });
 
