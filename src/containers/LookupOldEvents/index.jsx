@@ -4,34 +4,26 @@ import {
 } from 'react-redux';
 import { map } from 'lodash';
 import {
-  Button,
-  Switch,
-  DatePicker,
-  Select,
-  Row,
-  Progress,
+    Button,
+    Switch,
+    DatePicker,
+    Select,
+    Row,
+    Progress,
+    Col,
 } from 'antd';
-import {
-    VictoryBar,
-    VictoryChart,
-} from 'victory';
-import {
-  CSVLink,
-} from 'react-csv';
+
 import moment from 'moment';
 import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
+import mocStateBranch from '../../state/mocs';
 import { getDateArray } from '../../utils';
 import { statesAb } from '../../assets/data/states';
 
 import "./style.scss";
 
-const colors = {
-    R: "#ff4741",
-    D: "#3facef",
-    I: 'purple',
-    None: 'gray',
-}
+import OldEventsResults from './results';
+
 const {
   RangePicker,
 } = DatePicker;
@@ -99,88 +91,80 @@ class LookupOldEvents extends React.Component {
             includeLiveEventsInLookup,
             oldEventsForDownload,
             emailCoverage,
+            getMocReport,
+            missingMemberReport116
         } = this.props;
         return (    
-            <div
-                className="lookup-form"
-            >
-                <Row
-                    type="flex" 
-                >
-                    <RangePicker 
-                        onChange={this.onDateRangeChange} 
-                        format = "MMM D, YYYY"
-                    />
-                </Row>
-                <Row
-                    type="flex" 
-                >
-                    <Select
-                        mode="multiple"
-                        placeholder="Select a state to filter"
-                        onChange={this.handleAddState}
-                        style={{ width: '100%' }}
+            <React.Fragment>
+            <Row className="lookup-form">
+                <Col span={12} offset={6}>
+                    <Row
+                        type="flex" 
                     >
-                        {children}
-                    </Select>
-                </Row>
-                <Row
-                    type="flex" 
-                >
-                    <label>Include live events</label>
-                    <Switch 
-                        onChange={this.onIncludeLiveEvents} 
-                        checked={includeLiveEventsInLookup}
-
-                    />
-                </Row>
-                <Row
-                    type="flex" 
-                >
-                    <Button
-                        onClick={this.handleRequestOldEvents}
-                        loading={loading}
-                        type="primary"
-                    >Request events</Button>
-                    <Progress percent={emailCoverage} />
-                    {filteredOldEvents.length && !loading &&
-                    <React.Fragment>
-                        <Button 
-                            icon="download"
+                        <RangePicker 
+                            onChange={this.onDateRangeChange} 
+                            format = "MMM D, YYYY"
+                        />
+                    </Row>
+                    <Row
+                        type="flex" 
+                    >
+                        <Select
+                            mode="multiple"
+                            placeholder="Select a state to filter"
+                            onChange={this.handleAddState}
+                            style={{ width: '100%' }}
                         >
-                            <CSVLink 
-                                data = {
-                                oldEventsForDownload
-                                }
-                                filename={`${archiveUrl}.csv`}
-                            > DownloadEvents
-                            </CSVLink>
-                        </Button>
-                  
-                    </React.Fragment>
-                }
-                    {filteredOldEvents.length &&        
-                     <VictoryChart
-                            domainPadding={{ x: 20 }}
-                          >
-                            <VictoryBar
-                                horizontal
-                                barWidth={40}
+                            {children}
+                        </Select>
+                    </Row>
+                    <Row
+                        type="flex" 
+                    >
+                        <Col>
+                        <   label>Include live events</label>
+                        </Col>
+                        <Col>
+                            <Switch 
+                                onChange={this.onIncludeLiveEvents} 
+                                checked={includeLiveEventsInLookup}
 
-                                data={dataForChart}
-                                x="party"
-                                width={200}
-                                y="value"
-                                 style={{
-                                data: {
-                                    fill: (d) => colors[d.party],
-                                    }}
-                                }
                             />
-                        </VictoryChart>}
-                </Row>
-            </div>
-        );
+                        </Col>
+                    </Row>
+                    <Row
+                        type="flex" 
+                    >
+                        <Button
+                            onClick={this.handleRequestOldEvents}
+                            loading={loading}
+                            type="primary"
+                            block
+                        >Request events</Button>     
+                    </Row>
+                    <Row
+                        type="flex"
+                    >   <Col>
+                            <span>Download complete</span>
+                        </Col>
+                        <Col span={12}>
+                            <Progress percent={emailCoverage} />
+                        </Col>
+
+                    </Row>
+                </Col>
+        
+            </Row>
+            {filteredOldEvents.length > 0 &&
+                <OldEventsResults
+                    archiveUrl={archiveUrl}
+                    dataForChart={dataForChart}
+                    oldEventsForDownload={oldEventsForDownload}
+                    getMocReport={getMocReport}
+                    missingMemberReport116={missingMemberReport116}
+                />
+            }
+        </React.Fragment>)
     }
 }
 
@@ -194,6 +178,7 @@ const mapStateToProps = state => ({
     includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
     oldEventsForDownload: selectionStateBranch.selectors.getEventsAsDownloadObjects(state),
     emailCoverage: eventStateBranch.selectors.getEmailCoverage(state),
+    missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -201,7 +186,8 @@ const mapDispatchToProps = dispatch => ({
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
-    toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked))
+    toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),
+    getMocReport: (congressId) => dispatch(mocStateBranch.actions.getCongressIds(congressId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);

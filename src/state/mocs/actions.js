@@ -4,6 +4,7 @@ import {
   GET_MOCS_FAILED,
   ADD_CANDIDATE,
   ADD_CANDIDATE_FAILURE,
+  GET_CONGRESS_BY_SESSION,
 } from './constants';
 
 export const requestMocIds = () => ({
@@ -28,4 +29,9 @@ export const saveCandidate = (person) => ({
 export const saveCandidateFailed = (error) => ({
   type: ADD_CANDIDATE_FAILURE,
   payload: error,
+})
+
+export const getCongressIds = (congressId) => ({
+  type: GET_CONGRESS_BY_SESSION,
+  payload: congressId
 })

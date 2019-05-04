@@ -120,12 +120,18 @@ const approveEventLogic = createLogic({
       livePath,
     } = action.payload;
     console.log(livePath)
+    const townHallMetaData = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
     return firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
       .then(() => {
         const approvedTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
         return approvedTownHall.remove()
           .then(() => {
-            return townHall.eventId;
+            return townHallMetaData.update({
+              status: 'live',
+            })
+            .then(() => {
+              return townHall.eventId;
+            })
           })
       })
   }
@@ -155,8 +161,13 @@ const archiveEventLogic = createLogic({
         .then(() => {
             const removed = oldTownHall.remove();
             if (removed) {
-              oldTownHallID.remove()
-              return townHall.eventId;
+              return oldTownHallID.update({
+                status: 'archived',
+                archive_path: `${archivePath}/${dateKey}`,
+              })
+              .then(() => {
+                return townHall.eventId;
+              })
             }
         })
         .catch(e => {
@@ -177,7 +188,7 @@ const deleteEvent = createLogic({
       firebasedb,
     } = deps;
     const { townHall, path } = action.payload;
-    console.log(path)
+    console.log(path, townHall.eventId)
     const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
     if (path === 'townHalls') {
       firebasedb.ref(`/townHallIds/${townHall.eventId}`).update({
