@@ -167,7 +167,28 @@ export const get116MissingMemberReport = createSelector([getFilteredArchivedEven
         memberId: moc.govtrack_id,
         hasEvent: hasEvent.length > 0,
         name: moc.displayName,
-        eventIds: hasEvent.map(event => event.eventId)
+        party: moc.party,
+        chamber: moc.chamber,
+        state: moc.state,
+        district: moc.district || '',
+        number_of_events: hasEvent.length,
+        eventIds: hasEvent.map(event => event.eventId),
       }
+    })
+})
+
+export const get116CongressSenateResults = createSelector([get116MissingMemberReport], (mocs) => {
+    const allInChamber = filter(mocs, {chamber: 'upper'});
+    return reduce(allInChamber, (acc, cur) => {
+      if (cur.hasEvent) {
+        // TODO: finish this
+      }
+    }, {
+      dMissing: 0,
+      dEvents: 0,
+      rMissing: 0,
+      rEvents: 0,
+      otherMissing: 0,
+      otherEvents: 0,
     })
 })
