@@ -40,12 +40,14 @@ const getCongressLogic = createLogic({
     return firebasedb.ref(`moc_by_congress/${action.payload}`).once('value')
       .then((snapshot) => {
           const allIds = snapshot.val();
-          console.log(allIds)
-          const allMocs = []
-          return {
-            ids: map(allIds),
-            key: action.payload,
-          }
+          const allDataRequests = map(allIds, (id) => firebasedb.ref(`mocData/${id}`).once('value'));
+          return Promise.all(allDataRequests).then(allData => {
+            const allReturnedData =  map(allData, (snapshot => (snapshot.val())))
+            return {
+              mocs: allReturnedData,
+              key: action.payload,
+            }
+          })
 
       })
   }
