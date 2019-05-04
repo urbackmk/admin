@@ -5,10 +5,14 @@ import {
   GET_MOCS_FAILED, 
   ADD_CANDIDATE, 
   ADD_CANDIDATE_FAILURE, 
-  ADD_CANDIDATE_SUCCESS 
+  ADD_CANDIDATE_SUCCESS, 
+  GET_CONGRESS_BY_SESSION,
+  GET_CONGRESS_BY_SESSION_SUCCESS,
+  GET_CONGRESS_BY_SESSION_FAILED
 } from "./constants";
 
 import Candidate from './candidate-model';
+import { map } from "lodash";
 
 const fetchMocs = createLogic({
   type: GET_MOCS,
@@ -20,6 +24,32 @@ const fetchMocs = createLogic({
     return deps.httpClient.get(`${deps.firebaseUrl}/mocID.json`);
   }
 });
+
+const getCongressLogic = createLogic({
+  type: GET_CONGRESS_BY_SESSION,
+    processOptions: {
+      successType: GET_CONGRESS_BY_SESSION_SUCCESS,
+      failType: GET_CONGRESS_BY_SESSION_FAILED,
+    },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    console.log(action.payload)
+    return firebasedb.ref(`moc_by_congress/${action.payload}`).once('value')
+      .then((snapshot) => {
+          const allIds = snapshot.val();
+          console.log(allIds)
+          const allMocs = []
+          return {
+            ids: map(allIds),
+            key: action.payload,
+          }
+
+      })
+  }
+})
 
 const addCandidateLogic = createLogic({
   type: ADD_CANDIDATE,
@@ -48,4 +78,5 @@ const addCandidateLogic = createLogic({
 export default [
   fetchMocs,
   addCandidateLogic,
+  getCongressLogic,
 ];

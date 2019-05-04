@@ -21,6 +21,7 @@ import {
 import moment from 'moment';
 import selectionStateBranch from '../../state/selections';
 import eventStateBranch from '../../state/events';
+import mocStateBranch from '../../state/mocs';
 import { getDateArray } from '../../utils';
 import { statesAb } from '../../assets/data/states';
 
@@ -99,6 +100,8 @@ class LookupOldEvents extends React.Component {
             includeLiveEventsInLookup,
             oldEventsForDownload,
             emailCoverage,
+            getMocReport,
+            missingMemberReport116
         } = this.props;
         return (    
             <div
@@ -142,7 +145,26 @@ class LookupOldEvents extends React.Component {
                         loading={loading}
                         type="primary"
                     >Request events</Button>
+                    <Button
+                        onClick = {() => getMocReport('116')}
+                    >
+                        Get Moc Report (116th congress)
+                    </Button>
                     <Progress percent={emailCoverage} />
+                    {missingMemberReport116 && missingMemberReport116.length && < React.Fragment >
+                        <Button 
+                            icon="download"
+                        >
+                            <CSVLink 
+                                data = {
+                                missingMemberReport116
+                                }
+                                filename="Missing_Member_116.csv"
+                            > Download Missing Member Report
+                            </CSVLink>
+                        </Button>
+                  
+                    </React.Fragment>}
                     {filteredOldEvents.length && !loading &&
                     <React.Fragment>
                         <Button 
@@ -194,6 +216,7 @@ const mapStateToProps = state => ({
     includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
     oldEventsForDownload: selectionStateBranch.selectors.getEventsAsDownloadObjects(state),
     emailCoverage: eventStateBranch.selectors.getEmailCoverage(state),
+    missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -201,7 +224,8 @@ const mapDispatchToProps = dispatch => ({
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
-    toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked))
+    toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),
+    getMocReport: (congressId) => dispatch(mocStateBranch.actions.getCongressIds(congressId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LookupOldEvents);

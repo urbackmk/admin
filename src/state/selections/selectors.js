@@ -4,6 +4,7 @@ import {
   filter,
   map, 
   reduce,
+  find,
 } from 'lodash';
 import moment from 'moment';
 import { 
@@ -15,6 +16,7 @@ import {
   getAllEventsAsList,
   getAllOldEventsWithUserEmails,
 } from '../events/selectors';
+import { get116thCongressIds } from '../mocs/selectors';
 
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
@@ -157,3 +159,14 @@ export const getDataForArchiveChart = createSelector(
     })
   }
 )
+
+export const get116MissingMemberReport = createSelector([getFilteredArchivedEvents, get116thCongressIds], (events, congressIds) => {
+  console.log(congressIds)
+    map(congressIds, (id) => {
+      const hasEvent = find(events, {govtrack_id: id});
+      return {
+        memberId: id,
+        hasEvent: !!hasEvent
+      }
+    })
+})
