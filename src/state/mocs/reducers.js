@@ -11,7 +11,6 @@ const initialState = {
 const mocReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_MOCS_SUCCESS:
-    console.log(action.payload.data)
       return {
         ...state,
         allMocIds: map(action.payload.data),
@@ -30,13 +29,11 @@ const mocReducer = (state = initialState, action) => {
         error: action.payload
       };
     case GET_CONGRESS_BY_SESSION_SUCCESS:
-    console.log(action.payload)
       return {
         ...state,
         [action.payload.key]: action.payload.mocs
       }
     case GET_CONGRESS_BY_SESSION_FAILED:
-    console.log(action.payload)
       return {
         ...state,
         error: action.payload

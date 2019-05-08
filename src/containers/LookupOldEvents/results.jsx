@@ -8,6 +8,7 @@ import {
 import {
     VictoryBar,
     VictoryChart,
+    VictoryStack,
 } from 'victory';
 import {
     CSVLink,
@@ -34,31 +35,51 @@ class OldEventsResults extends React.Component {
             dataForChart,
             oldEventsForDownload,
             getMocReport,
-            missingMemberReport116
+            missingMemberReport116,
+            missingMemberCongressData
         } = this.props;
         return (
            <Row type="flex">
-               <Col span={12}>
+               <Col span={16}>
                     <VictoryChart
                         domainPadding={{ x: 20 }}
                     >
                         <VictoryBar
                             horizontal
                             barWidth={40}
-
                             data={dataForChart}
+                            height={300}
+                            width={300}
                             x="party"
-                            width={200}
-                            height={200}
                             y="value"
                             style={{
                                 data: {
                                     fill: (d) => colors[d.party],
                                 }
-                            }
-                            }
+                            }}
                         />
                     </VictoryChart>
+                    {missingMemberCongressData.length > 0 && 
+                        <VictoryStack
+                            labels={["senate", "house"]}
+                            colorScale={["lightblue", "blue", "pink", "red", "gray", "purple"]}
+                            height={300}
+                            width={300}
+                            animate={{
+                                duration: 2000,
+                                onLoad: { duration: 1000 }
+                            }}
+                        >
+                            {missingMemberCongressData.map((data, index)=> {
+                                return (
+                                <VictoryBar
+                                    horizontal
+                                    data={data}
+                                    key={index}
+                                />)
+                            })}
+                        </VictoryStack>
+                    }
                </Col>
     
                <Col span={8}>
@@ -80,7 +101,7 @@ class OldEventsResults extends React.Component {
                         > DownloadEvents
                     </CSVLink>
                     </Button>
-                    {missingMemberReport116.length > 0 && < React.Fragment >
+                    {missingMemberReport116.length > 0 && < React.Fragment>
                         <Button
                             icon="download"
                             block

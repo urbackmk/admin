@@ -4,7 +4,7 @@ import {
   filter,
   map, 
   reduce,
-  find,
+  uniq,
 } from 'lodash';
 import moment from 'moment';
 import { 
@@ -162,7 +162,11 @@ export const getDataForArchiveChart = createSelector(
 
 export const get116MissingMemberReport = createSelector([getFilteredArchivedEvents, get116thCongress], (events, mocs) => {
     return map(mocs, (moc) => {
-      const hasEvent = filter(events, {govtrack_id: moc.govtrack_id});
+    
+      const eventsForMoc = filter(events, { govtrack_id: moc.govtrack_id });
+      const hasEvent = filter(eventsForMoc, { meetingType: 'Town Hall' });
+      const eventTypes = uniq(map(eventsForMoc, 'meetingType'));
+
       return {
         memberId: moc.govtrack_id,
         hasEvent: hasEvent.length > 0,
@@ -171,8 +175,9 @@ export const get116MissingMemberReport = createSelector([getFilteredArchivedEven
         chamber: moc.chamber,
         state: moc.state,
         district: moc.district || '',
-        number_of_events: hasEvent.length,
-        eventIds: hasEvent.map(event => event.eventId),
+        number_of_town_halls: hasEvent.length,
+        type_of_events: eventTypes,
+        eventIds: eventsForMoc.map(event => event.eventId),
       }
     })
 })
@@ -181,8 +186,23 @@ export const get116CongressSenateResults = createSelector([get116MissingMemberRe
     const allInChamber = filter(mocs, {chamber: 'upper'});
     return reduce(allInChamber, (acc, cur) => {
       if (cur.hasEvent) {
-        // TODO: finish this
+        if (cur.party[0].toLowerCase() === 'd') {
+          acc.dEvents ++;
+        } else if (cur.party[0].toLowerCase() === 'r') {
+          acc.rEvents++;
+        } else {
+          acc.otherEvents++;
+        }
+      } else {
+        if (cur.party[0].toLowerCase() === 'd') {
+          acc.dMissing++;
+        } else if (cur.party[0].toLowerCase() === 'r') {
+          acc.rMissing++;
+        } else {
+          acc.otherMissing++;
+        }
       }
+      return acc;
     }, {
       dMissing: 0,
       dEvents: 0,
@@ -191,4 +211,52 @@ export const get116CongressSenateResults = createSelector([get116MissingMemberRe
       otherMissing: 0,
       otherEvents: 0,
     })
+})
+
+export const get116CongressHouseResults = createSelector([get116MissingMemberReport], (mocs) => {
+  const allInChamber = filter(mocs, {
+    chamber: 'lower'
+  });
+  return reduce(allInChamber, (acc, cur) => {
+    if (cur.hasEvent) {
+      if (cur.party[0].toLowerCase() === 'd') {
+        acc.dEvents++;
+      } else if (cur.party[0].toLowerCase() === 'r') {
+        acc.rEvents++;
+      } else {
+        acc.otherEvents++;
+      }
+    } else {
+      if (cur.party[0].toLowerCase() === 'd') {
+        acc.dMissing++;
+      } else if (cur.party[0].toLowerCase() === 'r') {
+        acc.rMissing++;
+      } else {
+        acc.otherMissing++;
+      }
+    }
+    return acc;
+  }, {
+    dMissing: 0,
+    dEvents: 0,
+    rMissing: 0,
+    rEvents: 0,
+    otherMissing: 0,
+    otherEvents: 0,
+  })
+})
+
+export const getCongressReport = createSelector([get116CongressSenateResults, get116CongressHouseResults], 
+  (senateCount, houseCount) => {
+      return map(senateCount, (value, key) => {
+        return [{
+          x: 'senate',
+          y: value,
+      },
+      {
+        x: 'house',
+        y: houseCount[key],
+      },
+    ]
+  })
 })
