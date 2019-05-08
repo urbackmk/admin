@@ -11,13 +11,28 @@ import {
 import {
     statesAb
 } from '../../assets/data/states';
+import {
+    districts
+} from '../../assets/data/districts';
 import userStateBranch from '../../state/users';
+
+import './style.scss';
 
 const Option = Select.Option;
 
-const children = map(statesAb, (stateName, state) => {
+const statesOpts = map(statesAb, (stateName, state) => {
     return (<Option key={state}>{state}</Option>)
 });
+
+const districtOpts = map(districts, (district) => {
+    return (<Option key={district}>{district}</Option>)
+});
+
+const stateEvents = map(statesAb, (stateName, state) => {
+    return (<Option key={`${state}-state-events`}>{state}-state-events</Option>)
+});
+
+const options = [...statesOpts, ...districtOpts, ...stateEvents]
 
 class SubscriberSignup extends React.Component {
 
@@ -28,6 +43,10 @@ class SubscriberSignup extends React.Component {
 
     handleChange(value) {
         console.log(`selected ${value}`);
+    }
+
+    hasErrors(fieldsError) {
+        return Object.keys(fieldsError).some(field => fieldsError[field]);
     }
 
     handleSubmit(e) {
@@ -50,9 +69,12 @@ class SubscriberSignup extends React.Component {
       
         // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
-        const nameError = isFieldTouched('name') && getFieldError('name');
+        const nameError = isFieldTouched('districts') && getFieldError('districts');
         return (
-        <Form layout="inline" onSubmit={this.handleSubmit}>
+        <Form 
+            onSubmit={this.handleSubmit}
+            className="subscriber-form"
+        >
             <Form.Item
             label="Name"
             validateStatus={nameError ? 'error' : ''}
@@ -67,23 +89,26 @@ class SubscriberSignup extends React.Component {
             validateStatus={emailError ? 'error' : ''}
             help={emailError || ''}
             >
-            {getFieldDecorator('email', {
-                rules: [{ required: true, message: 'Must have an email' }],
-            })(
-                <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="email" />
-            )}
+                {getFieldDecorator('email', {
+                    rules: [{ required: true, message: 'Must have an email' }],
+                })(
+                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="email" />
+                )}
             </Form.Item>
             <Form.Item
-            validateStatus={nameError ? 'error' : ''}
-            help={nameError || ''}
+                validateStatus={nameError ? 'error' : ''}
+                help={'ex. "AZ" will sign them up for all federal AZ events, "AZ-state-events", only state events'}
+                label="districts"
             >
-            {getFieldDecorator('districts')(
+                {getFieldDecorator('districts', {
+                    rules: [{ required: true, message: 'Must have districts' }],
+                })(
             <Select
                 mode="tags"
                 style={{ width: '200px' }}
                 onChange={this.handleChange}
                 >
-                {children}
+                    {options}
                 </Select>
             )}
             </Form.Item>
@@ -91,7 +116,7 @@ class SubscriberSignup extends React.Component {
             <Button
                 type="primary"
                 htmlType="submit"
-                //disabled={hasErrors(getFieldsError())}
+                disabled={this.hasErrors(getFieldsError())}
             >
                 Submit
             </Button>
