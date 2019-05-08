@@ -36,7 +36,6 @@ const getCongressLogic = createLogic({
       action,
       firebasedb,
     } = deps;
-    console.log(action.payload)
     return firebasedb.ref(`moc_by_congress/${action.payload}`).once('value')
       .then((snapshot) => {
           const allIds = snapshot.val();

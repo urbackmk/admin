@@ -92,7 +92,8 @@ class LookupOldEvents extends React.Component {
             oldEventsForDownload,
             emailCoverage,
             getMocReport,
-            missingMemberReport116
+            missingMemberReport116,
+            missingMemberCongressData
         } = this.props;
         return (    
             <React.Fragment>
@@ -162,6 +163,7 @@ class LookupOldEvents extends React.Component {
                     oldEventsForDownload={oldEventsForDownload}
                     getMocReport={getMocReport}
                     missingMemberReport116={missingMemberReport116}
+                    missingMemberCongressData={missingMemberCongressData}
                 />
             }
         </React.Fragment>)
@@ -179,6 +181,7 @@ const mapStateToProps = state => ({
     oldEventsForDownload: selectionStateBranch.selectors.getEventsAsDownloadObjects(state),
     emailCoverage: eventStateBranch.selectors.getEmailCoverage(state),
     missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
+    missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
 });
 
 const mapDispatchToProps = dispatch => ({
