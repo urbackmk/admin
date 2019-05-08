@@ -1,5 +1,8 @@
 import React from 'react';
 import {
+    connect
+} from 'react-redux';
+import {
     map
 } from 'lodash';
 import {
@@ -8,6 +11,7 @@ import {
 import {
     statesAb
 } from '../../assets/data/states';
+import userStateBranch from '../../state/users';
 
 const Option = Select.Option;
 
@@ -17,15 +21,24 @@ const children = map(statesAb, (stateName, state) => {
 
 class SubscriberSignup extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
     handleChange(value) {
         console.log(`selected ${value}`);
     }
 
     handleSubmit(e) {
         e.preventDefault();
+        const {
+            submitSubscriber,
+        } = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
               console.log('Received values of form: ', values);
+              submitSubscriber(values);
             }
           });
     }
@@ -33,7 +46,7 @@ class SubscriberSignup extends React.Component {
     render() {
         const {
             getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
-          } = this.props.form;
+        } = this.props.form;
       
         // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
@@ -88,4 +101,9 @@ class SubscriberSignup extends React.Component {
     }
 }
 
-export default Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
+const mapDispatchToProps = dispatch => ({
+    submitSubscriber: (person) => dispatch(userStateBranch.actions.submitSubscriber(person)),
+});
+
+const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
+export default connect(null, mapDispatchToProps)(wrappedForm);
