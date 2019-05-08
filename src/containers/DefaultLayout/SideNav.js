@@ -20,7 +20,7 @@ const defaultProps = {};
 
 class SideNav extends Component {
 
-    rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources'];
+    rootSubmenuKeys = ['events', 'mocs', 'researchers', 'resources', 'subscribers'];
 
     state = {
       openKeys: ['events'],
@@ -69,6 +69,9 @@ class SideNav extends Component {
             </Menu.Item>
               <Menu.Item key="manage-access">
             <Link to="/manage-access">Manage Data Access</Link>
+            </Menu.Item>
+            <Menu.Item key="subscribers">
+              <Link to="/subscribers">Subscribers</Link>
             </Menu.Item>
             <Menu.Item key="downloads">
               <Link to="/downloads">Download Rsvps</Link>

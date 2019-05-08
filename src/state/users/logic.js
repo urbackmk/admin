@@ -14,6 +14,8 @@ import {
   APPROVE_USER_REQUEST,
   REJECT_USER_REQUEST,
   HANDLE_APPROVE_REJECT,
+  SUBMIT_SUBSCRIBER_SUCCESS,
+  SUBMIT_SUBSCRIBER,
 } from "./constants";
 
 const requestPendingUsersLogic = createLogic({
@@ -131,10 +133,28 @@ const requestAccessLogic = createLogic({
   type: SUBMIT_REQUEST_ACCESS,
 });
 
+const submitSubscriberLogic = createLogic({
+  process({
+      firebasedb, 
+      action,
+    }) {
+    const {
+      payload,
+    } = action;
+    return firebasedb.ref(`subscribers/`).push(payload)
+  },
+  processOptions: {
+    failType: REQUEST_FAILED,
+    successType: SUBMIT_SUBSCRIBER_SUCCESS,
+  },
+  type: SUBMIT_SUBSCRIBER,
+});
+
 export default [
   fetchCurrentUser,
   approveUserRequestLogic,
   rejectUserRequestLogic,
   requestPendingUsersLogic,
   requestAccessLogic,
+  submitSubscriberLogic,
 ];
