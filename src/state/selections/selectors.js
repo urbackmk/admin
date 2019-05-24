@@ -43,7 +43,7 @@ export const getSubmissionUrl = createSelector([getActiveFederalOrState], (feder
 
 export const getArchiveUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
-    return `state_townhalls_archive/${federalOrState}`;
+    return `archived_state_town_halls/${federalOrState}`;
   }
   return 'archived_town_halls';
 });
