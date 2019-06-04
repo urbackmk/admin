@@ -14,7 +14,7 @@ import {
 import {
     districts
 } from '../../assets/data/districts';
-import userStateBranch from '../../state/users';
+import subscriberStateBranch from '../../state/subscribers';
 
 import './style.scss';
 
@@ -39,10 +39,15 @@ class SubscriberSignup extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(value) {
-        console.log(`selected ${value}`);
+    handleChange(e) {
+        e.preventDefault();
+        const { getSubscriber } = this.props;
+        // getSubscriber('test email');
+        console.log(this.props);
+        console.log(getSubscriber('test email'));
     }
 
     hasErrors(fieldsError) {
@@ -81,7 +86,10 @@ class SubscriberSignup extends React.Component {
             help={nameError || ''}
             >
             {getFieldDecorator('name')(
-                <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="name" placeholder="name" />
+                <Input 
+                    prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} 
+                    type="name" 
+                    placeholder="name" />
             )}
             </Form.Item>
             <Form.Item
@@ -92,7 +100,10 @@ class SubscriberSignup extends React.Component {
                 {getFieldDecorator('email', {
                     rules: [{ required: true, message: 'Must have an email' }],
                 })(
-                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="email" />
+                    <Input 
+                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                    onBlur={this.handleChange}
+                    placeholder="email" />
                 )}
             </Form.Item>
             <Form.Item
@@ -106,7 +117,6 @@ class SubscriberSignup extends React.Component {
             <Select
                 mode="tags"
                 style={{ width: '200px' }}
-                onChange={this.handleChange}
                 >
                     {options}
                 </Select>
@@ -127,8 +137,18 @@ class SubscriberSignup extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    submitSubscriber: (person) => dispatch(userStateBranch.actions.submitSubscriber(person)),
+    submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
+});
+
+const mapStateToProps = state => ({
+    getSubscriber: (email) => {
+        return {
+            name: state,
+            email: email,
+            districts: []
+        }
+    },
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
-export default connect(null, mapDispatchToProps)(wrappedForm);
+export default connect(mapStateToProps, mapDispatchToProps)(wrappedForm);
