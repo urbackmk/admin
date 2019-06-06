@@ -44,10 +44,9 @@ class SubscriberSignup extends React.Component {
 
     handleChange(e) {
         e.preventDefault();
-        const { getSubscriber } = this.props;
-        // getSubscriber('test email');
-        console.log(this.props);
-        console.log(getSubscriber('test email'));
+        const { getSubscribers } = this.props;
+        console.log(getSubscribers());
+        console.log(this);
     }
 
     hasErrors(fieldsError) {
@@ -138,17 +137,15 @@ class SubscriberSignup extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
+    getSubscribers: () => dispatch(subscriberStateBranch.actions.getSubscribers()),
 });
 
 const mapStateToProps = state => ({
-    getSubscriber: (email) => {
-        return {
-            name: state,
-            email: email,
-            districts: []
-        }
-    },
+    subscribers: subscriberStateBranch.selectors.getSubscribers(state),
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
 export default connect(mapStateToProps, mapDispatchToProps)(wrappedForm);
+
+
+// on componentdidmount request all subscribers
