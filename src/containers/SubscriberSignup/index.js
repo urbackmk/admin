@@ -6,7 +6,7 @@ import {
     map
 } from 'lodash';
 import {
-    Form, Icon, Input, Button, Select,
+    Form, Icon, Input, Button, Select, AutoComplete
   } from 'antd';
 import {
     statesAb
@@ -36,17 +36,24 @@ const options = [...statesOpts, ...districtOpts, ...stateEvents]
 
 class SubscriberSignup extends React.Component {
 
+    state = {
+        emailDataSource: [],
+    }
+
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.emailSearch = this.emailSearch.bind(this);
+    }
+
+    componentDidMount() {
+        const {getAllSubscribers} = this.props;
+        getAllSubscribers();
     }
 
     handleChange(e) {
-        e.preventDefault();
-        const { getSubscribers } = this.props;
-        console.log(getSubscribers());
-        console.log(this);
+        console.log(this.props.allSubscribers);
     }
 
     hasErrors(fieldsError) {
@@ -66,23 +73,48 @@ class SubscriberSignup extends React.Component {
           });
     }
 
+    emailSearch(input) {
+        this.setState({
+            emailDataSource: this.props.allSubscribers.reduce((acc, curr) => {
+                if (curr.email.includes(input)) acc.push(curr.email);
+                return acc;
+            }, [])
+        });
+    }
+
     render() {
         const {
             getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
         } = this.props.form;
+
+        const {emailDataSource} = this.state;
       
         // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
         const nameError = isFieldTouched('districts') && getFieldError('districts');
+
         return (
         <Form 
             onSubmit={this.handleSubmit}
             className="subscriber-form"
         >
             <Form.Item
-            label="Name"
-            validateStatus={nameError ? 'error' : ''}
-            help={nameError || ''}
+                label="Email"
+                validateStatus={emailError ? 'error' : ''}
+                help={emailError || ''}
+            >
+                {getFieldDecorator('email', {
+                    rules: [{ required: true, message: 'Must have an email' }],
+                })(<AutoComplete 
+                        dataSource={emailDataSource}
+                        onSearch={this.emailSearch}
+                        placeholder="email" />
+                )}
+            </Form.Item>
+            <Form.Item
+                label="Name"
+                validateStatus={nameError ? 'error' : ''}
+                help={nameError || ''}
             >
             {getFieldDecorator('name')(
                 <Input 
@@ -92,20 +124,6 @@ class SubscriberSignup extends React.Component {
             )}
             </Form.Item>
             <Form.Item
-            label="Email"
-            validateStatus={emailError ? 'error' : ''}
-            help={emailError || ''}
-            >
-                {getFieldDecorator('email', {
-                    rules: [{ required: true, message: 'Must have an email' }],
-                })(
-                    <Input 
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    onBlur={this.handleChange}
-                    placeholder="email" />
-                )}
-            </Form.Item>
-            <Form.Item
                 validateStatus={nameError ? 'error' : ''}
                 help={'ex. "AZ" will sign them up for all federal AZ events, "AZ-state-events", only state events'}
                 label="districts"
@@ -113,22 +131,22 @@ class SubscriberSignup extends React.Component {
                 {getFieldDecorator('districts', {
                     rules: [{ required: true, message: 'Must have districts' }],
                 })(
-            <Select
-                mode="tags"
-                style={{ width: '200px' }}
+                <Select
+                    mode="tags"
+                    style={{ width: '200px' }}
                 >
                     {options}
                 </Select>
             )}
             </Form.Item>
             <Form.Item>
-            <Button
-                type="primary"
-                htmlType="submit"
-                disabled={this.hasErrors(getFieldsError())}
-            >
-                Submit
-            </Button>
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    disabled={this.hasErrors(getFieldsError())}
+                >
+                    Submit
+                </Button>
             </Form.Item>
         </Form>
         );
@@ -137,15 +155,14 @@ class SubscriberSignup extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
-    getSubscribers: () => dispatch(subscriberStateBranch.actions.getSubscribers()),
+    getAllSubscribers: () => dispatch(subscriberStateBranch.actions.getAllSubscribers()),
+    getEditSubscriber: (email) => dispatch(subscriberStateBranch.actions.getEditSubscriber(email)),
 });
 
 const mapStateToProps = state => ({
-    subscribers: subscriberStateBranch.selectors.getSubscribers(state),
+    allSubscribers: subscriberStateBranch.selectors.allSubscribers(state),
+    editSubscriber: subscriberStateBranch.selectors.editSubscriber(state),
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
 export default connect(mapStateToProps, mapDispatchToProps)(wrappedForm);
-
-
-// on componentdidmount request all subscribers

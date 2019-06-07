@@ -2,6 +2,7 @@ import {
     SUBMIT_SUBSCRIBER_SUCCESS,
     SUBMIT_SUBSCRIBER,
     REQUEST_ALL_SUBSCRIBERS,
+    REQUEST_SUBSCRIBER_BY_EMAIL,
   } from "./constants";
 
 export const submitSubscriber = person => ({
@@ -9,6 +10,11 @@ export const submitSubscriber = person => ({
     payload: person
 });
 
-export const getSubscribers = () => ({
+export const getAllSubscribers = () => ({
   type: REQUEST_ALL_SUBSCRIBERS,
+});
+
+export const getEditSubscriber = (email) => ({
+  type: REQUEST_SUBSCRIBER_BY_EMAIL,
+  payload: email
 });
