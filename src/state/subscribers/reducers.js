@@ -8,7 +8,6 @@ import {
 const initialState = {
     error: null,
     allSubscribers: [],
-    editSubscriber: null,
 };
 
 const subscriberReducer = (state = initialState, {type, payload}) => {
@@ -18,7 +17,7 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
                 ...state, 
                 error: null,
                 newSubscriber: payload,
-                allSubscribers: [...state.subscribers, payload]
+                allSubscribers: [...state.allSubscribers, payload]
             }
         case REQUEST_ALL_SUBSCRIBERS_SUCCESS:
             return {

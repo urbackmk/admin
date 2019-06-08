@@ -9,8 +9,6 @@ import {
   SUBMIT_SUBSCRIBER,
   REQUEST_ALL_SUBSCRIBERS,
   REQUEST_ALL_SUBSCRIBERS_SUCCESS,
-  REQUEST_SUBSCRIBER_BY_EMAIL,
-  REQUEST_SUBSCRIBER_BY_EMAIL_SUCCESS,
 } from "./constants";
 
 const submitSubscriberLogic = createLogic({
@@ -60,34 +58,7 @@ const getAllSubscriberLogic = createLogic({
   type: REQUEST_ALL_SUBSCRIBERS,
 });
 
-const getEditSubscriberLogic = createLogic({
-  process({
-      firebasedb,
-      action,
-    }) {
-    const {payload} = action;
-    return firebasedb.ref(`subscribers/`).once('value')
-    .then((snapshot) => {
-      const toReturn = [];
-      snapshot.forEach(element => {
-        toReturn.push({
-          ...element.val(),
-          key: element.key,
-        })
-      });
-      console.log(toReturn);
-      return toReturn;
-    })
-  },
-  processOptions: {
-    failType: REQUEST_FAILED,
-    successType: REQUEST_SUBSCRIBER_BY_EMAIL_SUCCESS,
-  },
-  type: REQUEST_SUBSCRIBER_BY_EMAIL,
-});
-
 export default [
     submitSubscriberLogic,
     getAllSubscriberLogic,
-    getEditSubscriberLogic,
 ]

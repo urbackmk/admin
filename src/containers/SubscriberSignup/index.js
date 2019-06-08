@@ -45,6 +45,7 @@ class SubscriberSignup extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.emailSearch = this.emailSearch.bind(this);
+        this.emailSelect = this.emailSelect.bind(this);
     }
 
     componentDidMount() {
@@ -53,7 +54,7 @@ class SubscriberSignup extends React.Component {
     }
 
     handleChange(e) {
-        console.log(this.props.allSubscribers);
+        
     }
 
     hasErrors(fieldsError) {
@@ -79,6 +80,16 @@ class SubscriberSignup extends React.Component {
                 if (curr.email.includes(input)) acc.push(curr.email);
                 return acc;
             }, [])
+        });
+    }
+
+    emailSelect(input) {
+        const editSubscriber = this.props.allSubscribers.find((sub) => {
+            return sub.email === input;
+        });
+        this.props.form.setFieldsValue({
+            name: editSubscriber.name,
+            districts: editSubscriber.districts,
         });
     }
 
@@ -108,6 +119,7 @@ class SubscriberSignup extends React.Component {
                 })(<AutoComplete 
                         dataSource={emailDataSource}
                         onSearch={this.emailSearch}
+                        onSelect={this.emailSelect}
                         placeholder="email" />
                 )}
             </Form.Item>
@@ -161,7 +173,6 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
     allSubscribers: subscriberStateBranch.selectors.allSubscribers(state),
-    editSubscriber: subscriberStateBranch.selectors.editSubscriber(state),
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);

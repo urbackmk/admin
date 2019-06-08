@@ -13,8 +13,3 @@ export const submitSubscriber = person => ({
 export const getAllSubscribers = () => ({
   type: REQUEST_ALL_SUBSCRIBERS,
 });
-
-export const getEditSubscriber = (email) => ({
-  type: REQUEST_SUBSCRIBER_BY_EMAIL,
-  payload: email
-});
