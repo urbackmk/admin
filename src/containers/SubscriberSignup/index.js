@@ -38,6 +38,7 @@ class SubscriberSignup extends React.Component {
 
     state = {
         emailDataSource: [],
+        submitText: 'Add New',
     }
 
     constructor(props) {
@@ -46,6 +47,7 @@ class SubscriberSignup extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.emailSearch = this.emailSearch.bind(this);
         this.emailSelect = this.emailSelect.bind(this);
+        this.clearForm = this.clearForm.bind(this);
     }
 
     componentDidMount() {
@@ -68,7 +70,6 @@ class SubscriberSignup extends React.Component {
         } = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
-              console.log('Received values of form: ', values);
               submitSubscriber(values);
             }
           });
@@ -90,15 +91,23 @@ class SubscriberSignup extends React.Component {
         this.props.form.setFieldsValue({
             name: editSubscriber.name,
             districts: editSubscriber.districts,
+            key: editSubscriber.key,
         });
+        this.setState({ submitText: 'Update' });
+    }
+
+    clearForm() {
+        this.props.form.resetFields();
+        this.setState({ submitText: 'Add New' });
     }
 
     render() {
         const {
             getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
         } = this.props.form;
-
-        const {emailDataSource} = this.state;
+        const {
+            emailDataSource, submitText,
+        } = this.state;
       
         // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
@@ -152,12 +161,24 @@ class SubscriberSignup extends React.Component {
             )}
             </Form.Item>
             <Form.Item>
+                {getFieldDecorator('key')(
+                    <Input type="hidden" />
+                )}
+            </Form.Item>
+            <Form.Item>
                 <Button
                     type="primary"
                     htmlType="submit"
                     disabled={this.hasErrors(getFieldsError())}
                 >
-                    Submit
+                    {submitText}
+                </Button>
+                <Button
+                    type="default"
+                    htmlType="reset"
+                    onClick={this.clearForm}
+                >
+                    Clear
                 </Button>
             </Form.Item>
         </Form>
@@ -168,7 +189,6 @@ class SubscriberSignup extends React.Component {
 const mapDispatchToProps = dispatch => ({
     submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
     getAllSubscribers: () => dispatch(subscriberStateBranch.actions.getAllSubscribers()),
-    getEditSubscriber: (email) => dispatch(subscriberStateBranch.actions.getEditSubscriber(email)),
 });
 
 const mapStateToProps = state => ({

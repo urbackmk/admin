@@ -19,12 +19,18 @@ const submitSubscriberLogic = createLogic({
       const {
         payload,
       } = action;
-      const newKey = firebasedb.ref(`subscribers/`).push().key;
-      return firebasedb.ref(`subscribers/${newKey}`).update(payload)
+      let subKey = '';
+      if (payload.key) {
+        subKey = payload.key;
+      } else {
+        subKey = firebasedb.ref(`subscribers/`).push().key;
+      }
+      delete payload.key;
+      return firebasedb.ref(`subscribers/${subKey}`).update(payload)
       .then(()=> {
         return {
           ...payload,
-          key: newKey,
+          key: subKey,
         }
       })
     },
