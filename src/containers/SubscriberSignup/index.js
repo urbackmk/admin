@@ -44,7 +44,6 @@ class SubscriberSignup extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.emailSearch = this.emailSearch.bind(this);
         this.emailSelect = this.emailSelect.bind(this);
         this.clearForm = this.clearForm.bind(this);
@@ -53,10 +52,6 @@ class SubscriberSignup extends React.Component {
     componentDidMount() {
         const {getAllSubscribers} = this.props;
         getAllSubscribers();
-    }
-
-    handleChange(e) {
-        
     }
 
     hasErrors(fieldsError) {
@@ -72,7 +67,8 @@ class SubscriberSignup extends React.Component {
             if (!err) {
               submitSubscriber(values);
             }
-          });
+        });
+        this.clearForm();
     }
 
     emailSearch(input) {
@@ -178,7 +174,7 @@ class SubscriberSignup extends React.Component {
                     htmlType="reset"
                     onClick={this.clearForm}
                 >
-                    Clear
+                    Clear Form
                 </Button>
             </Form.Item>
         </Form>
