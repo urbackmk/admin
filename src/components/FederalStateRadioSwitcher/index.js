@@ -3,6 +3,7 @@ import { map } from 'lodash';
 import {
   Radio, 
   Row,
+  Badge,
 } from 'antd';
 
 import { FEDERAL_STATE_RADIO_BUTTONS } from '../../constants';
@@ -26,7 +27,11 @@ class FederalStateRadioSwitcher extends React.Component {
                         >
                         {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
                             return (
-                                <RadioButton key={key} value={key}>{key}</RadioButton>
+                                <Badge count={5}>
+                                    <RadioButton key={key} value={key}>
+                                        {key}
+                                    </RadioButton>
+                                </Badge>
                             )
                         })
                         }

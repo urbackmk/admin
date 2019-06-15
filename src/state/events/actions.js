@@ -111,3 +111,8 @@ export const updateExistingEvent = (updateData, path, eventId) => ({
     eventId,
   }
 });
+
+export const requestEventsCounts = (path) => ({
+  type: REQUEST_EVENTS_COUNTS,
+  payload: path,
+});

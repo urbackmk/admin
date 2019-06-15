@@ -29,19 +29,18 @@ class EventsDashBoard extends React.Component {
         const {
           requestEvents,
           pathForEvents,
-
         } = this.props;
         requestEvents(pathForEvents);
-
     }
 
     componentDidUpdate(prevProps) {
         const {          
             requestEvents,
             pathForEvents,
+            pendingOrLive,
         } = this.props;
         if (prevProps.pathForEvents !== pathForEvents && pathForEvents) {
-                requestEvents(pathForEvents);
+            requestEvents(pathForEvents);
         }
     }
 
@@ -101,6 +100,7 @@ const mapStateToProps = state => ({
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
     userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
+    // eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -110,6 +110,7 @@ const mapDispatchToProps = dispatch => ({
     changeRadioButton: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
     requestEvents: (path) => dispatch(eventsStateBranch.actions.requestEvents(path)),
     updateEvent: (newData, path, eventId) => dispatch(eventsStateBranch.actions.updateExistingEvent(newData, path, eventId)),
+    requestEventsCounts: (path) => dispatch(eventsStateBranch.actions.requestEventsCounts(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsDashBoard);

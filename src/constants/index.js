@@ -4,6 +4,17 @@ export const ARCHIVED_EVENTS_TAB = 'archive';
 export const FEDERAL_RADIO_BUTTON = 'federal';
 export const STATES_LEGS = ['CO', 'AZ', 'NC', 'OR', 'VA', 'NV', 'MI', 'ME', 'MD', 'PA', 'FL'];
 export const FEDERAL_STATE_RADIO_BUTTONS = [FEDERAL_RADIO_BUTTON, ...STATES_LEGS];
+export const EVENTS_PATHS = {
+    PENDING: {
+        FEDERAL: 'UserSubmission',
+        STATE: 'state_legislators_user_submission'},
+    LIVE: {
+        FEDERAL: 'townHalls',
+        STATE: 'state_townhalls'},
+    ARCHIVE: {
+        FEDERAL: 'archived_town_halls',
+        STATE: 'archived_state_town_halls'},
+};
 export const EVENT_MENU_ITEM = 'events';
 export const MOC_MENU_ITEM = 'mocs';
 export const RESEARCHER_MENU_ITEM = 'researcher';
