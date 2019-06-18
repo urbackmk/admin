@@ -51,7 +51,7 @@ class SubscriberSignup extends React.Component {
     }
 
     componentDidMount() {
-        const {getAllSubscribers} = this.props;
+        const { getAllSubscribers } = this.props;
         getAllSubscribers();
     }
 
