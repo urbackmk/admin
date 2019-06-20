@@ -37,11 +37,14 @@ class EventsDashBoard extends React.Component {
         const {          
             requestEvents,
             pathForEvents,
+            requestEventsCounts,
             pendingOrLive,
         } = this.props;
         if (prevProps.pathForEvents !== pathForEvents && pathForEvents) {
             requestEvents(pathForEvents);
         }
+        console.log(this.props);
+        requestEventsCounts(pendingOrLive);
     }
 
     onRadioChange({target}) {

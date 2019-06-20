@@ -11,12 +11,14 @@ import {
   GET_USER_EMAIL_FOR_EVENT_SUCCESS,
   GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
   RESET_OLD_EVENTS,
+  REQUEST_EVENTS_COUNT_SUCCESS,
 } from "./constants";
 import { filter, map } from "lodash";
 
 const initialState = {
   allEvents: {},
   allOldEvents: {},
+  eventsCounts: {},
   error: null,
   loading: false,
 };
@@ -87,16 +89,21 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         loading: action.payload,
       }
-      case UPDATE_EVENT_SUCCESS:
-        return {
-          ...state,
-          allEvents: map(state.allEvents, (ele) => {
-            if(ele.eventId === action.payload.eventId) {
-              return {...ele, ...action.payload}
-            }
-            return ele
-          })
-        }
+    case UPDATE_EVENT_SUCCESS:
+      return {
+        ...state,
+        allEvents: map(state.allEvents, (ele) => {
+          if(ele.eventId === action.payload.eventId) {
+            return {...ele, ...action.payload}
+          }
+          return ele
+        })
+      }
+    case REQUEST_EVENTS_COUNT_SUCCESS:
+      return {
+        ...state,
+        eventsCounts: action.payload,
+      }
     default:
       return state;
   }

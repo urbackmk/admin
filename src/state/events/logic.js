@@ -9,6 +9,8 @@ import {
   DELETE_EVENT_FAIL,
   REQUEST_EVENTS, 
   REQUEST_EVENTS_FAILED,
+  REQUEST_EVENTS_COUNT_SUCCESS,
+  REQUEST_EVENTS_COUNT,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
@@ -19,6 +21,7 @@ import {
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
 } from "./constants";
+import { EVENTS_PATHS } from '../../constants';
 import {
   addOldEventToState,
   setLoading,
@@ -223,6 +226,26 @@ const updateEventLogic = createLogic({
   }
 })
 
+const requestEventsCounts = createLogic({
+  type: REQUEST_EVENTS_COUNT,
+  processOptions: {
+    successType: REQUEST_EVENTS_COUNT_SUCCESS,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const path = action.payload;
+    console.log(EVENTS_PATHS[path]);
+    const eventCounts = [];
+    EVENTS_PATHS[path].forEach((p) => {
+      const ref = firebasedb.ref(`${p}`);
+      console.log(ref);
+    });
+  }
+})
+
 export default [
   archiveEventLogic,
   approveEventLogic,
@@ -230,4 +253,5 @@ export default [
   fetchEvents,
   deleteEvent,
   updateEventLogic,
+  requestEventsCounts,
 ];

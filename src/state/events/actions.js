@@ -14,6 +14,7 @@ import {
   UPDATE_EXISTING_EVENT,
   GET_USER_EMAIL_FOR_EVENT,
   REQUEST_EVENTS_SUCCESS,
+  REQUEST_EVENTS_COUNT,
 } from './constants';
 
 
@@ -113,6 +114,6 @@ export const updateExistingEvent = (updateData, path, eventId) => ({
 });
 
 export const requestEventsCounts = (path) => ({
-  type: REQUEST_EVENTS_COUNTS,
+  type: REQUEST_EVENTS_COUNT,
   payload: path,
 });
