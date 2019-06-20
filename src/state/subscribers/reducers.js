@@ -1,7 +1,6 @@
 import {
     REQUEST_FAILED,
     SUBMIT_SUBSCRIBER_SUCCESS,
-    SUBMIT_SUBSCRIBER,
     REQUEST_ALL_SUBSCRIBERS_SUCCESS,
 } from './constants';
 
@@ -32,6 +31,12 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
                 ...state,
                 error: null,
                 allSubscribers: payload,
+            }
+        case REQUEST_FAILED:
+            console.log(payload)
+            return {
+                ...state,
+                error: payload
             }
         default:
             return state;

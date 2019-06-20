@@ -1,7 +1,4 @@
 import { createLogic } from "redux-logic"
-import {
-  map,
-} from "lodash";
 
 import { 
   REQUEST_FAILED,
