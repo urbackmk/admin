@@ -37,7 +37,6 @@ const options = [...statesOpts, ...districtOpts, ...stateEvents]
 class SubscriberSignup extends React.Component {
 
     state = {
-        emailDataSource: [],
         submitText: 'Add New',
     }
 
@@ -72,12 +71,7 @@ class SubscriberSignup extends React.Component {
     }
 
     emailSearch(input) {
-        this.setState({
-            emailDataSource: this.props.allSubscribers.reduce((acc, curr) => {
-                if (curr.email.includes(input)) acc.push(curr.email);
-                return acc;
-            }, [])
-        });
+        this.props.updateEmailDataSource(input);
     }
 
     emailSelect(input) {
@@ -102,8 +96,11 @@ class SubscriberSignup extends React.Component {
             getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
         } = this.props.form;
         const {
-            emailDataSource, submitText,
+            submitText,
         } = this.state;
+        const {
+            emailDataSource,
+        } = this.props;
       
         // Only show error after a field is touched.
         const emailError = isFieldTouched('email') && getFieldError('email');
@@ -185,10 +182,12 @@ class SubscriberSignup extends React.Component {
 const mapDispatchToProps = dispatch => ({
     submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
     getAllSubscribers: () => dispatch(subscriberStateBranch.actions.getAllSubscribers()),
+    updateEmailDataSource: (input) => dispatch(subscriberStateBranch.actions.updateEmailDataSource(input)),
 });
 
 const mapStateToProps = state => ({
     allSubscribers: subscriberStateBranch.selectors.allSubscribers(state),
+    emailDataSource: subscriberStateBranch.selectors.emailDataSource(state),
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);

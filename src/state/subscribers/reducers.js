@@ -2,11 +2,14 @@ import {
     REQUEST_FAILED,
     SUBMIT_SUBSCRIBER_SUCCESS,
     REQUEST_ALL_SUBSCRIBERS_SUCCESS,
+    UPDATE_EMAIL_DATA,
 } from './constants';
 
 const initialState = {
     error: null,
     allSubscribers: [],
+    emailDataSource: [],
+    submitText: 'Add New',
 };
 
 const subscriberReducer = (state = initialState, {type, payload}) => {
@@ -31,6 +34,15 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
                 ...state,
                 error: null,
                 allSubscribers: payload,
+            }
+        case UPDATE_EMAIL_DATA:
+            const emails = state.allSubscribers.reduce((acc, curr) => {
+                if (curr.email.includes(payload)) acc.push(curr.email);
+                return acc;
+            }, []);
+            return {
+                ...state,
+                emailDataSource: emails,
             }
         case REQUEST_FAILED:
             console.log(payload)

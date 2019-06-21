@@ -1,6 +1,7 @@
 import {
     SUBMIT_SUBSCRIBER,
     REQUEST_ALL_SUBSCRIBERS,
+    UPDATE_EMAIL_DATA,
   } from "./constants";
 
 export const submitSubscriber = person => ({
@@ -10,4 +11,9 @@ export const submitSubscriber = person => ({
 
 export const getAllSubscribers = () => ({
   type: REQUEST_ALL_SUBSCRIBERS,
+});
+
+export const updateEmailDataSource = (input) => ({
+  type: UPDATE_EMAIL_DATA,
+  payload: input
 });
