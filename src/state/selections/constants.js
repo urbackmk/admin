@@ -1,3 +1,8 @@
+import {
+  makeConstant
+} from "../../utils";
+const STATE_BRANCH = 'SELECTIONS';
+
 export const CHANGE_EVENTS_TAB = "CHANGE_EVENTS_TAB";
 export const CHANGE_FEDERAL_STATE_RADIO = "CHANGE_FEDERAL_STATE_RADIO";
 export const GET_URL_HASH = "GET_URL_HASH";
@@ -8,3 +13,4 @@ export const CHANGE_DATE_LOOKUP = "CHANGE_DATE_LOOKUP";
 export const CHANGE_STATE_FILTERS = "CHANGE_STATE_FILTERS";
 export const TOGGLE_INCLUDE_LIVE_EVENTS = "TOGGLE_INCLUDE_LIVE_EVENTS";
 export const CHANGE_MODE = "CHANGE_MODE";
+export const CHANGE_MOC_END_POINT = makeConstant(STATE_BRANCH, "CHANGE_MOC_END_POINT");

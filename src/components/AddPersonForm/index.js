@@ -5,6 +5,7 @@ import {
 import { map } from 'lodash';
 
 import { statesAb } from '../../assets/data/states';
+import './style.scss';
 
 const { Option } = Select;
 
@@ -34,13 +35,19 @@ class AddPersonForm extends React.Component {
   handleSubmit(e) {
     const {
       saveCandidate,
-      form
+      form,
+      candidateKeySavePath,
+      usState,
     } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        saveCandidate(values);
+        const person = {
+          ...values,
+          level: usState ? 'state' : 'level'
+        }
+        saveCandidate(candidateKeySavePath, person);
         form.resetFields();
       }
     });
@@ -51,16 +58,53 @@ class AddPersonForm extends React.Component {
       getFieldDecorator,
       getFieldValue,
     } = this.props.form;
+    const {
+      usState,
+    } = this.props;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    const noLabelFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 16,
+          offset: 8,
+        },
+      },
+    };
     return (
-      <Form onSubmit={this.handleSubmit} className="add-person-form" >
-        <Form.Item>
+      <Form onSubmit={this.handleSubmit} {...formItemLayout} className="add-person-form" >
+        <h1>Add a candidate</h1>
+
+        <Form.Item {...noLabelFormItemLayout}>
           {getFieldDecorator('displayName', {
             rules: [{ required: true, message: 'need a name' }],
           })(
             <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Display Name" />
           )}
         </Form.Item>
-        
+        <Form.Item label="Level (state or federal)">
+          {getFieldDecorator('level', {
+            initialValue: usState ? 'state' : 'federal',
+            rules: [{ required: true}],
+          })(
+            <Select>
+                <Option value="federal">federal</Option>
+                <Option value="state">state</Option>
+            </Select>
+          )}
+        </Form.Item>        
         <Form.Item label="Party">
           {getFieldDecorator('party', {
             rules: [{ required: true, message: 'enter a party' }],
@@ -100,7 +144,12 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
-        {getFieldValue('chamber') === 'lower' && <Form.Item hasFeedback help="zero padded number, '09'">
+        {(getFieldValue('chamber') === 'lower' || usState) && 
+        <Form.Item 
+          {...noLabelFormItemLayout}
+          hasFeedback 
+          help={usState ? "full district, ie HD-9" : "zero padded number, '09'"}
+        >
           {getFieldDecorator('district', {
             rules: [{ required: false, message: 'need a name' }],
           })(
@@ -112,17 +161,23 @@ class AddPersonForm extends React.Component {
             <Checkbox />
           )}
         </Form.Item>
+        <Form.Item label="Pledger">
+          {getFieldDecorator('pledged')(
+            <Checkbox />
+          )}
+        </Form.Item>
         <Form.Item label="State">
           {getFieldDecorator('state', {
+            initialValue: usState || ''
           })(
-            <Select 
+            <Select
               placeholder="Select a State"
             >
                 {children}
             </Select>
           )}
         </Form.Item>
-        <Form.Item>
+        <Form.Item  {...noLabelFormItemLayout}>
           <Button type="primary" htmlType="submit" className="login-form-button">
             Save to database
           </Button>
