@@ -64,6 +64,7 @@ class EventsDashBoard extends React.Component {
             pathForPublishing,
             userSubmissionPath,
             updateEvent,
+            radioButtonValue,
         } = this.props;
         return (
             <React.Fragment>
@@ -71,9 +72,10 @@ class EventsDashBoard extends React.Component {
                     type="flex"
                     justify="center"
                 >
-                <FederalStateRadioSwitcher 
-                    onRadioChange={this.onRadioChange}
-                />
+                    <FederalStateRadioSwitcher 
+                        onRadioChange={this.onRadioChange}
+                        defaultValue={radioButtonValue}
+                    />
                 </Row>
                 {pendingOrLive === ARCHIVED_EVENTS_TAB ?
                 <LookupOldEvents /> :
@@ -97,6 +99,7 @@ class EventsDashBoard extends React.Component {
 const mapStateToProps = state => ({
     pendingOrLive: selectionStateBranch.selectors.getPendingOrLiveTab(state),
     eventsForList: eventsStateBranch.selectors.getAllEventsAsList(state),
+    radioButtonValue: selectionStateBranch.selectors.getActiveFederalOrState(state),
     pathForEvents: selectionStateBranch.selectors.getEventsToShowUrl(state),
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),

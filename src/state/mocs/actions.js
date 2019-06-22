@@ -21,9 +21,12 @@ export const getMocsFailed = err => ({
   payload: err
 });
 
-export const saveCandidate = (person) => ({
+export const saveCandidate = (path, person) => ({
   type: ADD_CANDIDATE,
-  payload: person,
+  payload: { 
+    person,
+    path,
+  }
 })
 
 export const saveCandidateFailed = (error) => ({

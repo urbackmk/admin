@@ -64,11 +64,10 @@ const addCandidateLogic = createLogic({
       firebasedb,
     } = deps;
 
-      const newId = firebasedb.ref().child('candidate_data').push().key;
-      const newCandidate = new Candidate(action.payload);
-      const nameKey = newCandidate.createNameKey();
-
-    firebasedb.ref(`candidate_keys/${nameKey}`).update({
+    const newId = firebasedb.ref().child('candidate_data').push().key;
+    const newCandidate = new Candidate(action.payload.person);
+    const nameKey = newCandidate.createNameKey();
+    firebasedb.ref(`${action.payload.path}/${nameKey}`).update({
       id: newId,
       nameEntered: newCandidate.displayName,
     });

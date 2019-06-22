@@ -11,8 +11,9 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 class FederalStateRadioSwitcher extends React.Component {
-
+    
     render () {
+        const { defaultValue } = this.props;
         return (
             <React.Fragment>
                 <Row
@@ -20,7 +21,7 @@ class FederalStateRadioSwitcher extends React.Component {
                     justify="center"
                 >
                     <RadioGroup 
-                        defaultValue={FEDERAL_STATE_RADIO_BUTTONS[0]}
+                        defaultValue={defaultValue}
                         buttonStyle="solid"
                         onChange={this.props.onRadioChange}
                         >
