@@ -158,9 +158,9 @@ class AddPersonForm extends React.Component {
             >
                 <Option value="Rep">Rep</Option>
                 <Option value="Sen">Senator</Option>
-                <Option value="Gov">Gov</Option>
-                <Option value="Mayor">Mayor</Option>
-                <Option value="Pres">Pres</Option>
+                {getFieldValue('level') === LEVEL_STATE && <Option value="Gov">Gov</Option>}
+                {getFieldValue('level') === LEVEL_STATE &&<Option value="Mayor">Mayor</Option>}
+                {getFieldValue('level') === LEVEL_FEDERAL && <Option value="Pres">Pres</Option>}
             </Select>
           )}
         </Form.Item>
