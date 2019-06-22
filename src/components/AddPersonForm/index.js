@@ -6,11 +6,44 @@ import { map } from 'lodash';
 
 import { statesAb } from '../../assets/data/states';
 import './style.scss';
+import { LEVEL_FEDERAL, LEVEL_STATE } from '../../constants';
 
 const { Option } = Select;
 
 const children = map(statesAb, (value, key) => (<Option key={key}>{value}</Option>));
 
+const stateChambers = [
+  {
+    value: 'upper',
+    label: 'upper',
+  },
+  {
+    value: 'lower',
+    label: 'lower',
+  },
+  {
+    value: 'statewide',
+    label: 'Gov',
+  },
+  {
+    value: 'citywide',
+    label: 'Mayor',
+  },
+];
+
+const federalChambers = [{
+    value: 'upper',
+    label: 'Senate',
+  },
+  {
+    value: 'lower',
+    label: 'House',
+  },
+  {
+    value: 'nationwide',
+    label: 'Pres',
+  },
+];
 
 class AddPersonForm extends React.Component {
   constructor(props) {
@@ -96,12 +129,12 @@ class AddPersonForm extends React.Component {
         </Form.Item>
         <Form.Item label="Level (state or federal)">
           {getFieldDecorator('level', {
-            initialValue: usState ? 'state' : 'federal',
+            initialValue: usState ? LEVEL_STATE : LEVEL_FEDERAL,
             rules: [{ required: true}],
           })(
             <Select>
-                <Option value="federal">federal</Option>
-                <Option value="state">state</Option>
+                <Option value={LEVEL_FEDERAL}>{LEVEL_FEDERAL}</Option>
+                <Option value={LEVEL_STATE}>{LEVEL_STATE}</Option>
             </Select>
           )}
         </Form.Item>        
@@ -116,7 +149,7 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="Running For">
+        <Form.Item label="Running For (prefix)">
           {getFieldDecorator('role', {
             rules: [{ required: true, message: 'Please enter a role' }],
           })(
@@ -136,11 +169,10 @@ class AddPersonForm extends React.Component {
             rules: [{ required: true, message: 'Party' }],
           })(
             <Select>
-                <Option value="upper">upper</Option>
-                <Option value="lower">lower</Option>
-                <Option value="statewide">Gov</Option>
-                <Option value="citywide">Mayor</Option>
-                <Option value="nationwide">Pres</Option>
+              {getFieldValue('level') === LEVEL_FEDERAL ?
+                  map(federalChambers, (item) => <Option value={item.value}>{item.label}</Option>) :
+                  map(stateChambers, (item) => <Option value={item.value}>{item.label}</Option>)
+              }
             </Select>
           )}
         </Form.Item>
