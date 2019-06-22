@@ -3,11 +3,13 @@ import {
     SUBMIT_SUBSCRIBER_SUCCESS,
     REQUEST_ALL_SUBSCRIBERS_SUCCESS,
     UPDATE_EMAIL_DATA,
+    REQUEST_EDIT_SUBSCRIBER,
 } from './constants';
 
 const initialState = {
     error: null,
     allSubscribers: [],
+    editSubscriber: {},
     emailDataSource: [],
     submitText: 'Add New',
 };
@@ -43,6 +45,18 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
             return {
                 ...state,
                 emailDataSource: emails,
+            }
+        case REQUEST_EDIT_SUBSCRIBER:
+            const matchSubscriber = state.allSubscribers.find((subscriber) => {
+                return subscriber.email === payload;
+            });
+            return {
+                ...state,
+                editSubscriber: {
+                    name: matchSubscriber.name,
+                    districts: matchSubscriber.districts,
+                    key: matchSubscriber.key,
+                }
             }
         case REQUEST_FAILED:
             console.log(payload)

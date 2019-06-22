@@ -49,8 +49,20 @@ class SubscriberSignup extends React.Component {
     }
 
     componentDidMount() {
-        const { getAllSubscribers } = this.props;
-        getAllSubscribers();
+        const { requestAllSubscribers } = this.props;
+        requestAllSubscribers();
+    }
+
+    componentDidUpdate(prevProps) {
+        const { editSubscriber } = this.props;
+        if (editSubscriber != prevProps.editSubscriber) {
+            this.props.form.setFieldsValue({
+                name: editSubscriber.name,
+                districts: editSubscriber.districts,
+                key: editSubscriber.key,
+            });
+            this.setState({ submitText: 'Update' });
+        }
     }
 
     hasErrors(fieldsError) {
@@ -75,15 +87,7 @@ class SubscriberSignup extends React.Component {
     }
 
     emailSelect(input) {
-        const editSubscriber = this.props.allSubscribers.find((sub) => {
-            return sub.email === input;
-        });
-        this.props.form.setFieldsValue({
-            name: editSubscriber.name,
-            districts: editSubscriber.districts,
-            key: editSubscriber.key,
-        });
-        this.setState({ submitText: 'Update' });
+        this.props.requestEditSubscriber(input);
     }
 
     clearForm() {
@@ -181,12 +185,13 @@ class SubscriberSignup extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
     submitSubscriber: (person) => dispatch(subscriberStateBranch.actions.submitSubscriber(person)),
-    getAllSubscribers: () => dispatch(subscriberStateBranch.actions.getAllSubscribers()),
+    requestAllSubscribers: () => dispatch(subscriberStateBranch.actions.requestAllSubscribers()),
     updateEmailDataSource: (input) => dispatch(subscriberStateBranch.actions.updateEmailDataSource(input)),
+    requestEditSubscriber: (email) => dispatch(subscriberStateBranch.actions.requestEditSubscriber(email)),
 });
 
 const mapStateToProps = state => ({
-    allSubscribers: subscriberStateBranch.selectors.allSubscribers(state),
+    editSubscriber: subscriberStateBranch.selectors.editSubscriber(state),
     emailDataSource: subscriberStateBranch.selectors.emailDataSource(state),
 });
 
