@@ -36,10 +36,6 @@ const options = [...statesOpts, ...districtOpts, ...stateEvents]
 
 class SubscriberSignup extends React.Component {
 
-    state = {
-        submitText: 'Add New',
-    }
-
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -61,7 +57,7 @@ class SubscriberSignup extends React.Component {
                 districts: editSubscriber.districts,
                 key: editSubscriber.key,
             });
-            this.setState({ submitText: 'Update' });
+            this.props.updateSubmitButtonText('Update');
         }
     }
 
@@ -92,18 +88,19 @@ class SubscriberSignup extends React.Component {
 
     clearForm() {
         this.props.form.resetFields();
-        this.setState({ submitText: 'Add New' });
+        this.props.updateSubmitButtonText('Add New');
     }
 
     render() {
         const {
-            getFieldDecorator, getFieldsError, getFieldError, isFieldTouched,
+            getFieldDecorator,
+            getFieldsError,
+            getFieldError,
+            isFieldTouched,
         } = this.props.form;
         const {
-            submitText,
-        } = this.state;
-        const {
             emailDataSource,
+            submitButtonText,
         } = this.props;
       
         // Only show error after a field is touched.
@@ -168,7 +165,7 @@ class SubscriberSignup extends React.Component {
                     htmlType="submit"
                     disabled={this.hasErrors(getFieldsError())}
                 >
-                    {submitText}
+                    {submitButtonText}
                 </Button>
                 <Button
                     type="default"
@@ -188,11 +185,13 @@ const mapDispatchToProps = dispatch => ({
     requestAllSubscribers: () => dispatch(subscriberStateBranch.actions.requestAllSubscribers()),
     updateEmailDataSource: (input) => dispatch(subscriberStateBranch.actions.updateEmailDataSource(input)),
     requestEditSubscriber: (email) => dispatch(subscriberStateBranch.actions.requestEditSubscriber(email)),
+    updateSubmitButtonText: (text) => dispatch(subscriberStateBranch.actions.updateSubmitButtonText(text)),
 });
 
 const mapStateToProps = state => ({
-    editSubscriber: subscriberStateBranch.selectors.editSubscriber(state),
-    emailDataSource: subscriberStateBranch.selectors.emailDataSource(state),
+    editSubscriber: subscriberStateBranch.selectors.getEditSubscriber(state),
+    emailDataSource: subscriberStateBranch.selectors.getEmailDataSource(state),
+    submitButtonText: subscriberStateBranch.selectors.getSubmitButtonText(state),
 });
 
 const wrappedForm = Form.create({ name: 'SubscriberSignup' })(SubscriberSignup);
