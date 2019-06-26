@@ -3,14 +3,12 @@ import {
     SUBMIT_SUBSCRIBER_SUCCESS,
     REQUEST_ALL_SUBSCRIBERS_SUCCESS,
     REQUEST_EDIT_SUBSCRIBER,
-    UPDATE_SUBMIT_BUTTON_TEXT,
 } from './constants';
 
 const initialState = {
     error: null,
     allSubscribers: [],
     editSubscriber: {},
-    submitButtonText: 'Add New',
 };
 
 const subscriberReducer = (state = initialState, {type, payload}) => {
@@ -47,11 +45,6 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
                     districts: matchSubscriber.districts,
                     key: matchSubscriber.key,
                 },
-            }
-        case UPDATE_SUBMIT_BUTTON_TEXT:
-            return {
-                ...state,
-                submitButtonText: payload,
             }
         case REQUEST_FAILED:
             console.log(payload)
