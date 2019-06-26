@@ -21,7 +21,7 @@ import {
 
 import NotAuthLayout from '../../components/NotAuthLayout';
 import './style.scss';
-import { RSVP_DOWNLOAD_ACCESS } from '../../constants';
+import { RSVP_DOWNLOAD_ACCESS, ADMIN_ACCESS } from '../../constants';
 import DownloadApp from '../DownloadApp';
 
 const {
@@ -190,7 +190,7 @@ class DefaultLayout extends Component {
       submitRequestAccess,
     } = this.props;
     if (this.state.user && user ) {
-      if (user.isAdmin) {
+      if (user[ADMIN_ACCESS]) {
         return this.renderAdminApp()
       }
       if (user[RSVP_DOWNLOAD_ACCESS]) {
@@ -224,7 +224,7 @@ DefaultLayout.propTypes = {
 const mapStateToProps = state => ({
   activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
   currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
-  user: userStateBranch.selectors.getUser(state),
+  user: userStateBranch.selectors.getCurrentUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({
