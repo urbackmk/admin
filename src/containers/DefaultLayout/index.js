@@ -21,7 +21,7 @@ import {
 
 import NotAuthLayout from '../../components/NotAuthLayout';
 import './style.scss';
-import { RSVP_DOWNLOAD_ACCESS } from '../../constants';
+import { RSVP_DOWNLOAD_ACCESS, ADMIN_ACCESS } from '../../constants';
 import DownloadApp from '../DownloadApp';
 
 const {
@@ -190,7 +190,7 @@ class DefaultLayout extends Component {
       submitRequestAccess,
     } = this.props;
     if (this.state.user && user ) {
-      if (user.isAdmin) {
+      if (user[ADMIN_ACCESS]) {
         return this.renderAdminApp()
       }
       if (user[RSVP_DOWNLOAD_ACCESS]) {
