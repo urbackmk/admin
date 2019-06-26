@@ -45,6 +45,7 @@ const approveUserRequestLogic = createLogic({
       const ref = firebasedb.ref(`users/${payload.uid}`);
       return ref.update({
         [payload.accessLevel]: true,
+        [payload.moderator]: payload.moderator || null,
     }).then(() => {
         const ref = firebasedb.ref(`pending_access_request/${payload.uid}`);
         return ref.remove();
@@ -100,7 +101,7 @@ const fetchCurrentUser = createLogic({
           email: payload.email,
           username: payload.username,
           uid: payload.uid,
-          mocs: {},
+          mocs: {},     
         }
       })
     })

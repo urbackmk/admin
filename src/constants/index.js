@@ -17,11 +17,10 @@ export const EVENT_DOWNLOAD_ACCESS = 'eventDownloads';
 export const MOC_DOWNLOAD_ACCESS = 'mocDownload';
 export const ADMIN_ACCESS = 'isAdmin';
 export const MODERATOR_ACCESS = 'moderator';
-export const ACCESS_KEYS = [RSVP_DOWNLOAD_ACCESS, EVENT_DOWNLOAD_ACCESS, MODERATOR_ACCESS, MOC_DOWNLOAD_ACCESS, ADMIN_ACCESS];
+export const ACCESS_KEYS = [RSVP_DOWNLOAD_ACCESS, EVENT_DOWNLOAD_ACCESS, MOC_DOWNLOAD_ACCESS, ADMIN_ACCESS];
 export const ACCESS_LEVELS_MAP = {
     [RSVP_DOWNLOAD_ACCESS]: 'download RSVPs',
     [EVENT_DOWNLOAD_ACCESS]: 'download Events',
     [MOC_DOWNLOAD_ACCESS]: 'download MoC data',
-    [MODERATOR_ACCESS]: 'Approve events other than their own',
     [ADMIN_ACCESS]: 'ACCESS EVERYTHING!',
 }

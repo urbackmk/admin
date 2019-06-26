@@ -17,6 +17,7 @@ class EventList extends React.Component {
             archiveEvent,
             approveEvent,
             currentUserId,
+            currentUserEmail,
             isAdmin,
             pathForArchive,
             pending,
@@ -25,12 +26,13 @@ class EventList extends React.Component {
             pathForPublishing,
             updateEvent,
         } = this.props;
+        const sameUser = townHall.enteredBy === currentUserEmail || townHall.enteredBy === currentUserId;
         return (
             <List.Item>
                 <EventCard 
                     townHall={townHall}
                     pending={pending}
-                    canApprove={townHall.enteredBy !== currentUserId || isAdmin}
+                    canApprove={!sameUser || isAdmin}
                     approveEvent={() => {
                         return approveEvent(townHall, pathForEvents, pathForPublishing)
                     }}

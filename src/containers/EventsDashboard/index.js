@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Radio, 
   Row,
 } from 'antd';
 
@@ -14,7 +13,6 @@ import EventList from '../../components/EventList';
 import { 
     PENDING_EVENTS_TAB, 
     ARCHIVED_EVENTS_TAB, 
-    ADMIN_ACCESS
 } from '../../constants';
 
 import './style.scss';
@@ -56,7 +54,7 @@ class EventsDashBoard extends React.Component {
 
     render () {
         const {
-            accessLevel,
+            isModerator,
             eventsForList,
             pendingOrLive,
             deleteEvent,
@@ -69,6 +67,7 @@ class EventsDashBoard extends React.Component {
             updateEvent,
             radioButtonValue,
             currentUserId,
+            currentUserEmail,
         } = this.props;
         return (
             <React.Fragment>
@@ -90,12 +89,13 @@ class EventsDashBoard extends React.Component {
                     deleteEvent={deleteEvent}
                     approveEvent={approveEvent}
                     archiveEvent={archiveEvent}
-                    isAdmin={accessLevel === ADMIN_ACCESS}
+                    isAdmin={!isModerator}
                     pathForArchive={pathForArchive}
                     pathForPublishing={pathForPublishing}
                     userSubmissionPath={userSubmissionPath}
                     updateEvent={updateEvent}
                     currentUserId={currentUserId}
+                    currentUserEmail={currentUserEmail}
                 />}
             </React.Fragment>
         )
@@ -103,8 +103,9 @@ class EventsDashBoard extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    currentUserId: userStateBranch.selectors.getCurrentUser(state),
-    accessLevel: userStateBranch.selectors.getAdminStatus(state),
+    currentUserId: userStateBranch.selectors.getCurrentUserId(state),
+    currentUserEmail: userStateBranch.selectors.getCurrentUserEmail(state),
+    isModerator: userStateBranch.selectors.getModeratorStatus(state),
     pendingOrLive: selectionStateBranch.selectors.getPendingOrLiveTab(state),
     eventsForList: eventsStateBranch.selectors.getAllEventsAsList(state),
     radioButtonValue: selectionStateBranch.selectors.getActiveFederalOrState(state),
