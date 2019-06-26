@@ -44,13 +44,11 @@ const editSubscriberLogic = createLogic({
     action,
   }) {
     const { payload } = action;
-    const subscriberKey = payload.key;
-    payload.key = null;
-    return firebasedb.ref(`subscribers/${subscriberKey}`).update(payload)
+    const update = {...payload, key: null}
+    return firebasedb.ref(`subscribers/${payload.key}`).update(update)
       .then(()=> {
         return {
           ...payload,
-          key: subscriberKey,
         }
       })
   },
