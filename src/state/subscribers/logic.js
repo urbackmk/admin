@@ -2,66 +2,85 @@ import { createLogic } from "redux-logic"
 
 import { 
   REQUEST_FAILED,
-  SUBMIT_SUBSCRIBER_SUCCESS,
   SUBMIT_SUBSCRIBER,
+  SUBMIT_SUBSCRIBER_SUCCESS,
+  EDIT_SUBSCRIBER,
+  EDIT_SUBSCRIBER_SUCCESS,
   REQUEST_ALL_SUBSCRIBERS,
   REQUEST_ALL_SUBSCRIBERS_SUCCESS,
 } from "./constants";
 
 const submitSubscriberLogic = createLogic({
-    process({
-        firebasedb, 
-        action,
-      }) {
-      const {
-        payload,
-      } = action;
-      let subKey = '';
-      if (payload.key) {
-        subKey = payload.key;
-      } else {
-        subKey = firebasedb.ref(`subscribers/`).push().key;
-      }
-      payload.key = null;
-      return firebasedb.ref(`subscribers/${subKey}`).update(payload)
+  type: SUBMIT_SUBSCRIBER,
+  processOptions: {
+    failType: REQUEST_FAILED,
+    successType: SUBMIT_SUBSCRIBER_SUCCESS,
+  },
+  process({
+    firebasedb, 
+    action,
+  }) {
+    const { payload } = action;
+    const subscriberKey = firebasedb.ref(`subscribers/`).push().key;
+    payload.key = null;
+    return firebasedb.ref(`subscribers/${subscriberKey}`).update(payload)
       .then(()=> {
         return {
           ...payload,
-          key: subKey,
+          key: subscriberKey,
         }
       })
-    },
-    processOptions: {
-      failType: REQUEST_FAILED,
-      successType: SUBMIT_SUBSCRIBER_SUCCESS,
-    },
-    type: SUBMIT_SUBSCRIBER,
-  });
+  },
+});
+
+const editSubscriberLogic = createLogic({
+  type: EDIT_SUBSCRIBER,
+  processOptions: {
+    failType: REQUEST_FAILED,
+    successType: EDIT_SUBSCRIBER_SUCCESS,
+  },
+  process({
+    firebasedb,
+    action,
+  }) {
+    const { payload } = action;
+    const subscriberKey = payload.key;
+    payload.key = null;
+    return firebasedb.ref(`subscribers/${subscriberKey}`).update(payload)
+      .then(()=> {
+        return {
+          ...payload,
+          key: subscriberKey,
+        }
+      })
+  },
+});
 
 const getAllSubscriberLogic = createLogic({
-  process({
-      firebasedb,
-    }) {
-    return firebasedb.ref(`subscribers/`).once('value')
-    .then((snapshot) => {
-      const toReturn = [];
-      snapshot.forEach(element => {
-        toReturn.push({
-          ...element.val(),
-          key: element.key,
-        })
-      });
-      return toReturn;
-    })
-  },
+  type: REQUEST_ALL_SUBSCRIBERS,
   processOptions: {
     failType: REQUEST_FAILED,
     successType: REQUEST_ALL_SUBSCRIBERS_SUCCESS,
   },
-  type: REQUEST_ALL_SUBSCRIBERS,
+  process({
+      firebasedb,
+    }) {
+    return firebasedb.ref(`subscribers/`).once('value')
+      .then((snapshot) => {
+        const toReturn = [];
+        snapshot.forEach(element => {
+          toReturn.push({
+            ...element.val(),
+            key: element.key,
+          })
+        });
+        return toReturn;
+      })
+  },
 });
 
 export default [
-    submitSubscriberLogic,
-    getAllSubscriberLogic,
+  submitSubscriberLogic,
+  editSubscriberLogic,
+  getAllSubscriberLogic,
 ]

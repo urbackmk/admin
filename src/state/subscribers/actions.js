@@ -1,12 +1,18 @@
 import {
-    SUBMIT_SUBSCRIBER,
-    REQUEST_ALL_SUBSCRIBERS,
-    REQUEST_EDIT_SUBSCRIBER,
-  } from "./constants";
+  SUBMIT_SUBSCRIBER,
+  EDIT_SUBSCRIBER,
+  REQUEST_ALL_SUBSCRIBERS,
+  GET_EDIT_SUBSCRIBER,
+} from "./constants";
 
 export const submitSubscriber = person => ({
-    type: SUBMIT_SUBSCRIBER,
-    payload: person
+  type: SUBMIT_SUBSCRIBER,
+  payload: person
+});
+
+export const editSubscriber = person => ({
+  type: EDIT_SUBSCRIBER,
+  payload: person
 });
 
 export const requestAllSubscribers = () => ({
@@ -14,6 +20,6 @@ export const requestAllSubscribers = () => ({
 });
 
 export const requestEditSubscriber = (email) => ({
-  type: REQUEST_EDIT_SUBSCRIBER,
+  type: GET_EDIT_SUBSCRIBER,
   payload: email
 });
