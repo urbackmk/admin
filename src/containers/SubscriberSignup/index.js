@@ -39,9 +39,12 @@ class SubscriberSignup extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.emailSearch = this.emailSearch.bind(this);
         this.emailSelect = this.emailSelect.bind(this);
         this.clearForm = this.clearForm.bind(this);
+    }
+
+    state = {
+        updating: false,
     }
 
     componentDidMount() {
@@ -78,10 +81,6 @@ class SubscriberSignup extends React.Component {
         this.clearForm();
     }
 
-    emailSearch(input) {
-        this.props.updateEmailDataSource(input);
-    }
-
     emailSelect(input) {
         this.props.requestEditSubscriber(input);
     }
@@ -99,7 +98,7 @@ class SubscriberSignup extends React.Component {
             isFieldTouched,
         } = this.props.form;
         const {
-            emailDataSource,
+            subscriberEmails,
             submitButtonText,
         } = this.props;
       
@@ -120,10 +119,12 @@ class SubscriberSignup extends React.Component {
                 {getFieldDecorator('email', {
                     rules: [{ required: true, message: 'Must have an email' }],
                 })(<AutoComplete 
-                        dataSource={emailDataSource}
-                        onSearch={this.emailSearch}
+                        dataSource={subscriberEmails}
                         onSelect={this.emailSelect}
-                        placeholder="email" />
+                        placeholder="email" 
+                        filterOption={(inputValue, option) => {
+                            return option.props.children.toUpperCase().includes(inputValue.toUpperCase());
+                        }}/>
                 )}
             </Form.Item>
             <Form.Item
@@ -190,7 +191,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
     editSubscriber: subscriberStateBranch.selectors.getEditSubscriber(state),
-    emailDataSource: subscriberStateBranch.selectors.getEmailDataSource(state),
+    subscriberEmails: subscriberStateBranch.selectors.getSubscriberEmails(state),
     submitButtonText: subscriberStateBranch.selectors.getSubmitButtonText(state),
 });
 

@@ -2,7 +2,6 @@ import {
     REQUEST_FAILED,
     SUBMIT_SUBSCRIBER_SUCCESS,
     REQUEST_ALL_SUBSCRIBERS_SUCCESS,
-    UPDATE_EMAIL_DATA,
     REQUEST_EDIT_SUBSCRIBER,
     UPDATE_SUBMIT_BUTTON_TEXT,
 } from './constants';
@@ -11,7 +10,6 @@ const initialState = {
     error: null,
     allSubscribers: [],
     editSubscriber: {},
-    emailDataSource: [],
     submitButtonText: 'Add New',
 };
 
@@ -37,15 +35,6 @@ const subscriberReducer = (state = initialState, {type, payload}) => {
                 ...state,
                 error: null,
                 allSubscribers: payload,
-            }
-        case UPDATE_EMAIL_DATA:
-            const emails = state.allSubscribers.reduce((acc, curr) => {
-                if (curr.email.includes(payload)) acc.push(curr.email);
-                return acc;
-            }, []);
-            return {
-                ...state,
-                emailDataSource: emails,
             }
         case REQUEST_EDIT_SUBSCRIBER:
             const matchSubscriber = state.allSubscribers.find((subscriber) => {

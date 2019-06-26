@@ -22,7 +22,7 @@ const submitSubscriberLogic = createLogic({
       } else {
         subKey = firebasedb.ref(`subscribers/`).push().key;
       }
-      delete payload.key;
+      payload.key = null;
       return firebasedb.ref(`subscribers/${subKey}`).update(payload)
       .then(()=> {
         return {
