@@ -8,28 +8,21 @@ Good luck!
 
 ---
 ## 0. Before you start
-The development workflow is as follows:
-
-#### Setting up the repos:
-- Fork the admin repo
-- Clone your forked repo
-
-#### Topic workflow:
-- Checkout a new topic branch
-  - Make code changes as usual
-- Add, commit, and push your changes to your forked repo
-  - but no need to merge to master
-- Create pull requests from your topic branch to the main THP repo master
+#### The general development workflow is as follows:
+- Fork the THP admin repo
+- Make changes to your forked repo
+- Send PRs from the forked repo to the main THP repo
 
 #### Merging your changes to the main THP repo
-
 1. update your forked master branch to match the main THP master branch:
 - Set up the original THP admin repo as a remote (this only has to be done once):
   `git remote add upstream https://github.com/townhallproject/admin.git`
-  - Verify that the remote was added: `git remote -v`
+  - To verify that the remote was added: `git remote -v`
 - `git checkout master`
 - `git pull upstream master`
+  - this brings all new content from the main THP repo into the current branch of your cloned repo
 - `git push origin master`
+  - this sends those changes to your fork
 
 2. Rebase your topic branch onto your fork's master, which is now up to date with everyone elses changes:
 - `git checkout <your branch>`
