@@ -224,7 +224,7 @@ DefaultLayout.propTypes = {
 const mapStateToProps = state => ({
   activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
   currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
-  user: userStateBranch.selectors.getUser(state),
+  user: userStateBranch.selectors.getCurrentUser(state),
 });
 
 const mapDispatchToProps = dispatch => ({

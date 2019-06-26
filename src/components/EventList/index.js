@@ -16,6 +16,8 @@ class EventList extends React.Component {
         const {
             archiveEvent,
             approveEvent,
+            currentUserId,
+            isAdmin,
             pathForArchive,
             pending,
             deleteEvent,
@@ -28,6 +30,7 @@ class EventList extends React.Component {
                 <EventCard 
                     townHall={townHall}
                     pending={pending}
+                    canApprove={townHall.enteredBy !== currentUserId || isAdmin}
                     approveEvent={() => {
                         return approveEvent(townHall, pathForEvents, pathForPublishing)
                     }}

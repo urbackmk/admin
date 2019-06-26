@@ -6,13 +6,15 @@ import {
 } from 'antd';
 
 import eventsStateBranch from '../../state/events';
-import selectionStateBranch from '../../state/selections'
+import selectionStateBranch from '../../state/selections';
+import userStateBranch from '../../state/users';
 
 import EventList from '../../components/EventList';
 
 import { 
     PENDING_EVENTS_TAB, 
-    ARCHIVED_EVENTS_TAB 
+    ARCHIVED_EVENTS_TAB, 
+    ADMIN_ACCESS
 } from '../../constants';
 
 import './style.scss';
@@ -54,6 +56,7 @@ class EventsDashBoard extends React.Component {
 
     render () {
         const {
+            accessLevel,
             eventsForList,
             pendingOrLive,
             deleteEvent,
@@ -65,6 +68,7 @@ class EventsDashBoard extends React.Component {
             userSubmissionPath,
             updateEvent,
             radioButtonValue,
+            currentUserId,
         } = this.props;
         return (
             <React.Fragment>
@@ -86,10 +90,12 @@ class EventsDashBoard extends React.Component {
                     deleteEvent={deleteEvent}
                     approveEvent={approveEvent}
                     archiveEvent={archiveEvent}
+                    isAdmin={accessLevel === ADMIN_ACCESS}
                     pathForArchive={pathForArchive}
                     pathForPublishing={pathForPublishing}
                     userSubmissionPath={userSubmissionPath}
                     updateEvent={updateEvent}
+                    currentUserId={currentUserId}
                 />}
             </React.Fragment>
         )
@@ -97,6 +103,8 @@ class EventsDashBoard extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    currentUserId: userStateBranch.selectors.getCurrentUser(state),
+    accessLevel: userStateBranch.selectors.getAdminStatus(state),
     pendingOrLive: selectionStateBranch.selectors.getPendingOrLiveTab(state),
     eventsForList: eventsStateBranch.selectors.getAllEventsAsList(state),
     radioButtonValue: selectionStateBranch.selectors.getActiveFederalOrState(state),
