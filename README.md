@@ -35,6 +35,7 @@ The development workflow is as follows:
 - `git checkout <your branch>`
 - `git rebase master`
   - if there are any problems they will become apparent here
+- `git push origin master`
 
 3. Create a pull request to the main THP repo master
 - use the github UI
