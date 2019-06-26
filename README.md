@@ -7,6 +7,38 @@ This setup process is fairly lengthy, but it's not too bad if you stick with it!
 Good luck!
 
 ---
+## 0. Before you start
+The development workflow is as follows:
+
+#### Setting up the repos:
+- Fork the admin repo
+- Clone your forked repo
+
+#### Topic workflow:
+- Checkout a new topic branch
+  - Make code changes as usual
+- Add, commit, and push your changes to your forked repo
+  - but no need to merge to master
+- Create pull requests from your topic branch to the main THP repo master
+
+#### Merging your changes to the main THP repo
+
+1. update your forked master branch to match the main THP master branch:
+- Set up the original THP admin repo as a remote (this only has to be done once):
+  `git remote add upstream https://github.com/townhallproject/admin.git`
+  - Verify that the remote was added: `git remote -v`
+- `git checkout master`
+- `git pull upstream master`
+
+2. Rebase your topic branch onto your fork's master, which is now up to date with everyone elses changes:
+- `git checkout <your branch>`
+- `git rebase master`
+  - if there are any problems they will become apparent here
+
+3. Create a pull request to the main THP repo master
+- use the github UI
+
+
 ## 1. Download the files
 
 - Clone this repository to a folder of your choice on your local machine:
