@@ -42,12 +42,18 @@ export default class EventCard extends React.Component {
             archiveEvent,
             approveEvent,
             deleteEvent,
+            canApprove
         } = this.props;
-        return [
+        const buttonList = [
                     <Button key="archive-button" ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
                     <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>,
-                    <Button key="approve-button" type="primary" icon="check" onClick={approveEvent}>Approve</Button>
                 ]
+        if (canApprove) {
+            buttonList.push(
+                    <Button key="approve-button" type="primary" icon="check" onClick={approveEvent}>Approve</Button>
+            )
+        }
+        return buttonList;
     }
 
     renderLiveActions() {
