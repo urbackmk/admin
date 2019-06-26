@@ -29,6 +29,7 @@ The development workflow is as follows:
   - Verify that the remote was added: `git remote -v`
 - `git checkout master`
 - `git pull upstream master`
+- `git push origin master`
 
 2. Rebase your topic branch onto your fork's master, which is now up to date with everyone elses changes:
 - `git checkout <your branch>`
