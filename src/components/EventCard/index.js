@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Card,
+  Checkbox,
   Button,
   Tag,
   Input,
@@ -145,6 +146,7 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
+                <Checkbox defaultChecked={townHall.ada_accessible}>ADA Accessible</Checkbox>
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
                     <li>Chamber: {townHall.chamber}</li>
