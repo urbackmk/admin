@@ -21,7 +21,7 @@ import {
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
 } from "./constants";
-import { EVENTS_PATHS } from '../../constants';
+import { EVENTS_PATHS } from '../constants';
 import {
   addOldEventToState,
   setLoading,
@@ -230,6 +230,7 @@ const requestEventsCounts = createLogic({
   type: REQUEST_EVENTS_COUNT,
   processOptions: {
     successType: REQUEST_EVENTS_COUNT_SUCCESS,
+    failType: 'failed eventsCount',
   },
   process(deps) {
     const {
@@ -237,11 +238,17 @@ const requestEventsCounts = createLogic({
       firebasedb,
     } = deps;
     const path = action.payload;
-    console.log(EVENTS_PATHS[path]);
-    const eventCounts = [];
-    EVENTS_PATHS[path].forEach((p) => {
-      const ref = firebasedb.ref(`${p}`);
-      console.log(ref);
+    const eventCounts = {};
+    const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
+      for (let [key, val] of Object.entries(snapshot.val())) {
+        eventCounts[key] = Object.keys(val).length;
+      }
+    });
+    const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
+      eventCounts['federal'] = snapshot.numChildren();
+    });
+    return Promise.all([p1, p2]).then((values) => {
+      return eventCounts;
     });
   }
 })

@@ -104,6 +104,8 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         eventsCounts: action.payload,
       }
+    case 'failed eventsCount':
+      console.log(action);
     default:
       return state;
   }

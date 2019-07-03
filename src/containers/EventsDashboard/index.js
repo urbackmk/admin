@@ -29,8 +29,11 @@ class EventsDashBoard extends React.Component {
         const {
           requestEvents,
           pathForEvents,
+          requestEventsCounts,
+          pendingOrLive,
         } = this.props;
         requestEvents(pathForEvents);
+        requestEventsCounts(pendingOrLive);
     }
 
     componentDidUpdate(prevProps) {
@@ -43,8 +46,9 @@ class EventsDashBoard extends React.Component {
         if (prevProps.pathForEvents !== pathForEvents && pathForEvents) {
             requestEvents(pathForEvents);
         }
-        console.log(this.props);
-        requestEventsCounts(pendingOrLive);
+        if (prevProps.pendingOrLive !== pendingOrLive) {
+            requestEventsCounts(pendingOrLive);
+        }
     }
 
     onRadioChange({target}) {
@@ -75,6 +79,7 @@ class EventsDashBoard extends React.Component {
                 >
                 <FederalStateRadioSwitcher 
                     onRadioChange={this.onRadioChange}
+                    eventsCounts={this.props.eventsCounts}
                 />
                 </Row>
                 {pendingOrLive === ARCHIVED_EVENTS_TAB ?
@@ -103,7 +108,7 @@ const mapStateToProps = state => ({
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
     userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
-    // eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
+    eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
