@@ -36,6 +36,7 @@ export default class EventCard extends React.Component {
         this.setEditEventNotesTrue = this.setEditEventNotesTrue.bind(this)
         this.selectEventNotes = this.selectEventNotes.bind(this)
         this.stopEditing = this.stopEditing.bind(this)
+        this.toggleAdaAccessible = this.toggleAdaAccessible.bind(this)
     }
 
     renderPendingActions() {
@@ -99,7 +100,13 @@ export default class EventCard extends React.Component {
 
     stopEditing() {
         this.setState({currentEditing: false})
+    }
 
+    toggleAdaAccessible({target}) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({ada_accessible: target.checked})
     }
 
     render() {
@@ -146,7 +153,7 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
-                <Checkbox defaultChecked={townHall.ada_accessible}>ADA Accessible</Checkbox>
+                <Checkbox defaultChecked={townHall.ada_accessible} onChange={this.toggleAdaAccessible}>ADA Accessible</Checkbox>
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
                     <li>Chamber: {townHall.chamber}</li>
