@@ -3,6 +3,7 @@ import Events from './Events';
 import MoCs from './MoCs';
 import Researchers from './Researchers';
 import Widgets from './Widgets';
+import SmsUsers from './SmsUsers';
 
 export {
   Dashboard,
@@ -10,5 +11,6 @@ export {
   MoCs,
   Researchers,
   Widgets,
+  SmsUsers,
 };
 
