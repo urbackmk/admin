@@ -9,8 +9,9 @@ import {
   DELETE_EVENT_FAIL,
   REQUEST_EVENTS, 
   REQUEST_EVENTS_FAILED,
-  REQUEST_EVENTS_COUNT_SUCCESS,
-  REQUEST_EVENTS_COUNT,
+  REQUEST_EVENTS_COUNTS_SUCCESS,
+  REQUEST_EVENTS_COUNTS_FAIL,
+  REQUEST_EVENTS_COUNTS,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
@@ -26,6 +27,8 @@ import {
   addOldEventToState,
   setLoading,
   storeEventsInState,
+  clearEventsCounts,
+  requestEventsCountsSuccess,
 } from "./actions";
 import {
   requestResearcherById
@@ -227,16 +230,17 @@ const updateEventLogic = createLogic({
 })
 
 const requestEventsCounts = createLogic({
-  type: REQUEST_EVENTS_COUNT,
+  type: REQUEST_EVENTS_COUNTS,
   processOptions: {
-    successType: REQUEST_EVENTS_COUNT_SUCCESS,
-    failType: 'failed eventsCount',
+    // successType: REQUEST_EVENTS_COUNTS_SUCCESS,
+    failType: REQUEST_EVENTS_COUNTS_FAIL,
   },
-  process(deps) {
+  process(deps, dispatch, done) {
     const {
       action,
       firebasedb,
     } = deps;
+    dispatch(clearEventsCounts());
     const path = action.payload;
     const eventCounts = {};
     const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
@@ -247,8 +251,9 @@ const requestEventsCounts = createLogic({
     const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
       eventCounts['federal'] = snapshot.numChildren();
     });
-    return Promise.all([p1, p2]).then((values) => {
-      return eventCounts;
+    Promise.all([p1, p2]).then(() => {
+      dispatch(requestEventsCountsSuccess(eventCounts))
+      done();
     });
   }
 })

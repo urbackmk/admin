@@ -11,7 +11,9 @@ import {
   GET_USER_EMAIL_FOR_EVENT_SUCCESS,
   GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
   RESET_OLD_EVENTS,
-  REQUEST_EVENTS_COUNT_SUCCESS,
+  REQUEST_EVENTS_COUNTS_SUCCESS,
+  REQUEST_EVENTS_COUNTS_FAIL,
+  CLEAR_EVENTS_COUNTS,
 } from "./constants";
 import { filter, map } from "lodash";
 
@@ -99,13 +101,25 @@ const eventReducer = (state = initialState, action) => {
           return ele
         })
       }
-    case REQUEST_EVENTS_COUNT_SUCCESS:
+    case REQUEST_EVENTS_COUNTS_SUCCESS:
+      console.log(action);
       return {
         ...state,
         eventsCounts: action.payload,
       }
-    case 'failed eventsCount':
+    case CLEAR_EVENTS_COUNTS:
+      console.log('clear');
+      return {
+        ...state,
+        eventsCounts: {},
+        error: null,
+      }
+    case REQUEST_EVENTS_COUNTS_FAIL:
       console.log(action);
+      return {
+        ...state,
+        error: action.payload
+      };
     default:
       return state;
   }

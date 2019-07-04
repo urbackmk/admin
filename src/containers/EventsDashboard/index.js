@@ -33,6 +33,7 @@ class EventsDashBoard extends React.Component {
           pendingOrLive,
         } = this.props;
         requestEvents(pathForEvents);
+        console.log(pendingOrLive);
         requestEventsCounts(pendingOrLive);
     }
 
@@ -47,6 +48,7 @@ class EventsDashBoard extends React.Component {
             requestEvents(pathForEvents);
         }
         if (prevProps.pendingOrLive !== pendingOrLive) {
+            console.log(pendingOrLive);
             requestEventsCounts(pendingOrLive);
         }
     }
