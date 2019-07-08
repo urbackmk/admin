@@ -232,7 +232,6 @@ const updateEventLogic = createLogic({
 const requestEventsCounts = createLogic({
   type: REQUEST_EVENTS_COUNTS,
   processOptions: {
-    // successType: REQUEST_EVENTS_COUNTS_SUCCESS,
     failType: REQUEST_EVENTS_COUNTS_FAIL,
   },
   process(deps, dispatch, done) {
@@ -242,19 +241,23 @@ const requestEventsCounts = createLogic({
     } = deps;
     dispatch(clearEventsCounts());
     const path = action.payload;
-    const eventCounts = {};
-    const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
-      for (let [key, val] of Object.entries(snapshot.val())) {
-        eventCounts[key] = Object.keys(val).length;
-      }
-    });
-    const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
-      eventCounts['federal'] = snapshot.numChildren();
-    });
-    Promise.all([p1, p2]).then(() => {
-      dispatch(requestEventsCountsSuccess(eventCounts))
+    if (path === 'archive') {
       done();
-    });
+    } else {
+      const eventCounts = {};
+      const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
+        for (let [key, val] of Object.entries(snapshot.val())) {
+          eventCounts[key] = Object.keys(val).length;
+        }
+      });
+      const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
+        eventCounts['federal'] = snapshot.numChildren();
+      });
+      Promise.all([p1, p2]).then(() => {
+        dispatch(requestEventsCountsSuccess(eventCounts))
+        done();
+      });
+    }
   }
 })
 

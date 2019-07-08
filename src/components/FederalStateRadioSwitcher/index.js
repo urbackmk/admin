@@ -27,7 +27,7 @@ class FederalStateRadioSwitcher extends React.Component {
                         >
                         {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
                             return (
-                                <Badge count={this.props.eventsCounts[key]}>
+                                <Badge key={key} count={this.props.eventsCounts[key]}>
                                     <RadioButton key={key} value={key}>
                                         {key}
                                     </RadioButton>

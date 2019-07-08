@@ -102,13 +102,11 @@ const eventReducer = (state = initialState, action) => {
         })
       }
     case REQUEST_EVENTS_COUNTS_SUCCESS:
-      console.log(action);
       return {
         ...state,
         eventsCounts: action.payload,
       }
     case CLEAR_EVENTS_COUNTS:
-      console.log('clear');
       return {
         ...state,
         eventsCounts: {},
