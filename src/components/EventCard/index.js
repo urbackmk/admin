@@ -165,7 +165,7 @@ export default class EventCard extends React.Component {
                     <li>Chamber: {townHall.chamber}</li>
                     <li>Icon Flag: {this.state.currentEditing === 'iconFlag' ? selectIconFlag : displayIconFlag}</li>
                     <li>Entered by: {townHall.enteredBy}</li>
-                    {townHall['Internal-Notes'] && <p>Internal Notes: {townHall['Internal-Notes']}</p>}
+                    {townHall.internalNotes && <p>Internal Notes: {townHall.internalNotes}</p>}
                     <Tag color={townHall.dateValid ? "#2db7f5" : "#f50" }>{townHall.dateValid ? 'Date Valid' : 'Date not valid' }</Tag>
                     <Tag color={townHall.lat ?  "#2db7f5" : "#f50"}>{townHall.lat ? 'has geocode' : 'needs geocode'}</Tag>
                 </ul>
