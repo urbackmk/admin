@@ -22,13 +22,18 @@ import {
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
 } from "./constants";
-import { EVENTS_PATHS } from '../constants';
+import { 
+  EVENTS_PATHS,
+  eventsPathsReverse,
+} from '../constants';
 import {
   addOldEventToState,
   setLoading,
   storeEventsInState,
   clearEventsCounts,
   requestEventsCountsSuccess,
+  approveEventSuccess,
+  decrementEvents,
 } from "./actions";
 import {
   requestResearcherById
@@ -111,10 +116,10 @@ const fetchOldEventsLogic = createLogic({
 const approveEventLogic = createLogic({
   type: APPROVE_EVENT,
   processOptions: {
-    successType: APPROVE_EVENT_SUCCESS,
+    // successType: APPROVE_EVENT_SUCCESS,
     failType: APPROVE_EVENT_FAIL,
   },
-  process(deps) {
+  process(deps, dispatch, done) {
     const {
       action,
       firebasedb,
@@ -125,18 +130,28 @@ const approveEventLogic = createLogic({
       path,
       livePath,
     } = action.payload;
-    console.log(livePath)
+    console.log(livePath);
+    console.log(path);
+    console.log(townHall);
     const townHallMetaData = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
-    return firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
+    firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
       .then(() => {
         const approvedTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
-        return approvedTownHall.remove()
+        approvedTownHall.remove()
           .then(() => {
-            return townHallMetaData.update({
+            townHallMetaData.update({
               status: 'live',
             })
             .then(() => {
-              return townHall.eventId;
+              dispatch(approveEventSuccess(townHall.eventId));
+              let key = '';
+              if (eventsPathsReverse[path]) {
+                key = eventsPathsReverse[path];
+              } else {
+                key = path.match(/[A-Z]*$/);
+              }
+              dispatch(decrementEvents(key));
+              done();
             })
           })
       })
@@ -246,8 +261,10 @@ const requestEventsCounts = createLogic({
     } else {
       const eventCounts = {};
       const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
-        for (let [key, val] of Object.entries(snapshot.val())) {
-          eventCounts[key] = Object.keys(val).length;
+        if (snapshot.numChildren() > 0) {
+          for (let [key, val] of Object.entries(snapshot.val())) {
+            eventCounts[key] = Object.keys(val).length;
+          }
         }
       });
       const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {

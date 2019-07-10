@@ -20,3 +20,9 @@ export const EVENTS_PATHS = {
         FEDERAL: 'archived_town_halls',
         STATE: 'archived_state_town_halls'},
 };
+export const FEDERAL_KEY = 'federal';
+export const eventsPathsReverse = {
+    'UserSubmission': FEDERAL_KEY,
+    'townHalls': FEDERAL_KEY,
+    'archived_town_halls': FEDERAL_KEY,
+};

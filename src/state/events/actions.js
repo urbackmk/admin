@@ -7,6 +7,7 @@ import {
   REQUEST_PENDING_EVENTS_FAILED,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
+  APPROVE_EVENT_SUCCESS,
   REQUEST_OLD_EVENTS,
   REQUEST_OLD_EVENTS_SUCCESS,
   RESET_OLD_EVENTS,
@@ -17,6 +18,7 @@ import {
   REQUEST_EVENTS_COUNTS,
   REQUEST_EVENTS_COUNTS_SUCCESS,
   CLEAR_EVENTS_COUNTS,
+  DECREMENT_EVENTS,
 } from './constants';
 
 
@@ -127,4 +129,14 @@ export const requestEventsCountsSuccess = (payload) => ({
 
 export const clearEventsCounts = () => ({
   type: CLEAR_EVENTS_COUNTS,
+});
+
+export const decrementEvents = (key) => ({
+  type: DECREMENT_EVENTS,
+  payload: key,
+});
+
+export const approveEventSuccess = (eventId) => ({
+  type: APPROVE_EVENT_SUCCESS,
+  payload: eventId,
 });

@@ -15,7 +15,6 @@ const RadioGroup = Radio.Group;
 class FederalStateRadioSwitcher extends React.Component {
 
     render () {
-        console.log(this.props.federalEventCount)
         return (
             <React.Fragment>
                 <Row
