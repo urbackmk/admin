@@ -251,7 +251,7 @@ const requestEventsCounts = createLogic({
         }
       });
       const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
-        eventCounts['federal'] = snapshot.numChildren();
+        eventCounts.federal = snapshot.numChildren();
       });
       Promise.all([p1, p2]).then(() => {
         dispatch(requestEventsCountsSuccess(eventCounts))
