@@ -1,16 +1,30 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-// import RequestList from '../../containers/RequestList';
-class UserRequests extends Component {
+import smsUsersStateBranch from '../../state/sms-users';
+
+class SmsUsers extends Component {
+  componentDidMount() {
+    const { requestTotalCount } = this.props;
+    requestTotalCount();
+  }
 
   render() {
     return (
       <React.Fragment>
-        <div>hello</div>
+        <div>Total number of sms users: {this.props.totalSmsUsers}</div>
       </React.Fragment>
     );
   }
-  
 }
 
-export default UserRequests;
+const mapStateToProps = state => ({
+  totalSmsUsers: smsUsersStateBranch.selectors.getTotalSMSUsers(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  requestTotalCount: () => dispatch(smsUsersStateBranch.actions.requestTotalCount()),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SmsUsers);
