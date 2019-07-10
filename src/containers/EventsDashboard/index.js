@@ -70,6 +70,8 @@ class EventsDashBoard extends React.Component {
             pathForPublishing,
             userSubmissionPath,
             updateEvent,
+            eventsCounts,
+            federalEventCount
         } = this.props;
         return (
             <React.Fragment>
@@ -79,7 +81,8 @@ class EventsDashBoard extends React.Component {
                 >
                 <FederalStateRadioSwitcher 
                     onRadioChange={this.onRadioChange}
-                    eventsCounts={this.props.eventsCounts}
+                    eventsCounts={eventsCounts}
+                    federalEventCount={federalEventCount}
                 />
                 </Row>
                 {pendingOrLive === ARCHIVED_EVENTS_TAB ?
@@ -109,6 +112,7 @@ const mapStateToProps = state => ({
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
     userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
     eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
+    federalEventCount : eventsStateBranch.selectors.getFederalEventCount(state),
 });
 
 const mapDispatchToProps = dispatch => ({
