@@ -79,6 +79,9 @@ class SideNav extends Component {
             <Menu.Item key="resources">
               <Link to="/resources">Resources</Link>
             </Menu.Item>
+            <Menu.Item key="sms-users">
+              <Link to="/sms-users">SMS Users</Link>
+            </Menu.Item>
           </Menu>
           </Affix>
     );
