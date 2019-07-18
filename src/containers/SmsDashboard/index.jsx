@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, Comment, Card } from 'antd';
-import { map } from 'lodash';
+import { List } from 'antd';
+import SmsCard from '../../components/SmsCard';
+
 import smsUsersStateBranch from '../../state/sms-users';
 
+
 class SmsUsersDashboard extends Component {
+
     componentDidMount() {
         const { requestTotalCount, requestCache } = this.props;
         requestTotalCount();
@@ -12,7 +15,7 @@ class SmsUsersDashboard extends Component {
     }
 
     render() {
-        const { userCache } = this.props;
+        const { userCache, sendMessage } = this.props;
         return (
             <React.Fragment>
                 <div>Total number of sms users: {this.props.totalSmsUsers}</div>
@@ -22,20 +25,11 @@ class SmsUsersDashboard extends Component {
                     itemLayout="horizontal"
                     dataSource={userCache}
                     renderItem={item => (
-                        <li>
-                            <Card
-                                title={item.phoneNumber}
-                            >
-
-                            {map(item.messages, message => 
-                                <Comment
-                                    actions={item.actions}
-                                    author={message.from_user? item.phoneNumber : 'THP'}
-                                    content={message.body}
-                                    datetime={item.last_updated}
-                                />
-                            )}
-                            </Card>
+                        <li key={item.phoneNumber}>
+                            <SmsCard 
+                                item={item}
+                                sendMessage={sendMessage}
+                            />
                         </li>
                     )}
                 />
@@ -46,12 +40,13 @@ class SmsUsersDashboard extends Component {
 
 const mapStateToProps = state => ({
     totalSmsUsers: smsUsersStateBranch.selectors.getTotalSMSUsers(state),
-    userCache: smsUsersStateBranch.selectors.getUserCache(state),
+    userCache: smsUsersStateBranch.selectors.getUsersWithMessages(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     requestTotalCount: () => dispatch(smsUsersStateBranch.actions.requestTotalCount()),
     requestCache: () => dispatch(smsUsersStateBranch.actions.requestCache()),
+    sendMessage: (payload) => dispatch(smsUsersStateBranch.actions.sendMessage(payload)),
 });
 
 
