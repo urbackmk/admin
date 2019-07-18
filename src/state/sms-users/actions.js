@@ -1,5 +1,5 @@
 import { 
-  REQUEST_TOTAL_USERS, REQUEST_CACHE, SEND_SMS_MESSAGE,
+  REQUEST_TOTAL_USERS, REQUEST_CACHE, SEND_SMS_MESSAGE, RECEIVE_MESSAGE
 } from "./constants";
 
 export const requestTotalCount = () => ({
@@ -13,4 +13,9 @@ export const requestCache = () => ({
 export const sendMessage = (payload) => ({
   payload,
   type: SEND_SMS_MESSAGE,
+})
+
+export const receiveMessage = payload => ({
+  payload,
+  type: RECEIVE_MESSAGE,
 })

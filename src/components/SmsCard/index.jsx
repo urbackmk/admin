@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Comment, Avatar } from 'antd';
 import { map } from 'lodash';
 import moment from 'moment';
+import { firebasedb } from '../../utils/firebaseinit';
 
 import Editor from '../Editor';
 const initialState = {
@@ -17,6 +18,21 @@ export default class SmsCard extends React.Component {
         this.stopEditing = this.stopEditing.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        const { item, receiveMessage } = this.props;
+
+        firebasedb.ref(`sms-users/user-cache/${item.phoneNumber}`).child('messages').on('child_added', (snapshot) => {
+            receiveMessage({ from: item.phoneNumber, message: snapshot.val() });
+        })
+
+    }
+
+    componentWillUnmount() {
+        const { item } = this.props;
+
+        firebasedb.ref(`sms-users/user-cache/${item.phoneNumber}`).child('messages').off('child_added')
     }
 
     componentDidUpdate(prevProps, prevState) {

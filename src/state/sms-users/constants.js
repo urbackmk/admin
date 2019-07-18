@@ -14,3 +14,4 @@ export const REQUEST_CACHE = makeConstant(STATE_BRANCH, 'REQUEST_CACHE');
 export const RECEIVE_SMS_CACHE = makeConstant(STATE_BRANCH, 'RECEIVE_SMS_CACHE');
 export const SEND_SMS_MESSAGE = makeConstant(STATE_BRANCH, 'SEND_SMS_MESSAGE');
 export const SENT_MESSAGE = makeConstant(STATE_BRANCH, 'SENT_MESSAGE');
+export const RECEIVE_MESSAGE = makeConstant(STATE_BRANCH, "RECEIVE_MESSAGE");

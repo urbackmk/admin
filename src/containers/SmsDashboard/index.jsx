@@ -47,6 +47,7 @@ const mapDispatchToProps = dispatch => ({
     requestTotalCount: () => dispatch(smsUsersStateBranch.actions.requestTotalCount()),
     requestCache: () => dispatch(smsUsersStateBranch.actions.requestCache()),
     sendMessage: (payload) => dispatch(smsUsersStateBranch.actions.sendMessage(payload)),
+    receiveMessage: (payload) => dispatch(smsUsersStateBranch.actions.receiveMessage(payload))
 });
 
 
