@@ -1,4 +1,6 @@
 import { createLogic } from "redux-logic"
+import superagent from 'superagent';
+import { map } from 'lodash';
 
 import { 
   REQUEST_TOTAL_USERS,
@@ -6,6 +8,8 @@ import {
   REQUEST_FAILED,
   RECEIVE_SMS_CACHE,
   REQUEST_CACHE,
+  SEND_SMS_MESSAGE,
+  SENT_MESSAGE,
 } from "./constants";
 
 const requestAllSMSUsersLogic = createLogic({
@@ -30,7 +34,10 @@ const requestCacheLogic = createLogic({
       .then((snapshot) => {
         const toReturn = [];
         snapshot.forEach((ele) => {
-          toReturn.push(ele.val())
+          const user = ele.val();
+          user.messages = map(user.messages, (message, key) => {return {...message, id: key}})
+          user.phoneNumber = user.phoneNumber || ele.key;
+          toReturn.push(user)
         })
         return toReturn;
       })
@@ -42,24 +49,29 @@ const requestCacheLogic = createLogic({
   type: REQUEST_CACHE,
 });
 
-// const sendMessageLogic = createLogic({
-//     process({
-//         firebasedb
-//       }) {
-//         return firebasedb.ref('sms-users/cached-users').on('child')
-//           .then((snapshot) => {
-//             return snapshot.numChildren();
-//           })
-//       },
-//       processOptions: {
-//         failType: REQUEST_FAILED,
-//         successType: RECEIVE_TOTAL_USERS,
-//       },
-//       type: REQUEST_TOTAL_USERS,
-// })
+const sendMessageLogic = createLogic({
+  process({
+    action,
+  }) {
+    return superagent
+      .post('http://localhost:8080/send-message')
+      .send(action.payload)
+      .then(res => {
+        if (res.status === 200) {
+          return res.body;
+        } 
+        return Promise.reject()
+      });
+  },
+      processOptions: {
+        failType: REQUEST_FAILED,
+        successType: SENT_MESSAGE,
+      },
+      type: SEND_SMS_MESSAGE,
+})
 
 export default [
   requestAllSMSUsersLogic,
-  // sendMessageLogic,
+  sendMessageLogic,
   requestCacheLogic,
 ];

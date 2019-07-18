@@ -2,7 +2,9 @@ import {
   RECEIVE_TOTAL_USERS,
   REQUEST_FAILED,
   RECEIVE_SMS_CACHE,
+  SENT_MESSAGE,
 } from "./constants";
+import { map } from "lodash";
 
 const initialState = {
   totalSmsUsers: 0,
@@ -31,6 +33,14 @@ const smsUserReducer = (state = initialState, {type, payload}) => {
           userCache: payload,
           error: null,
         }
+    case SENT_MESSAGE: 
+        return {
+          ...state,
+          userCache: map(state.userCache, (user) => user.phoneNumber === payload.sentTo ? {
+            ...user,
+            messages: [...user.messages, payload.message]
+          } : user)
+        };
     default:
       return state;
   }
