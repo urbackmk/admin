@@ -60,6 +60,9 @@ export const getEventsToShowUrl = createSelector([getPendingOrLiveTab, getSubmis
 
 export const getPeopleNameUrl = createSelector([getActiveFederalOrState, getMode], (federalOrState, mode) => {
   if (mode === 'candidate') {
+    if (includes(STATES_LEGS, federalOrState)) {
+      return `state_candidate_keys/${federalOrState}`;
+    }
     return 'candidate_keys';
   }
   if (includes(STATES_LEGS, federalOrState)) {

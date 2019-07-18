@@ -5,11 +5,45 @@ import {
 import { map } from 'lodash';
 
 import { statesAb } from '../../assets/data/states';
+import './style.scss';
+import { LEVEL_FEDERAL, LEVEL_STATE } from '../../constants';
 
 const { Option } = Select;
 
 const children = map(statesAb, (value, key) => (<Option key={key}>{value}</Option>));
 
+const stateChambers = [
+  {
+    value: 'upper',
+    label: 'upper',
+  },
+  {
+    value: 'lower',
+    label: 'lower',
+  },
+  {
+    value: 'statewide',
+    label: 'Gov',
+  },
+  {
+    value: 'citywide',
+    label: 'Mayor',
+  },
+];
+
+const federalChambers = [{
+    value: 'upper',
+    label: 'Senate',
+  },
+  {
+    value: 'lower',
+    label: 'House',
+  },
+  {
+    value: 'nationwide',
+    label: 'Pres',
+  },
+];
 
 class AddPersonForm extends React.Component {
   constructor(props) {
@@ -34,13 +68,19 @@ class AddPersonForm extends React.Component {
   handleSubmit(e) {
     const {
       saveCandidate,
-      form
+      form,
+      candidateKeySavePath,
+      usState,
     } = this.props;
     e.preventDefault();
     form.validateFields((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
-        saveCandidate(values);
+        const person = {
+          ...values,
+          level: usState ? 'state' : 'level'
+        }
+        saveCandidate(candidateKeySavePath, person);
         form.resetFields();
       }
     });
@@ -51,16 +91,53 @@ class AddPersonForm extends React.Component {
       getFieldDecorator,
       getFieldValue,
     } = this.props.form;
+    const {
+      usState,
+    } = this.props;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 8 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    const noLabelFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 16,
+          offset: 8,
+        },
+      },
+    };
     return (
-      <Form onSubmit={this.handleSubmit} className="add-person-form" >
-        <Form.Item>
+      <Form onSubmit={this.handleSubmit} {...formItemLayout} className="add-person-form" >
+        <h1>Add a candidate</h1>
+
+        <Form.Item {...noLabelFormItemLayout}>
           {getFieldDecorator('displayName', {
             rules: [{ required: true, message: 'need a name' }],
           })(
             <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Display Name" />
           )}
         </Form.Item>
-        
+        <Form.Item label="Level (state or federal)">
+          {getFieldDecorator('level', {
+            initialValue: usState ? LEVEL_STATE : LEVEL_FEDERAL,
+            rules: [{ required: true}],
+          })(
+            <Select>
+                <Option value={LEVEL_FEDERAL}>{LEVEL_FEDERAL}</Option>
+                <Option value={LEVEL_STATE}>{LEVEL_STATE}</Option>
+            </Select>
+          )}
+        </Form.Item>        
         <Form.Item label="Party">
           {getFieldDecorator('party', {
             rules: [{ required: true, message: 'enter a party' }],
@@ -72,7 +149,7 @@ class AddPersonForm extends React.Component {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="Running For">
+        <Form.Item label="Running For (prefix)">
           {getFieldDecorator('role', {
             rules: [{ required: true, message: 'Please enter a role' }],
           })(
@@ -81,9 +158,9 @@ class AddPersonForm extends React.Component {
             >
                 <Option value="Rep">Rep</Option>
                 <Option value="Sen">Senator</Option>
-                <Option value="Gov">Gov</Option>
-                <Option value="Mayor">Mayor</Option>
-                <Option value="Pres">Pres</Option>
+                {getFieldValue('level') === LEVEL_STATE && <Option value="Gov">Gov</Option>}
+                {getFieldValue('level') === LEVEL_STATE &&<Option value="Mayor">Mayor</Option>}
+                {getFieldValue('level') === LEVEL_FEDERAL && <Option value="Pres">Pres</Option>}
             </Select>
           )}
         </Form.Item>
@@ -92,15 +169,19 @@ class AddPersonForm extends React.Component {
             rules: [{ required: true, message: 'Party' }],
           })(
             <Select>
-                <Option value="upper">upper</Option>
-                <Option value="lower">lower</Option>
-                <Option value="statewide">Gov</Option>
-                <Option value="citywide">Mayor</Option>
-                <Option value="nationwide">Pres</Option>
+              {getFieldValue('level') === LEVEL_FEDERAL ?
+                  map(federalChambers, (item) => <Option value={item.value}>{item.label}</Option>) :
+                  map(stateChambers, (item) => <Option value={item.value}>{item.label}</Option>)
+              }
             </Select>
           )}
         </Form.Item>
-        {getFieldValue('chamber') === 'lower' && <Form.Item hasFeedback help="zero padded number, '09'">
+        {(getFieldValue('chamber') === 'lower' || usState) && 
+        <Form.Item 
+          {...noLabelFormItemLayout}
+          hasFeedback 
+          help={usState ? "full district, ie HD-9" : "zero padded number, '09'"}
+        >
           {getFieldDecorator('district', {
             rules: [{ required: false, message: 'need a name' }],
           })(
@@ -112,17 +193,23 @@ class AddPersonForm extends React.Component {
             <Checkbox />
           )}
         </Form.Item>
+        <Form.Item label="Pledger">
+          {getFieldDecorator('pledged')(
+            <Checkbox />
+          )}
+        </Form.Item>
         <Form.Item label="State">
           {getFieldDecorator('state', {
+            initialValue: usState || ''
           })(
-            <Select 
+            <Select
               placeholder="Select a State"
             >
                 {children}
             </Select>
           )}
         </Form.Item>
-        <Form.Item>
+        <Form.Item  {...noLabelFormItemLayout}>
           <Button type="primary" htmlType="submit" className="login-form-button">
             Save to database
           </Button>

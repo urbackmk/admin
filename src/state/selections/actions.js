@@ -2,9 +2,11 @@ import {
   CHANGE_EVENTS_TAB, 
   CHANGE_FEDERAL_STATE_RADIO,
   GET_URL_HASH,
+  CHANGE_MODE,
   CHANGE_DATE_LOOKUP,
   CHANGE_STATE_FILTERS,
   TOGGLE_INCLUDE_LIVE_EVENTS,
+  CHANGE_MOC_END_POINT,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -16,6 +18,16 @@ export const changeFederalStateRadio = value => ({
   type: CHANGE_FEDERAL_STATE_RADIO,
   payload: value
 });
+
+export const changeMocEndpoint = value => ({
+  type: CHANGE_MOC_END_POINT,
+  payload: value,
+})
+
+export const changeMode = value => ({
+  type: CHANGE_MODE,
+  payload: value,
+})
 
 export const getHashLocationAndSave = () => ({
   type: GET_URL_HASH,

@@ -6,6 +6,7 @@ import {
   CHANGE_STATE_FILTERS,
   TOGGLE_INCLUDE_LIVE_EVENTS,
   CHANGE_MODE, 
+  CHANGE_MOC_END_POINT,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -20,6 +21,7 @@ const initialState = {
   dateLookupRange: [],
   filterByState: [],
   includeLiveEvents: false,
+  mocFederalOrState: FEDERAL_RADIO_BUTTON,
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -33,6 +35,11 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         federalOrState: action.payload
+      }
+    case CHANGE_MOC_END_POINT: 
+      return {
+        ...state,
+        mocFederalOrState: action.payload,
       }
     case GET_URL_HASH_SUCCESS:
       return {

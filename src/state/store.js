@@ -8,6 +8,8 @@ import users from './users';
 import selections from './selections';
 import rsvps from './rsvps';
 import researchers from './researchers';
+import smsUsers from './sms-users';
+import subscribers from './subscribers';
 
 import { firebaseUrl } from '../state/constants';
 import {
@@ -21,6 +23,8 @@ const reducers = {
   researchers: researchers.reducers,
   rsvps: rsvps.reducers,
   selections: selections.reducers,
+  smsUsers: smsUsers.reducers,
+  subscribers: subscribers.reducers,
 };
 
 const logics = [
@@ -30,6 +34,8 @@ const logics = [
   ...selections.logics,
   ...rsvps.logics,
   ...researchers.logics,
+  ...smsUsers.logics,
+  ...subscribers.logics,
 ];
 
 const reduxLogicDependencies = {

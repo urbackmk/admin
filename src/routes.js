@@ -47,6 +47,11 @@ const Subscribers = Loadable({
   loading: Loading,
 });
 
+const SmsUsers = Loadable({
+  loader: () => import('./routes/SmsUsers'),
+  loading: Loading,
+});
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
@@ -58,6 +63,7 @@ const routes = [
   { path: '/manage-access', name: 'Manage Data Access', component: Requests },
   { path: '/downloads', name: 'Downloads', component: Downloads },
   { path: '/subscribers', name: 'Subscribers', component: Subscribers },
+  { path: '/sms-users', name: 'SMS Users', component: SmsUsers },
 
   // { path: '/users/:id', exact: true, name: 'User Details', component: User },
 ];
