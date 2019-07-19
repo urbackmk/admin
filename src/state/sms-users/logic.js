@@ -12,6 +12,8 @@ import {
   SENT_MESSAGE,
 } from "./constants";
 
+const url = process.env.REACT_APP_SMS_API;
+
 const requestAllSMSUsersLogic = createLogic({
     process({firebasedb}) {
       return firebasedb.ref('sms-users/all-users').once('value')
@@ -54,7 +56,7 @@ const sendMessageLogic = createLogic({
     action,
   }) {
     return superagent
-      .post('http://localhost:8080/send-message')
+      .post(`${url}/send-message`)
       .send(action.payload)
       .then(res => {
         if (res.status === 200) {
