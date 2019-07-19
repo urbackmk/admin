@@ -77,6 +77,7 @@
     "rxjs": "^5.5.12",
     "simple-line-icons": "^2.4.1",
     "style-loader": "0.19.0",
+    "superagent": "^5.1.0",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.6.2",
     "victory": "^32.0.1",
