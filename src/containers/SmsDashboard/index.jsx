@@ -15,7 +15,7 @@ class SmsUsersDashboard extends Component {
     }
 
     render() {
-        const { userCache, sendMessage } = this.props;
+        const { userCache, sendMessage, receiveMessage } = this.props;
         return (
             <React.Fragment>
                 <div>Total number of sms users: {this.props.totalSmsUsers}</div>
@@ -28,7 +28,9 @@ class SmsUsersDashboard extends Component {
                         <li key={item.phoneNumber}>
                             <SmsCard 
                                 item={item}
+                                key={`${item.phoneNumber}-card`}
                                 sendMessage={sendMessage}
+                                receiveMessage={receiveMessage}
                             />
                         </li>
                     )}

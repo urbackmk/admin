@@ -5,7 +5,10 @@ import {
   RECEIVE_MESSAGE,
   SENT_MESSAGE,
 } from "./constants";
-import { map } from "lodash";
+import {
+  map,
+  uniqBy
+} from "lodash";
 import moment from "moment";
 
 const initialState = {
@@ -29,7 +32,6 @@ const smsUserReducer = (state = initialState, {type, payload}) => {
           error: payload
         };
     case RECEIVE_SMS_CACHE: 
-    console.log(payload)
         return {
           ...state,
           userCache: payload,
@@ -48,7 +50,7 @@ const smsUserReducer = (state = initialState, {type, payload}) => {
           ...state,
           userCache: map(state.userCache, (user) => user.phoneNumber === payload.from ? {
             ...user,
-            messages: [...user.messages, payload.message].sort((a, b) => {
+            messages: uniqBy([...user.messages, payload.message], 'id').sort((a, b) => {
               if (moment(a.time_stamp).isBefore(moment(b.time_stamp))) {
                 return 1
               }

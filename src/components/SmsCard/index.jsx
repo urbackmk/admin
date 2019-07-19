@@ -22,17 +22,21 @@ export default class SmsCard extends React.Component {
 
     componentDidMount() {
         const { item, receiveMessage } = this.props;
-
-        firebasedb.ref(`sms-users/user-cache/${item.phoneNumber}`).child('messages').on('child_added', (snapshot) => {
-            receiveMessage({ from: item.phoneNumber, message: snapshot.val() });
+        firebasedb.ref(`sms-users/cached-users/${item.phoneNumber}/messages`).on('child_added', (snapshot) => {
+            const newMessage = {
+                ...snapshot.val(),
+                id: snapshot.key
+            }
+            if (newMessage.from_user) {
+                receiveMessage({ from: item.phoneNumber, message: newMessage });
+            }
         })
 
     }
 
     componentWillUnmount() {
         const { item } = this.props;
-
-        firebasedb.ref(`sms-users/user-cache/${item.phoneNumber}`).child('messages').off('child_added')
+        firebasedb.ref(`sms-users/cached-users/${item.phoneNumber}/messages`).off('child_added')
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -40,6 +44,7 @@ export default class SmsCard extends React.Component {
         if (item.messages.length > prevProps.item.messages.length && this.state.submitting) {
             this.setState({
                 submitting: false,
+                editing: false,
             })
         }
     }
@@ -57,7 +62,6 @@ export default class SmsCard extends React.Component {
     }
 
     handleChange(e) {
-        console.log(e.target.value)
         this.setState({ replyValue: e.target.value })
     }
 
@@ -67,22 +71,23 @@ export default class SmsCard extends React.Component {
         const { replyValue } = this.state;
 
         sendMessage({ to: item.phoneNumber, body: replyValue })
-        this.setState({ submitting: true, editing: false })
+        this.setState({ submitting: true })
     }
 
     render() {
         const { item } = this.props;
         const { replyValue, submitting, editing} = this.state;
         const startEditActions = [
-            <span onClick={this.startEditing}>Reply</span>,
+            <span key="start" onClick={this.startEditing}>Reply</span>,
         ]
         const isEditingAction = [
-            <span onClick={this.stopEditing}>Cancel</span>,
+            <span key="stop" onClick={this.stopEditing}>Cancel</span>,
         ]
         const actions = editing ? isEditingAction : startEditActions
         return (
             <Card
                 title={item.phoneNumber}
+                key={item.phoneNumber}
             >
 
                 {map(item.messages, (message, index) =>
