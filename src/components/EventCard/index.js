@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Card,
+  Checkbox,
   Button,
   Tag,
   Input,
@@ -35,6 +36,7 @@ export default class EventCard extends React.Component {
         this.setEditEventNotesTrue = this.setEditEventNotesTrue.bind(this)
         this.selectEventNotes = this.selectEventNotes.bind(this)
         this.stopEditing = this.stopEditing.bind(this)
+        this.toggleAdaAccessible = this.toggleAdaAccessible.bind(this)
     }
 
     renderPendingActions() {
@@ -42,12 +44,18 @@ export default class EventCard extends React.Component {
             archiveEvent,
             approveEvent,
             deleteEvent,
+            canApprove
         } = this.props;
-        return [
+        const buttonList = [
                     <Button key="archive-button" ghost type="primary" icon="export" onClick={archiveEvent}>Archive</Button>, 
                     <Button key="delete-button" type="danger" icon="delete" onClick={deleteEvent}>Delete</Button>,
-                    <Button key="approve-button" type="primary" icon="check" onClick={approveEvent}>Approve</Button>
                 ]
+        if (canApprove) {
+            buttonList.push(
+                    <Button key="approve-button" type="primary" icon="check" onClick={approveEvent}>Approve</Button>
+            )
+        }
+        return buttonList;
     }
 
     renderLiveActions() {
@@ -98,7 +106,13 @@ export default class EventCard extends React.Component {
 
     stopEditing() {
         this.setState({currentEditing: false})
+    }
 
+    toggleAdaAccessible({target}) {
+        const {
+            updateEvent,
+        } = this.props
+        updateEvent({ada_accessible: target.checked})
     }
 
     render() {
@@ -145,11 +159,13 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
+                <Checkbox defaultChecked={townHall.ada_accessible} onChange={this.toggleAdaAccessible}>ADA Accessible</Checkbox>
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
                     <li>Chamber: {townHall.chamber}</li>
                     <li>Icon Flag: {this.state.currentEditing === 'iconFlag' ? selectIconFlag : displayIconFlag}</li>
                     <li>Entered by: {townHall.enteredBy}</li>
+                    {townHall.internalNotes && <p>Internal Notes: {townHall.internalNotes}</p>}
                     <Tag color={townHall.dateValid ? "#2db7f5" : "#f50" }>{townHall.dateValid ? 'Date Valid' : 'Date not valid' }</Tag>
                     <Tag color={townHall.lat ?  "#2db7f5" : "#f50"}>{townHall.lat ? 'has geocode' : 'needs geocode'}</Tag>
                 </ul>

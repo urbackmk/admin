@@ -19,6 +19,8 @@ import {
   REQUEST_EVENTS_COUNTS_SUCCESS,
   CLEAR_EVENTS_COUNTS,
   DECREMENT_EVENTS,
+  REQUEST_TOTAL_EVENTS_COUNTS,
+  REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
 } from './constants';
 
 
@@ -124,6 +126,15 @@ export const requestEventsCounts = (path) => ({
 
 export const requestEventsCountsSuccess = (payload) => ({
   type: REQUEST_EVENTS_COUNTS_SUCCESS,
+  payload: payload,
+});
+
+export const requestTotalEventsCounts = () => ({
+  type: REQUEST_TOTAL_EVENTS_COUNTS,
+});
+
+export const requestTotalEventsCountsSuccess = (payload) => ({
+  type: REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
   payload: payload,
 });
 

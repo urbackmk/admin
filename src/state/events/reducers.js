@@ -15,6 +15,7 @@ import {
   REQUEST_EVENTS_COUNTS_FAIL,
   CLEAR_EVENTS_COUNTS,
   DECREMENT_EVENTS,
+  REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
 } from "./constants";
 import { filter, map } from "lodash";
 
@@ -22,6 +23,7 @@ const initialState = {
   allEvents: {},
   allOldEvents: {},
   eventsCounts: {},
+  totalEventsCounts: {},
   error: null,
   loading: false,
 };
@@ -106,6 +108,11 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         eventsCounts: action.payload,
+      }
+    case REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS:
+      return {
+        ...state,
+        totalEventsCounts: action.payload
       }
     case CLEAR_EVENTS_COUNTS:
       return {

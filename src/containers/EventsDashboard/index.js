@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Radio, 
   Row,
 } from 'antd';
 
 import eventsStateBranch from '../../state/events';
-import selectionStateBranch from '../../state/selections'
+import selectionStateBranch from '../../state/selections';
+import userStateBranch from '../../state/users';
 
 import EventList from '../../components/EventList';
 
 import { 
     PENDING_EVENTS_TAB, 
-    ARCHIVED_EVENTS_TAB 
+    ARCHIVED_EVENTS_TAB, 
 } from '../../constants';
 
 import './style.scss';
@@ -60,6 +60,7 @@ class EventsDashBoard extends React.Component {
 
     render () {
         const {
+            isModerator,
             eventsForList,
             pendingOrLive,
             deleteEvent,
@@ -71,7 +72,10 @@ class EventsDashBoard extends React.Component {
             userSubmissionPath,
             updateEvent,
             eventsCounts,
-            federalEventCount
+            federalEventCount,
+            radioButtonValue,
+            currentUserId,
+            currentUserEmail,
         } = this.props;
         return (
             <React.Fragment>
@@ -83,6 +87,7 @@ class EventsDashBoard extends React.Component {
                     onRadioChange={this.onRadioChange}
                     eventsCounts={eventsCounts}
                     federalEventCount={federalEventCount}
+                    defaultValue={radioButtonValue}
                 />
                 </Row>
                 {pendingOrLive === ARCHIVED_EVENTS_TAB ?
@@ -94,10 +99,13 @@ class EventsDashBoard extends React.Component {
                     deleteEvent={deleteEvent}
                     approveEvent={approveEvent}
                     archiveEvent={archiveEvent}
+                    isAdmin={!isModerator}
                     pathForArchive={pathForArchive}
                     pathForPublishing={pathForPublishing}
                     userSubmissionPath={userSubmissionPath}
                     updateEvent={updateEvent}
+                    currentUserId={currentUserId}
+                    currentUserEmail={currentUserEmail}
                 />}
             </React.Fragment>
         )
@@ -105,8 +113,12 @@ class EventsDashBoard extends React.Component {
 }
 
 const mapStateToProps = state => ({
+    currentUserId: userStateBranch.selectors.getCurrentUserId(state),
+    currentUserEmail: userStateBranch.selectors.getCurrentUserEmail(state),
+    isModerator: userStateBranch.selectors.getModeratorStatus(state),
     pendingOrLive: selectionStateBranch.selectors.getPendingOrLiveTab(state),
     eventsForList: eventsStateBranch.selectors.getAllEventsAsList(state),
+    radioButtonValue: selectionStateBranch.selectors.getActiveFederalOrState(state),
     pathForEvents: selectionStateBranch.selectors.getEventsToShowUrl(state),
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),

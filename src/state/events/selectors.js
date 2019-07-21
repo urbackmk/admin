@@ -11,11 +11,11 @@ export const getAllEvents = state => state.events.allEvents;
 export const getAllOldEvents = state => state.events.allOldEvents;
 export const getLoading = state => state.events.loading;
 export const getEventsCounts = state => state.events.eventsCounts;
+export const getTotalEventCounts = state => state.events.totalEventsCounts;
 
 export const getFederalEventCount = createSelector([getEventsCounts], (eventCount) => {
   return eventCount.federal;
 })
-
 export const getStateEventCount = createSelector([getEventsCounts], (eventCount) => {
   delete eventCount.federal
   return eventCount;

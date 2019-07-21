@@ -8,9 +8,11 @@ import {
   Button,
   Radio,
   Layout,
+  Checkbox,
 } from 'antd';
 import AppHeader from '../../containers/DefaultLayout/Header';
 import './style.scss';
+import { MODERATOR_ACCESS, ADMIN_ACCESS } from '../../constants';
 
 const {
   Header,
@@ -85,9 +87,17 @@ class NotAuthLayout extends Component {
                                             <Radio value="rsvpDownloads">Download RSVPs to events</Radio>
                                             <Radio value="eventDownloads">Download Events</Radio>
                                             <Radio value="mocDownload">Access to our Member of Congress database</Radio>
-                                            <Radio value="isAdmin">Full Admin</Radio>
+                                            <Radio value={ADMIN_ACCESS}>Full Admin</Radio>
                                         </RadioGroup>
                                 )}
+                            </Form.Item>
+                            <Form.Item>
+                                {getFieldDecorator('moderator', {
+                                    initialValue: true,
+                                    valuePropName: 'checked',
+                                    })(<Checkbox>Can approve other people's events</Checkbox>
+
+                                    )}
                             </Form.Item>
                             <Form.Item>
                                 {getFieldDecorator('notes', {

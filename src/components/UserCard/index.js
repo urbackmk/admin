@@ -5,7 +5,7 @@ import {
 } from 'antd';
 
 import {
-  ACCESS_LEVELS_MAP
+  ACCESS_LEVELS_MAP, MODERATOR_ACCESS
 } from '../../constants';
 
 const {
@@ -31,6 +31,7 @@ export default class UserCard extends React.Component {
         const {
           user,
         } = this.props;
+        const moderatorAccess = user[MODERATOR_ACCESS] ? 'Only approve other people\'s events' : '';
         return (
             <Card 
                 key={user.uid}
@@ -43,8 +44,7 @@ export default class UserCard extends React.Component {
                     title={user.email || ''}
                     description={user.notes}
                 />
-                <p>Requesting access to: {ACCESS_LEVELS_MAP[user.accessLevel]}</p>
-               
+                <p>Requesting access to: {ACCESS_LEVELS_MAP[user.accessLevel]} {moderatorAccess}</p>       
       </Card>)
     }
 

@@ -12,6 +12,7 @@ import {
   REQUEST_EVENTS_COUNTS_SUCCESS,
   REQUEST_EVENTS_COUNTS_FAIL,
   REQUEST_EVENTS_COUNTS,
+  REQUEST_TOTAL_EVENTS_COUNTS,
   ARCHIVE_EVENT_SUCCESS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
@@ -27,6 +28,10 @@ import {
   eventsPathsReverse,
 } from '../constants';
 import {
+  PENDING_EVENTS_TAB,
+  LIVE_EVENTS_TAB,
+} from '../../constants'
+import {
   addOldEventToState,
   setLoading,
   storeEventsInState,
@@ -34,6 +39,7 @@ import {
   requestEventsCountsSuccess,
   approveEventSuccess,
   decrementEvents,
+  requestTotalEventsCountsSuccess,
 } from "./actions";
 import {
   requestResearcherById
@@ -278,6 +284,36 @@ const requestEventsCounts = createLogic({
   }
 })
 
+const requestTotalEventsCounts = createLogic({
+  type: REQUEST_TOTAL_EVENTS_COUNTS,
+  processOptions: {
+    failType: REQUEST_EVENTS_COUNTS_FAIL,
+  },
+  process(deps, dispatch, done) {
+    const { firebasedb } = deps;
+    const totalEvents = {
+      pending: 0,
+      live: 0
+    };
+    const p1 = firebasedb.ref(`${EVENTS_PATHS[PENDING_EVENTS_TAB].STATE}`).once('value', (snapshot) => {
+      totalEvents.pending += snapshot.numChildren();
+    });
+    const p2 = firebasedb.ref(`${EVENTS_PATHS[PENDING_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
+      totalEvents.pending += snapshot.numChildren();
+    });
+    // const p3 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].STATE}`).once('value', (snapshot) => {
+    //   totalEvents.live += snapshot.numChildren();
+    // });
+    // const p4 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
+    //   totalEvents.live += snapshot.numChildren();
+    // });
+    Promise.all([p1, p2]).then(() => {
+      dispatch(requestTotalEventsCountsSuccess(totalEvents))
+      done();
+    });
+  }
+})
+
 export default [
   archiveEventLogic,
   approveEventLogic,
@@ -286,4 +322,5 @@ export default [
   deleteEvent,
   updateEventLogic,
   requestEventsCounts,
+  requestTotalEventsCounts,
 ];

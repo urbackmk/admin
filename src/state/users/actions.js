@@ -7,8 +7,6 @@ import {
   APPROVE_USER_REQUEST,
   REQUEST_CURRENT_USER_BY_ID,
   REJECT_USER_REQUEST,
-  SUBMIT_SUBSCRIBER_SUCCESS,
-  SUBMIT_SUBSCRIBER,
 } from "./constants";
 
 export const requestCurrentPendingUsers = () => ({
@@ -60,9 +58,4 @@ export const rejectUserRequest = (uid) => ({
 export const receiveUser = user => ({
   type: RECEIVE_USER, 
   payload: user
-})
-
-export const submitSubscriber = person => ({
-  type: SUBMIT_SUBSCRIBER,
-  payload: person
 })
