@@ -15,15 +15,15 @@ class SmsUsersDashboard extends Component {
     }
 
     render() {
-        const { userCache, sendMessage, receiveMessage } = this.props;
+        const { usersSentMessages, sendMessage, receiveMessage, usersWithReplies } = this.props;
         return (
             <React.Fragment>
                 <div>Total number of sms users: {this.props.totalSmsUsers}</div>
                 <List
                     className="comment-list"
-                    header={`${userCache.length} replies`}
+                    header={`${usersSentMessages.length} replies`}
                     itemLayout="horizontal"
-                    dataSource={userCache}
+                    dataSource={usersWithReplies}
                     renderItem={item => (
                         <li key={item.phoneNumber}>
                             <SmsCard 
@@ -42,7 +42,8 @@ class SmsUsersDashboard extends Component {
 
 const mapStateToProps = state => ({
     totalSmsUsers: smsUsersStateBranch.selectors.getTotalSMSUsers(state),
-    userCache: smsUsersStateBranch.selectors.getUsersWithMessages(state),
+    usersSentMessages: smsUsersStateBranch.selectors.getUsersWithMessages(state),
+    usersWithReplies: smsUsersStateBranch.selectors.getUsersWithReplies(state),
 });
 
 const mapDispatchToProps = dispatch => ({
