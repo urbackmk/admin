@@ -5,5 +5,9 @@ export const getTotalSMSUsers = state => state.smsUsers.totalSmsUsers;
 export const getUserCache = state => state.smsUsers.userCache;
 
 export const getUsersWithMessages = createSelector([getUserCache], (users) => {
-    return filter(users, (ele) => ele.messages && ele.messages.length)
+    return filter(users, (ele) => ele.messages && ele.messages.length);
+})
+
+export const getUsersWithReplies = createSelector([getUsersWithMessages], (users) => {
+  return filter(users, (ele) => ele.messages.length > 1);
 })
