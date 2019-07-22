@@ -25,7 +25,6 @@ import {
 } from "./constants";
 import { 
   EVENTS_PATHS,
-  eventsPathsReverse,
 } from '../constants';
 import {
   PENDING_EVENTS_TAB,
@@ -39,6 +38,7 @@ import {
   requestEventsCountsSuccess,
   approveEventSuccess,
   decrementEvents,
+  decrementTotalEvents,
   requestTotalEventsCountsSuccess,
 } from "./actions";
 import {
@@ -150,13 +150,14 @@ const approveEventLogic = createLogic({
             })
             .then(() => {
               dispatch(approveEventSuccess(townHall.eventId));
-              let key = '';
-              if (eventsPathsReverse[path]) {
-                key = eventsPathsReverse[path];
+              if (EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
+                dispatch(decrementEvents('federal'));
               } else {
-                key = path.match(/[A-Z]*$/);
+                dispatch(decrementEvents(path.match(/[A-Z]*$/)));;
               }
-              dispatch(decrementEvents(key));
+              if (EVENTS_PATHS[path].STATUS === 'PENDING') {
+                dispatch(decrementTotalEvents('pending'));
+              }
               done();
             })
           })

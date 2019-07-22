@@ -9,20 +9,39 @@ export const stateLegislatorsData = 'state_legislators_data';
 export const stateLegislatorsId = 'state_legislators_id';
 export const candidateData = 'candidate_data';
 export const candidateKeys = 'candidate_keys';
+
+export const PENDING_FEDERAL_PATH = 'UserSubmission';
+export const PENDING_STATE_PATH = 'state_legislators_user_submission';
+export const LIVE_FEDERAL_PATH = 'townHalls';
+export const LIVE_STATE_PATH = 'state_townhalls';
+export const ARCHIVED_FEDERAL_PATH = 'archived_town_halls';
+export const ARCHIVED_STATE_PATH = 'archived_state_town_halls';
 export const EVENTS_PATHS = {
     [PENDING_EVENTS_TAB]: {
-        FEDERAL: 'UserSubmission',
-        STATE: 'state_legislators_user_submission'},
+        FEDERAL: PENDING_FEDERAL_PATH,
+        STATE: PENDING_STATE_PATH},
     [LIVE_EVENTS_TAB]: {
-        FEDERAL: 'townHalls',
-        STATE: 'state_townhalls'},
+        FEDERAL: LIVE_FEDERAL_PATH,
+        STATE: LIVE_STATE_PATH},
     [ARCHIVED_EVENTS_TAB]: {
-        FEDERAL: 'archived_town_halls',
-        STATE: 'archived_state_town_halls'},
-};
-export const FEDERAL_KEY = 'federal';
-export const eventsPathsReverse = {
-    'UserSubmission': FEDERAL_KEY,
-    'townHalls': FEDERAL_KEY,
-    'archived_town_halls': FEDERAL_KEY,
+        FEDERAL: ARCHIVED_FEDERAL_PATH,
+        STATE: ARCHIVED_STATE_PATH},
+    [PENDING_FEDERAL_PATH]: {
+        FEDERAL_OR_STATE: 'FEDERAL',
+        STATUS: 'PENDING'},
+    [PENDING_STATE_PATH]: {
+        FEDERAL_OR_STATE: 'STATE',
+        STATUS: 'PENDING'},
+    [LIVE_FEDERAL_PATH]: {
+        FEDERAL_OR_STATE: 'FEDERAL',
+        STATUS: 'LIVE'},
+    [LIVE_STATE_PATH]: {
+        FEDERAL_OR_STATE: 'STATE',
+        STATUS: 'LIVE'},
+    [ARCHIVED_FEDERAL_PATH]: {
+        FEDERAL_OR_STATE: 'FEDERAL',
+        STATUS: 'ARCHIVED'},
+    [ARCHIVED_STATE_PATH]: {
+        FEDERAL_OR_STATE: 'STATE',
+        STATUS: 'ARCHIVED'},
 };
