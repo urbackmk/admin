@@ -25,7 +25,7 @@ const fetchMocs = createLogic({
   }
 });
 
-const getCongressLogic = createLogic({
+const requestCongressLogic = createLogic({
   type: GET_CONGRESS_BY_SESSION,
     processOptions: {
       successType: GET_CONGRESS_BY_SESSION_SUCCESS,
@@ -78,5 +78,5 @@ const addCandidateLogic = createLogic({
 export default [
   fetchMocs,
   addCandidateLogic,
-  getCongressLogic,
+  requestCongressLogic,
 ];

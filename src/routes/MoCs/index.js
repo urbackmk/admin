@@ -1,11 +1,11 @@
 import React from 'react';
-import MoCLookup from '../../containers/MoCLookupDashboard';
-
+import MoCLookupDashboard from '../../containers/MoCLookupDashboard';
+console.log(MoCLookupDashboard)
 class MoCs extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <MoCLookup />
+        <MoCLookupDashboard />
       </React.Fragment>
     );
   }
