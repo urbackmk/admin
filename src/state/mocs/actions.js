@@ -5,6 +5,7 @@ import {
   ADD_CANDIDATE,
   ADD_CANDIDATE_FAILURE,
   GET_CONGRESS_BY_SESSION,
+  UPDATE_MISSING_MEMBER,
 } from './constants';
 
 export const requestMocIds = () => ({
@@ -37,4 +38,12 @@ export const saveCandidateFailed = (error) => ({
 export const getCongressBySession = (congressId) => ({
   type: GET_CONGRESS_BY_SESSION,
   payload: congressId
+})
+
+export const updateMissingMember = (id, missingMember) => ({
+  type: UPDATE_MISSING_MEMBER,
+    payload: {
+      id,
+      missingMember,
+    }
 })

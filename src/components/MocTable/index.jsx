@@ -6,6 +6,10 @@ import {
 } from 'antd';
 
 export default class MocTable extends React.Component {
+    handleChange({target}, id) {
+        const { updateMissingMemberValue } = this.props;
+        updateMissingMemberValue(id, target.checked)
+    }
     
     render() {
         const { mocs } = this.props;
@@ -25,7 +29,6 @@ export default class MocTable extends React.Component {
                 dataIndex: 'chamber',
                 key: 'chamber',
                 filters: [{ text: 'Senate', value: 'upper' }, { text: 'House', value: 'lower' }],
-                // filteredValue: filteredInfo.name || null,
                 onFilter: (value, record) => record.chamber === value,
             },
             {
@@ -38,7 +41,7 @@ export default class MocTable extends React.Component {
                 key: 'action',
                 render: (text, record) => (
                     <span>
-                        <Checkbox checked={record.missing_member && !!record.missing_member[116]}>Missing Member</Checkbox>
+                        <Checkbox onChange={(e) => this.handleChange(e, record.govtrack_id)} defaultChecked={record.missing_member && !!record.missing_member[116]}>Missing Member</Checkbox>
 
                     </span>
                 ),
