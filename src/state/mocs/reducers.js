@@ -34,6 +34,7 @@ const mocReducer = (state = initialState, action) => {
         [action.payload.key]: action.payload.mocs
       }
     case GET_CONGRESS_BY_SESSION_FAILED:
+      console.log('GET_CONGRESS_BY_SESSION_FAILED', action.payload)
       return {
         ...state,
         error: action.payload
