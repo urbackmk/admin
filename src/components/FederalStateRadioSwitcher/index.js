@@ -15,7 +15,10 @@ const RadioGroup = Radio.Group;
 class FederalStateRadioSwitcher extends React.Component {
     
     render () {
-        const { defaultValue } = this.props;
+        const {
+            defaultValue,
+            eventsCounts
+        } = this.props;
         return (
             <React.Fragment>
                 <Row
@@ -31,7 +34,7 @@ class FederalStateRadioSwitcher extends React.Component {
                         {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
                             return (
                                 <RadioButton key={key} value={key}>
-                                    <Badge key={key} count={this.props.eventsCounts[key]}>
+                                    <Badge key={key} count={eventsCounts[key]}>
                                         {key}
                                     </Badge>
                                 </RadioButton>
