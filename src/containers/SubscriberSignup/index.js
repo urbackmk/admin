@@ -54,7 +54,7 @@ class SubscriberSignup extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { subscriberToEdit } = this.props;
-    if (subscriberToEdit != prevProps.subscriberToEdit) {
+    if (subscriberToEdit !== prevProps.subscriberToEdit) {
       this.props.form.setFieldsValue({
         name: subscriberToEdit.name,
         districts: subscriberToEdit.districts,
