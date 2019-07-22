@@ -34,7 +34,7 @@ export const saveCandidateFailed = (error) => ({
   payload: error,
 })
 
-export const getCongressIds = (congressId) => ({
+export const getCongressBySession = (congressId) => ({
   type: GET_CONGRESS_BY_SESSION,
   payload: congressId
 })
