@@ -89,7 +89,6 @@ const updateMissingMemberLogic = createLogic({
           action,
           firebasedb,
         } = deps;
-        console.log(action.payload.id, action.payload.missingMember)
         return firebasedb.ref(`mocData/${action.payload.id}/missing_member`).update({
           116: action.payload.missingMember,
         }).then(() => action)
