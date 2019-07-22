@@ -8,7 +8,10 @@ import {
   ADD_CANDIDATE_SUCCESS, 
   GET_CONGRESS_BY_SESSION,
   GET_CONGRESS_BY_SESSION_SUCCESS,
-  GET_CONGRESS_BY_SESSION_FAILED
+  GET_CONGRESS_BY_SESSION_FAILED,
+  UPDATE_MISSING_MEMBER,
+  UPDATE_MISSING_MEMBER_FAIL,
+  UPDATE_MISSING_MEMBER_SUCCESS
 } from "./constants";
 
 import Candidate from './candidate-model';
@@ -25,7 +28,7 @@ const fetchMocs = createLogic({
   }
 });
 
-const getCongressLogic = createLogic({
+const requestCongressLogic = createLogic({
   type: GET_CONGRESS_BY_SESSION,
     processOptions: {
       successType: GET_CONGRESS_BY_SESSION_SUCCESS,
@@ -75,8 +78,27 @@ const addCandidateLogic = createLogic({
   }
 });
 
+const updateMissingMemberLogic = createLogic({
+    type: UPDATE_MISSING_MEMBER,
+      processOptions: {
+        successType: UPDATE_MISSING_MEMBER_SUCCESS,
+        failType: UPDATE_MISSING_MEMBER_FAIL,
+      },
+      process(deps) {
+        const {
+          action,
+          firebasedb,
+        } = deps;
+        console.log(action.payload.id, action.payload.missingMember)
+        return firebasedb.ref(`mocData/${action.payload.id}/missing_member`).update({
+          116: action.payload.missingMember,
+        }).then(() => action)
+      }
+})
+
 export default [
   fetchMocs,
   addCandidateLogic,
-  getCongressLogic,
+  requestCongressLogic,
+  updateMissingMemberLogic,
 ];
