@@ -19,6 +19,7 @@ import {
   REQUEST_EVENTS_COUNTS_SUCCESS,
   CLEAR_EVENTS_COUNTS,
   DECREMENT_EVENTS,
+  DECREMENT_TOTAL_EVENTS,
   REQUEST_TOTAL_EVENTS_COUNTS,
   REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
 } from './constants';
@@ -144,6 +145,11 @@ export const clearEventsCounts = () => ({
 
 export const decrementEvents = (key) => ({
   type: DECREMENT_EVENTS,
+  payload: key,
+});
+
+export const decrementTotalEvents = (key) => ({
+  type: DECREMENT_TOTAL_EVENTS,
   payload: key,
 });
 

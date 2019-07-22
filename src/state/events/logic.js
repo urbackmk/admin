@@ -122,7 +122,6 @@ const fetchOldEventsLogic = createLogic({
 const approveEventLogic = createLogic({
   type: APPROVE_EVENT,
   processOptions: {
-    // successType: APPROVE_EVENT_SUCCESS,
     failType: APPROVE_EVENT_FAIL,
   },
   process(deps, dispatch, done) {
@@ -136,9 +135,6 @@ const approveEventLogic = createLogic({
       path,
       livePath,
     } = action.payload;
-    console.log(livePath);
-    console.log(path);
-    console.log(townHall);
     const townHallMetaData = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
     firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
       .then(() => {
@@ -150,12 +146,12 @@ const approveEventLogic = createLogic({
             })
             .then(() => {
               dispatch(approveEventSuccess(townHall.eventId));
-              if (EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
+              if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
                 dispatch(decrementEvents('federal'));
               } else {
                 dispatch(decrementEvents(path.match(/[A-Z]*$/)));;
               }
-              if (EVENTS_PATHS[path].STATUS === 'PENDING') {
+              if (EVENTS_PATHS[path.match(/[a-zA-Z_]*/)].STATUS === 'PENDING') {
                 dispatch(decrementTotalEvents('pending'));
               }
               done();
