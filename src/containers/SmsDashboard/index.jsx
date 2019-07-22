@@ -21,7 +21,7 @@ class SmsUsersDashboard extends Component {
                 <div>Total number of sms users: {this.props.totalSmsUsers}</div>
                 <List
                     className="comment-list"
-                    header={`${usersSentMessages.length} replies`}
+                    header={`${usersSentMessages.length} sent, ${usersWithReplies.length} replies`}
                     itemLayout="horizontal"
                     dataSource={usersWithReplies}
                     renderItem={item => (
