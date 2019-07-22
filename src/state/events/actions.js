@@ -1,11 +1,13 @@
 import {
   DELETE_EVENT,
+  DELETE_EVENT_SUCCESS,
   REQUEST_EVENTS,
   REQUEST_PENDING_EVENTS_SUCCESS,
   REQUEST_EVENTS_FAILED,
   REQUEST_PENDING_EVENTS,
   REQUEST_PENDING_EVENTS_FAILED,
   ARCHIVE_EVENT,
+  ARCHIVE_EVENT_SUCCESS,
   APPROVE_EVENT,
   APPROVE_EVENT_SUCCESS,
   REQUEST_OLD_EVENTS,
@@ -93,6 +95,11 @@ export const deleteEvent = (townHall, path) => ({
   }
 });
 
+export const deleteEventSuccess = (eventId) => ({
+  type: DELETE_EVENT_SUCCESS,
+  payload: eventId,
+});
+
 export const archiveEvent = (townHall, path, archivePath) => ({
   type: ARCHIVE_EVENT,
   payload: {
@@ -100,6 +107,11 @@ export const archiveEvent = (townHall, path, archivePath) => ({
     path,
     archivePath,
   }
+});
+
+export const archiveEventSuccess = (eventId) => ({
+  type: ARCHIVE_EVENT_SUCCESS,
+  payload: eventId,
 });
 
 export const approveEvent = (townHall, path, livePath) => ({
