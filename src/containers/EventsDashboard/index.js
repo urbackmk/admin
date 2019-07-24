@@ -29,19 +29,25 @@ class EventsDashBoard extends React.Component {
         const {
           requestEvents,
           pathForEvents,
-
+          requestEventsCounts,
+          pendingOrLive,
         } = this.props;
         requestEvents(pathForEvents);
-
+        requestEventsCounts(pendingOrLive);
     }
 
     componentDidUpdate(prevProps) {
         const {          
             requestEvents,
             pathForEvents,
+            requestEventsCounts,
+            pendingOrLive,
         } = this.props;
         if (prevProps.pathForEvents !== pathForEvents && pathForEvents) {
-                requestEvents(pathForEvents);
+            requestEvents(pathForEvents);
+        }
+        if (prevProps.pendingOrLive !== pendingOrLive) {
+            requestEventsCounts(pendingOrLive);
         }
     }
 
@@ -65,6 +71,8 @@ class EventsDashBoard extends React.Component {
             pathForPublishing,
             userSubmissionPath,
             updateEvent,
+            eventsCounts,
+            federalEventCount,
             radioButtonValue,
             currentUserId,
             currentUserEmail,
@@ -75,10 +83,12 @@ class EventsDashBoard extends React.Component {
                     type="flex"
                     justify="center"
                 >
-                    <FederalStateRadioSwitcher 
-                        onRadioChange={this.onRadioChange}
-                        defaultValue={radioButtonValue}
-                    />
+                <FederalStateRadioSwitcher 
+                    onRadioChange={this.onRadioChange}
+                    eventsCounts={eventsCounts}
+                    federalEventCount={federalEventCount}
+                    defaultValue={radioButtonValue}
+                />
                 </Row>
                 {pendingOrLive === ARCHIVED_EVENTS_TAB ?
                 <LookupOldEvents /> :
@@ -113,6 +123,8 @@ const mapStateToProps = state => ({
     pathForArchive: selectionStateBranch.selectors.getArchiveUrl(state),
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
     userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
+    eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
+    federalEventCount : eventsStateBranch.selectors.getFederalEventCount(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -122,6 +134,7 @@ const mapDispatchToProps = dispatch => ({
     changeRadioButton: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
     requestEvents: (path) => dispatch(eventsStateBranch.actions.requestEvents(path)),
     updateEvent: (newData, path, eventId) => dispatch(eventsStateBranch.actions.updateExistingEvent(newData, path, eventId)),
+    requestEventsCounts: (path) => dispatch(eventsStateBranch.actions.requestEventsCounts(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsDashBoard);

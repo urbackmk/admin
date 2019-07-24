@@ -9,20 +9,36 @@ import {
   DELETE_EVENT_FAIL,
   REQUEST_EVENTS, 
   REQUEST_EVENTS_FAILED,
-  ARCHIVE_EVENT_SUCCESS,
+  REQUEST_EVENTS_COUNTS_FAIL,
+  REQUEST_EVENTS_COUNTS,
+  REQUEST_TOTAL_EVENTS_COUNTS,
   ARCHIVE_EVENT,
   APPROVE_EVENT,
-  APPROVE_EVENT_SUCCESS,
   APPROVE_EVENT_FAIL,
   REQUEST_OLD_EVENTS,
   UPDATE_EXISTING_EVENT,
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
 } from "./constants";
+import { 
+  EVENTS_PATHS,
+} from '../constants';
+import {
+  PENDING_EVENTS_TAB,
+  LIVE_EVENTS_TAB,
+} from '../../constants'
 import {
   addOldEventToState,
   setLoading,
   storeEventsInState,
+  clearEventsCounts,
+  requestEventsCountsSuccess,
+  approveEventSuccess,
+  decrementEvents,
+  decrementTotalEvents,
+  requestTotalEventsCountsSuccess,
+  deleteEventSuccess,
+  archiveEventSuccess,
 } from "./actions";
 import {
   requestResearcherById
@@ -105,10 +121,9 @@ const fetchOldEventsLogic = createLogic({
 const approveEventLogic = createLogic({
   type: APPROVE_EVENT,
   processOptions: {
-    successType: APPROVE_EVENT_SUCCESS,
     failType: APPROVE_EVENT_FAIL,
   },
-  process(deps) {
+  process(deps, dispatch, done) {
     const {
       action,
       firebasedb,
@@ -119,18 +134,26 @@ const approveEventLogic = createLogic({
       path,
       livePath,
     } = action.payload;
-    console.log(livePath)
     const townHallMetaData = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
-    return firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
+    firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
       .then(() => {
         const approvedTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
-        return approvedTownHall.remove()
+        approvedTownHall.remove()
           .then(() => {
-            return townHallMetaData.update({
+            townHallMetaData.update({
               status: 'live',
             })
             .then(() => {
-              return townHall.eventId;
+              dispatch(approveEventSuccess(townHall.eventId));
+              if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
+                dispatch(decrementEvents('federal'));
+              } else {
+                dispatch(decrementEvents(path.match(/[A-Z]*$/)));
+              }
+              if (EVENTS_PATHS[path.match(/[a-zA-Z_]*/)].STATUS === 'PENDING') {
+                dispatch(decrementTotalEvents('pending'));
+              }
+              done();
             })
           })
       })
@@ -140,9 +163,9 @@ const approveEventLogic = createLogic({
 const archiveEventLogic = createLogic({
   type: ARCHIVE_EVENT,
   processOptions: {
-    successType: ARCHIVE_EVENT_SUCCESS,
+    // successType: ARCHIVE_EVENT_SUCCESS,
   },
-  process(deps) {
+  process(deps, dispatch, done) {
       const {
         action,
         firebasedb,
@@ -157,16 +180,25 @@ const archiveEventLogic = createLogic({
       const oldTownHallID = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
       const dateKey = townHall.dateObj ? moment(townHall.dateObj).format('YYYY-MM') : 'no_date';
       console.log(`${archivePath}/${dateKey}/${townHall.eventId}`)
-      return firebasedb.ref(`${archivePath}/${dateKey}/${townHall.eventId}`).update(townHall)
+      firebasedb.ref(`${archivePath}/${dateKey}/${townHall.eventId}`).update(townHall)
         .then(() => {
             const removed = oldTownHall.remove();
             if (removed) {
-              return oldTownHallID.update({
+              oldTownHallID.update({
                 status: 'archived',
                 archive_path: `${archivePath}/${dateKey}`,
               })
               .then(() => {
-                return townHall.eventId;
+                dispatch(archiveEventSuccess(townHall.eventId));
+                if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
+                  dispatch(decrementEvents('federal'));
+                } else {
+                  dispatch(decrementEvents(path.match(/[A-Z]*$/)));
+                }
+                if (EVENTS_PATHS[path.match(/[a-zA-Z_]*/)].STATUS === 'PENDING') {
+                  dispatch(decrementTotalEvents('pending'));
+                }
+                done();
               })
             }
         })
@@ -179,10 +211,9 @@ const archiveEventLogic = createLogic({
 const deleteEvent = createLogic({
   type: DELETE_EVENT,
   processOptions: {
-    successType: DELETE_EVENT_SUCCESS,
     failType: DELETE_EVENT_FAIL,
   },
-  process(deps) {
+  process(deps, dispatch, done) {
     const {
       action,
       firebasedb,
@@ -197,8 +228,19 @@ const deleteEvent = createLogic({
         status: 'cancelled',
       })
     }
-    return oldTownHall.remove()
-      .then(() => townHall.eventId);
+    oldTownHall.remove()
+      .then(() => {
+        dispatch(deleteEventSuccess(townHall.eventId));
+        if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
+          dispatch(decrementEvents('federal'));
+        } else {
+          dispatch(decrementEvents(path.match(/[A-Z]*$/)));
+        }
+        if (EVENTS_PATHS[path.match(/[a-zA-Z_]*/)].STATUS === 'PENDING') {
+          dispatch(decrementTotalEvents('pending'));
+        }
+        done();
+      });
   }
 })
 
@@ -223,6 +265,74 @@ const updateEventLogic = createLogic({
   }
 })
 
+const requestEventsCounts = createLogic({
+  type: REQUEST_EVENTS_COUNTS,
+  processOptions: {
+    failType: REQUEST_EVENTS_COUNTS_FAIL,
+  },
+  process(deps, dispatch, done) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    dispatch(clearEventsCounts());
+    const path = action.payload;
+    if (path === 'archive') {
+      done();
+    } else {
+      const eventCounts = {};
+      const p1 = firebasedb.ref(`${EVENTS_PATHS[path].STATE}`).once('value', (snapshot) => {
+        if (snapshot.numChildren() > 0) {
+          for (let [key, val] of Object.entries(snapshot.val())) {
+            eventCounts[key] = Object.keys(val).length;
+          }
+        }
+      });
+      const p2 = firebasedb.ref(`${EVENTS_PATHS[path].FEDERAL}`).once('value', (snapshot) => {
+        eventCounts.federal = snapshot.numChildren();
+      });
+      Promise.all([p1, p2]).then(() => {
+        dispatch(requestEventsCountsSuccess(eventCounts))
+        done();
+      });
+    }
+  }
+})
+
+const requestTotalEventsCounts = createLogic({
+  type: REQUEST_TOTAL_EVENTS_COUNTS,
+  processOptions: {
+    failType: REQUEST_EVENTS_COUNTS_FAIL,
+  },
+  process(deps, dispatch, done) {
+    const { firebasedb } = deps;
+    const totalEvents = {
+      pending: 0,
+      live: 0
+    };
+    const p1 = firebasedb.ref(`${EVENTS_PATHS[PENDING_EVENTS_TAB].STATE}`).once('value', (snapshot) => {
+      if (snapshot.numChildren() > 0) {
+        Object.values(snapshot.val()).forEach((state) => {
+          totalEvents.pending += Object.keys(state).length;
+        });
+      }
+    });
+    const p2 = firebasedb.ref(`${EVENTS_PATHS[PENDING_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
+      totalEvents.pending += snapshot.numChildren();
+    });
+    // const p3 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].STATE}`).once('value', (snapshot) => {
+    //   totalEvents.live += snapshot.numChildren();
+    // });
+    // const p4 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
+    //   totalEvents.live += snapshot.numChildren();
+    // });
+    Promise.all([p1, p2]).then(() => {
+      dispatch(requestTotalEventsCountsSuccess(totalEvents))
+      done();
+    });
+  }
+})
+
 export default [
   archiveEventLogic,
   approveEventLogic,
@@ -230,4 +340,6 @@ export default [
   fetchEvents,
   deleteEvent,
   updateEventLogic,
+  requestEventsCounts,
+  requestTotalEventsCounts,
 ];

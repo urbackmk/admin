@@ -10,6 +10,7 @@ import {
 
 import userStateBranch from '../../state/users';
 import selectionStateBranch from '../../state/selections';
+import eventsStateBranch from '../../state/events';
 
 import routes from '../../routes';
 import AppHeader from './Header';
@@ -21,7 +22,12 @@ import {
 
 import NotAuthLayout from '../../components/NotAuthLayout';
 import './style.scss';
-import { RSVP_DOWNLOAD_ACCESS, ADMIN_ACCESS } from '../../constants';
+import { 
+  RSVP_DOWNLOAD_ACCESS,
+  ADMIN_ACCESS,
+  PENDING_EVENTS_TAB,
+  LIVE_EVENTS_TAB,
+} from '../../constants';
 import DownloadApp from '../DownloadApp';
 
 const {
@@ -49,21 +55,23 @@ class DefaultLayout extends Component {
       const {
           getUserById,
           getLocation,
+          requestTotalEventsCounts,
       } = this.props;
 
-        getLocation();
-        auth.onAuthStateChanged((user) => {
-          if (user) {
-            this.setState({
-              confirmLoading: false,
-              user,
-            });
-            getUserById(user.uid, user.email, user.displayName)
-          } else {
-            this.setState({
-              confirmLoading: false,
-            });
-          }
+      requestTotalEventsCounts(PENDING_EVENTS_TAB);
+      getLocation();
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          this.setState({
+            confirmLoading: false,
+            user,
+          });
+          getUserById(user.uid, user.email, user.displayName)
+        } else {
+          this.setState({
+            confirmLoading: false,
+          });
+        }
       });
       // if no user after 3 seconds, stop loading icon
       setTimeout(() => {
@@ -108,6 +116,7 @@ class DefaultLayout extends Component {
         activeEventTab,
         changeActiveEventTab,
         currentHashLocation,
+        totalEventsCounts,
       } = this.props;
       return (
         <Layout>
@@ -130,6 +139,7 @@ class DefaultLayout extends Component {
                     handleChangeTab={changeActiveEventTab}
                     activeEventTab={activeEventTab}
                     activeMenuItem={currentHashLocation}
+                    totalEventsCounts={totalEventsCounts}
                 />
               </Sider>
               <Switch>
@@ -225,13 +235,15 @@ const mapStateToProps = state => ({
   activeEventTab: selectionStateBranch.selectors.getPendingOrLiveTab(state),
   currentHashLocation: selectionStateBranch.selectors.getCurrentHashLocation(state),
   user: userStateBranch.selectors.getCurrentUser(state),
+  totalEventsCounts: eventsStateBranch.selectors.getTotalEventCounts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   changeActiveEventTab: (tab) => dispatch(selectionStateBranch.actions.changeActiveEventTab(tab)),
   getLocation: () => dispatch(selectionStateBranch.actions.getHashLocationAndSave()),
   getUserById: (id, email, name) => dispatch(userStateBranch.actions.requestUserById(id, email, name)),
-  submitRequestAccess: (user, values) => dispatch(userStateBranch.actions.submitRequestAccess(user, values))
+  submitRequestAccess: (user, values) => dispatch(userStateBranch.actions.submitRequestAccess(user, values)),
+  requestTotalEventsCounts: (path) => dispatch(eventsStateBranch.actions.requestTotalEventsCounts(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

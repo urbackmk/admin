@@ -11,12 +11,20 @@ import {
   GET_USER_EMAIL_FOR_EVENT_SUCCESS,
   GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS,
   RESET_OLD_EVENTS,
+  REQUEST_EVENTS_COUNTS_SUCCESS,
+  REQUEST_EVENTS_COUNTS_FAIL,
+  CLEAR_EVENTS_COUNTS,
+  DECREMENT_EVENTS,
+  DECREMENT_TOTAL_EVENTS,
+  REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
 } from "./constants";
 import { filter, map } from "lodash";
 
 const initialState = {
   allEvents: {},
   allOldEvents: {},
+  eventsCounts: {},
+  totalEventsCounts: {},
   error: null,
   loading: false,
 };
@@ -87,16 +95,54 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         loading: action.payload,
       }
-      case UPDATE_EVENT_SUCCESS:
-        return {
-          ...state,
-          allEvents: map(state.allEvents, (ele) => {
-            if(ele.eventId === action.payload.eventId) {
-              return {...ele, ...action.payload}
-            }
-            return ele
-          })
+    case UPDATE_EVENT_SUCCESS:
+      return {
+        ...state,
+        allEvents: map(state.allEvents, (ele) => {
+          if(ele.eventId === action.payload.eventId) {
+            return {...ele, ...action.payload}
+          }
+          return ele
+        })
+      }
+    case REQUEST_EVENTS_COUNTS_SUCCESS:
+      return {
+        ...state,
+        eventsCounts: action.payload,
+      }
+    case REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS:
+      return {
+        ...state,
+        totalEventsCounts: action.payload
+      }
+    case CLEAR_EVENTS_COUNTS:
+      return {
+        ...state,
+        eventsCounts: {},
+        error: null,
+      }
+    case DECREMENT_EVENTS:
+      return {
+        ...state,
+        eventsCounts: {
+          ...state.eventsCounts,
+          [action.payload]: state.eventsCounts[action.payload] -= 1,
         }
+      }
+    case DECREMENT_TOTAL_EVENTS:
+      return {
+        ...state,
+        totalEventsCounts: {
+          ...state.totalEventsCounts,
+          [action.payload]: state.totalEventsCounts[action.payload] -= 1,
+        }
+      }
+    case REQUEST_EVENTS_COUNTS_FAIL:
+      console.log(action);
+      return {
+        ...state,
+        error: action.payload
+      };
     default:
       return state;
   }

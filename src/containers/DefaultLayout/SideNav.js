@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   Affix,
   Menu,
+  Badge,
 } from 'antd';
 
 import PropTypes from 'prop-types';
@@ -43,6 +44,7 @@ class SideNav extends Component {
       handleChangeTab,
       activeMenuItem,
       activeEventTab,
+      totalEventsCounts,
     } = this.props;
     return (
         <Affix >
@@ -57,9 +59,15 @@ class SideNav extends Component {
               <Link to="/dashboard">Dashboard</Link>
             </Menu.Item>
             <SubMenu key="events" title={<Link to="/events"><span>Events</span></Link>}>
-              <Menu.Item key={PENDING_EVENTS_TAB} onClick={() => handleChangeTab(PENDING_EVENTS_TAB)}><Link to="/events">Pending</Link></Menu.Item>
-              <Menu.Item key={LIVE_EVENTS_TAB} onClick={() => handleChangeTab(LIVE_EVENTS_TAB)}><Link to="/events">Live</Link></Menu.Item>
-              <Menu.Item key={ARCHIVED_EVENTS_TAB} onClick={() => handleChangeTab(ARCHIVED_EVENTS_TAB)}><a href="/#/events">Archived</a></Menu.Item>
+              <Menu.Item key={PENDING_EVENTS_TAB} onClick={() => handleChangeTab(PENDING_EVENTS_TAB)}>
+                <Link to="/events">Pending<Badge count={totalEventsCounts.pending}></Badge></Link>
+              </Menu.Item>
+              <Menu.Item key={LIVE_EVENTS_TAB} onClick={() => handleChangeTab(LIVE_EVENTS_TAB)}>
+                <Link to="/events">Live<Badge count={0}></Badge></Link>
+              </Menu.Item>
+              <Menu.Item key={ARCHIVED_EVENTS_TAB} onClick={() => handleChangeTab(ARCHIVED_EVENTS_TAB)}>
+                <a href="/#/events">Archived</a>
+              </Menu.Item>
             </SubMenu>
             <Menu.Item key="mocs">
               <Link to="/mocs">Members of Congress</Link>

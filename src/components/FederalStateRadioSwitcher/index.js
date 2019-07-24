@@ -3,9 +3,11 @@ import { map } from 'lodash';
 import {
   Radio, 
   Row,
+  Badge,
 } from 'antd';
 
 import { FEDERAL_STATE_RADIO_BUTTONS } from '../../constants';
+import './style.scss';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -13,7 +15,10 @@ const RadioGroup = Radio.Group;
 class FederalStateRadioSwitcher extends React.Component {
     
     render () {
-        const { defaultValue } = this.props;
+        const {
+            defaultValue,
+            eventsCounts
+        } = this.props;
         return (
             <React.Fragment>
                 <Row
@@ -24,10 +29,15 @@ class FederalStateRadioSwitcher extends React.Component {
                         defaultValue={defaultValue}
                         buttonStyle="solid"
                         onChange={this.props.onRadioChange}
+                        className="federal-state-radio-group"
                         >
                         {map(FEDERAL_STATE_RADIO_BUTTONS, (key) => {
                             return (
-                                <RadioButton key={key} value={key}>{key}</RadioButton>
+                                <RadioButton key={key} value={key}>
+                                    <Badge key={key} count={eventsCounts[key]}>
+                                        {key}
+                                    </Badge>
+                                </RadioButton>
                             )
                         })
                         }
@@ -36,6 +46,10 @@ class FederalStateRadioSwitcher extends React.Component {
             </React.Fragment>
         )
     }
+}
+
+FederalStateRadioSwitcher.defaultProps = {
+    eventsCounts: {},
 }
 
 export default FederalStateRadioSwitcher;
