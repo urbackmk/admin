@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { Tabs } from 'antd';
+
 import mocStateBranch from '../../state/mocs';
 import selectionStateBranch from '../../state/selections';
 
@@ -10,56 +12,66 @@ import FederalStateRadioSwitcher from '../../components/FederalStateRadioSwitche
 import MocTable from '../../components/MocTable';
 
 class MoCLookUpDashboard extends React.Component {
-    constructor(props) {
-        super(props)
-        this.onRadioChange = this.onRadioChange.bind(this);
-    }
+  constructor(props) {
+    super(props)
+    this.onRadioChange = this.onRadioChange.bind(this);
+  }
 
-    componentDidMount() {
-        const {
-            requestMocIds,
-            changeMode,
-            getCongressBySession,
-        } = this.props;
-        requestMocIds();
-        getCongressBySession('116');
-        changeMode('candidate')
-    }
+  componentDidMount() {
+    const {
+      requestMocIds,
+      changeMode,
+      getCongressBySession,
+    } = this.props;
+    requestMocIds();
+    getCongressBySession('116');
+    changeMode('candidate')
+  }
 
-    onRadioChange({ target }) {
-        const {
-          changeMocEndpoint
-        } = this.props;
-        changeMocEndpoint(target.value)
-    }
+  onRadioChange({ target }) {
+    const {
+      changeMocEndpoint
+    } = this.props;
+    changeMocEndpoint(target.value)
+  }
 
-    render() {
-        const {
-            allMocNamesIds,
-            saveCandidate,
-            radioValue,
-            candidateKeySavePath,
-            the116theCongress,
-            updateMissingMemberValue
-        } = this.props;
-        return (
-            <div>
-                <FederalStateRadioSwitcher 
-                    onRadioChange={this.onRadioChange}
-                    defaultValue={radioValue}
-                />
-                {/* <MocLookUp 
-                    allMocNamesIds={allMocNamesIds}
-                /> */}
-                <MocTable mocs={the116theCongress} updateMissingMemberValue={updateMissingMemberValue} />
-                <AddPersonForm 
-                    usState={radioValue !== 'federal' ? radioValue : ''}
-                    saveCandidate={saveCandidate}
-                    candidateKeySavePath={candidateKeySavePath}
-                />
-            </div>
-        );
-    }
+  render() {
+    const {
+      allMocNamesIds,
+      saveCandidate,
+      radioValue,
+      candidateKeySavePath,
+      the116theCongress,
+      updateMissingMemberValue
+    } = this.props;
+    const { TabPane } = Tabs;
+    return (
+      <div>
+        <Tabs defaultActiveKey="congress">
+          <TabPane tab="Current Congress" key="congress">
+            <MocTable 
+              mocs={the116theCongress}
+              updateMissingMemberValue={updateMissingMemberValue}
+            />
+          </TabPane>
+          <TabPane tab="Candidates" key="candidates">
+            <FederalStateRadioSwitcher 
+              onRadioChange={this.onRadioChange}
+              defaultValue={radioValue}
+            />
+            <AddPersonForm 
+              usState={radioValue !== 'federal' ? radioValue : ''}
+              saveCandidate={saveCandidate}
+              candidateKeySavePath={candidateKeySavePath}
+            />
+          </TabPane>
+          <TabPane tab="Current State Legislators" key="legislators">
+            
+          </TabPane>
+        </Tabs>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
