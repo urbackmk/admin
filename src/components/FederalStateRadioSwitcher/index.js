@@ -48,4 +48,8 @@ class FederalStateRadioSwitcher extends React.Component {
     }
 }
 
+FederalStateRadioSwitcher.defaultProps = {
+    eventsCounts: {},
+}
+
 export default FederalStateRadioSwitcher;

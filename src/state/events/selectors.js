@@ -16,10 +16,6 @@ export const getTotalEventCounts = state => state.events.totalEventsCounts;
 export const getFederalEventCount = createSelector([getEventsCounts], (eventCount) => {
   return eventCount.federal;
 })
-export const getStateEventCount = createSelector([getEventsCounts], (eventCount) => {
-  delete eventCount.federal
-  return eventCount;
-})
 
 export const getAllOldEventsWithUserEmails = createSelector([getAllOldEvents, getAllResearchers], (oldEvents, researchers) => {
   return map(oldEvents, event => {

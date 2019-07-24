@@ -43,7 +43,6 @@ class MoCLookUpDashboard extends React.Component {
                 <FederalStateRadioSwitcher 
                     onRadioChange={this.onRadioChange}
                     defaultValue={radioValue}
-                    eventsCounts={{}}
                 />
                 {/* <MocLookUp 
                     allMocNamesIds={allMocNamesIds}
