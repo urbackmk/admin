@@ -48,15 +48,16 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         allEvents: state.allEvents.map((event) => event.eventId === action.payload.eventId ? {
           ...event,
-          enteredBy: action.payload.email
+          userEmail: action.payload.email
         } : event)
     };
     case GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS:
+      console.log(action.payload)
       return {
         ...state,
         allOldEvents: state.allOldEvents.map((event) => event.eventId === action.payload.eventId ? {
           ...event,
-          enteredBy: action.payload.email
+          userEmail: action.payload.email
         } : event)
       };
     case RESET_OLD_EVENTS:

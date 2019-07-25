@@ -110,8 +110,8 @@ class OldEventsResults extends React.Component {
                                 data={
                                     missingMemberReport116
                                 }
-                                filename="Missing_Member_116.csv"
-                            > Download Missing Member Report
+                                filename="Congress_116.csv"
+                            > Download Congress Report
                             </CSVLink>
                         </Button>
 

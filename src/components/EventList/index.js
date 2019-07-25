@@ -26,7 +26,7 @@ class EventList extends React.Component {
             pathForPublishing,
             updateEvent,
         } = this.props;
-        const sameUser = townHall.enteredBy === currentUserEmail || townHall.enteredBy === currentUserId;
+        const sameUser = townHall.userEmail === currentUserEmail || townHall.enteredBy === currentUserId;
         return (
             <List.Item>
                 <EventCard 

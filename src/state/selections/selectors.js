@@ -102,7 +102,7 @@ export const getEventsAsDownloadObjects= createSelector([getFilteredArchivedEven
    return map(allEvents, eventData => {
 
         const convertedTownHall = {};
-        convertedTownHall.Entered_By = eventData.enteredBy;
+        convertedTownHall.Entered_By = eventData.userEmail;
         convertedTownHall.Member = eventData.displayName || eventData.Member;
         convertedTownHall.Event_Name = eventData.eventName ? eventData.eventName : ' ';
         convertedTownHall.Location = eventData.Location ? eventData.Location : ' ';
