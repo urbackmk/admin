@@ -18,27 +18,28 @@ export const getFederalEventCount = createSelector([getEventsCounts], (eventCoun
 })
 
 export const getAllOldEventsWithUserEmails = createSelector([getAllOldEvents, getAllResearchers], (oldEvents, researchers) => {
+
   return map(oldEvents, event => {
-    const user = find(researchers, { uid: event.enteredBy}) || find(researchers, { email: event.enteredBy });
+    const user = find(researchers, { uid: event.enteredBy}) || find(researchers, { email: event.userEmail });
     return {
       ...event,
-      enteredBy: user ? user.email : event.enteredBy
+      userEmail: user ? user.email : null,
     }
   })
 })
 
 export const getEmailCoverage = createSelector([getAllOldEventsWithUserEmails], (oldEvents) => {
-  const finished = filter(oldEvents, event => includes(event.enteredBy, '@'));
+  const finished = filter(oldEvents, event => event.userEmail);
   const total = filter(oldEvents, event => event.enteredBy);
   return finished.length / total.length * 100;
 });
 
 export const getAllEventsAsList = createSelector([getAllEvents, getAllResearchers], (allEvents, researchers) => {
       return map(allEvents, event => {
-      const user = find(researchers, { uid: event.enteredBy}) || find(researchers, { email: event.enteredBy });
+      const user = find(researchers, { uid: event.enteredBy}) || find(researchers, { email: event.userEmail });
         return {
           ...event,
-          enteredBy: user? user.email : event.enteredBy
+          userEmail: user ? user.email : null,
         }
       })
 })

@@ -135,16 +135,20 @@ const approveEventLogic = createLogic({
       livePath,
     } = action.payload;
     const townHallMetaData = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
-    firebasedb.ref(`${livePath}/${townHall.eventId}`).update(townHall)
+    const cleanTownHall = {
+      ...townHall,
+      userEmail: null,
+    }
+    firebasedb.ref(`${livePath}/${townHall.eventId}`).update(cleanTownHall)
       .then(() => {
-        const approvedTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
+        const approvedTownHall = firebasedb.ref(`${path}/${cleanTownHall.eventId}`);
         approvedTownHall.remove()
           .then(() => {
             townHallMetaData.update({
               status: 'live',
             })
             .then(() => {
-              dispatch(approveEventSuccess(townHall.eventId));
+              dispatch(approveEventSuccess(cleanTownHall.eventId));
               if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
                 dispatch(decrementEvents('federal'));
               } else {
@@ -176,11 +180,15 @@ const archiveEventLogic = createLogic({
         path,
         archivePath
       } = action.payload;
-      const oldTownHall = firebasedb.ref(`${path}/${townHall.eventId}`);
-      const oldTownHallID = firebasedb.ref(`/townHallIds/${townHall.eventId}`);
-      const dateKey = townHall.dateObj ? moment(townHall.dateObj).format('YYYY-MM') : 'no_date';
-      console.log(`${archivePath}/${dateKey}/${townHall.eventId}`)
-      firebasedb.ref(`${archivePath}/${dateKey}/${townHall.eventId}`).update(townHall)
+      const cleanTownHall = {
+        ...townHall,
+        userEmail: null,
+      }
+      const oldTownHall = firebasedb.ref(`${path}/${cleanTownHall.eventId}`);
+      const oldTownHallID = firebasedb.ref(`/townHallIds/${cleanTownHall.eventId}`);
+      const dateKey = cleanTownHall.dateObj ? moment(cleanTownHall.dateObj).format('YYYY-MM') : 'no_date';
+      console.log(`${archivePath}/${dateKey}/${cleanTownHall.eventId}`)
+      firebasedb.ref(`${archivePath}/${dateKey}/${cleanTownHall.eventId}`).update(cleanTownHall)
         .then(() => {
             const removed = oldTownHall.remove();
             if (removed) {
@@ -189,7 +197,7 @@ const archiveEventLogic = createLogic({
                 archive_path: `${archivePath}/${dateKey}`,
               })
               .then(() => {
-                dispatch(archiveEventSuccess(townHall.eventId));
+                dispatch(archiveEventSuccess(cleanTownHall.eventId));
                 if (EVENTS_PATHS[path] && EVENTS_PATHS[path].FEDERAL_OR_STATE === 'FEDERAL') {
                   dispatch(decrementEvents('federal'));
                 } else {
