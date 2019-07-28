@@ -8,6 +8,8 @@ import {
   UPDATE_MISSING_MEMBER,
   UPDATE_IN_OFFICE,
   UPDATE_IN_OFFICE_SUCCESS,
+  UPDATE_DISPLAY_NAME,
+  UPDATE_DISPLAY_NAME_SUCCESS,
 } from './constants';
 
 export const requestMocIds = () => ({
@@ -63,5 +65,21 @@ export const updateInOfficeSuccess = (id, inOffice) => ({
   payload: {
     id,
     inOffice,
+  }
+})
+
+export const updateDisplayName = (id, displayName) => ({
+  type: UPDATE_DISPLAY_NAME,
+  payload: {
+    id,
+    displayName,
+  }
+})
+
+export const updateDisplayNameSuccess = (id, displayName) => ({
+  type: UPDATE_DISPLAY_NAME_SUCCESS,
+  payload: {
+    id,
+    displayName,
   }
 })

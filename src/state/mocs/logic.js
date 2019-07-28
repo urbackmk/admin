@@ -13,11 +13,13 @@ import {
   UPDATE_MISSING_MEMBER_FAIL,
   UPDATE_MISSING_MEMBER_SUCCESS,
   UPDATE_IN_OFFICE,
-  UPDATE_IN_OFFICE_SUCCESS,
   UPDATE_IN_OFFICE_FAIL,
+  UPDATE_DISPLAY_NAME,
+  UPDATE_DISPLAY_NAME_FAIL,
 } from "./constants";
 import {
   updateInOfficeSuccess,
+  updateDisplayNameSuccess,
 } from './actions';
 import Candidate from './candidate-model';
 import { map } from "lodash";
@@ -124,10 +126,30 @@ const updateInOfficeLogic = createLogic({
   }
 })
 
+const updateDisplayNameLogic = createLogic({
+  type: UPDATE_DISPLAY_NAME,
+  processOptions: {
+    failType: UPDATE_DISPLAY_NAME_FAIL,
+  },
+  process(deps, dispatch, done) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const p1 = firebasedb.ref(`mocData/${action.payload.id}/displayName`)
+      .set(action.payload.displayName)
+      .then(() => {
+        dispatch(updateDisplayNameSuccess(action.payload.id, action.payload.displayName));
+        done();
+    });
+  }
+})
+
 export default [
   fetchMocs,
   addCandidateLogic,
   requestCongressLogic,
   updateMissingMemberLogic,
   updateInOfficeLogic,
+  updateDisplayNameLogic,
 ];

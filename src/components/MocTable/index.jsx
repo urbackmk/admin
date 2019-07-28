@@ -3,6 +3,7 @@ import React from 'react';
 import {
     Table,
     Checkbox,
+    Input,
 } from 'antd';
 
 export default class MocTable extends React.Component {
@@ -15,14 +16,24 @@ export default class MocTable extends React.Component {
     const { updateInOfficeValue } = this.props;
     updateInOfficeValue(id, target.checked);
   }
+
+  updateDisplayName({target}, id) {
+    const { updateDisplayNameValue } = this.props;
+    updateDisplayNameValue(id, target.value);
+  }
   
   render() {
     const { mocs } = this.props;
     const columns = [
       {
         title: 'Display Name',
-        dataIndex: 'displayName',
         key: 'displayName',
+        render: (mocs, record) => (
+          <Input 
+            defaultValue={record.displayName}
+            onChange={(e) => this.updateDisplayName(e, record.govtrack_id)}
+          />
+        ),
       },
       {
         title: 'State',
