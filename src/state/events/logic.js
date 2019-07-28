@@ -320,12 +320,6 @@ const requestTotalEventsCounts = createLogic({
     const p2 = firebasedb.ref(`${EVENTS_PATHS[PENDING_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
       totalEvents.pending += snapshot.numChildren();
     });
-    // const p3 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].STATE}`).once('value', (snapshot) => {
-    //   totalEvents.live += snapshot.numChildren();
-    // });
-    // const p4 = firebasedb.ref(`${EVENTS_PATHS[LIVE_EVENTS_TAB].FEDERAL}`).once('value', (snapshot) => {
-    //   totalEvents.live += snapshot.numChildren();
-    // });
     Promise.all([p1, p2]).then(() => {
       dispatch(requestTotalEventsCountsSuccess(totalEvents))
       done();

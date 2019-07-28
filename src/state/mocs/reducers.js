@@ -1,4 +1,13 @@
-import { GET_MOCS_SUCCESS, GET_MOCS_FAILED, ADD_CANDIDATE_FAILURE, GET_CONGRESS_BY_SESSION_SUCCESS, GET_CONGRESS_BY_SESSION_FAILED, UPDATE_MISSING_MEMBER_SUCCESS } from "./constants";
+import {
+  GET_MOCS_SUCCESS,
+  GET_MOCS_FAILED,
+  ADD_CANDIDATE_FAILURE,
+  GET_CONGRESS_BY_SESSION_SUCCESS,
+  GET_CONGRESS_BY_SESSION_FAILED,
+  UPDATE_MISSING_MEMBER_SUCCESS,
+  UPDATE_IN_OFFICE_SUCCESS,
+  UPDATE_IN_OFFICE_FAIL,
+} from "./constants";
 import { map } from 'lodash';
 
 const initialState = {
@@ -49,6 +58,14 @@ const mocReducer = (state = initialState, action) => {
             116: action.payload.missingMember,
             }
             }: moc)
+      }
+    case UPDATE_IN_OFFICE_SUCCESS:
+      return {
+        ...state,
+        116: map(state[116], (moc) => moc.govtrack_id === action.payload.id ? 
+          {...moc, 
+            in_office: action.payload.inOffice,
+          }: moc)
       }
     default:
       return state;

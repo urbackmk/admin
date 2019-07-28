@@ -42,7 +42,8 @@ class MoCLookUpDashboard extends React.Component {
       radioValue,
       candidateKeySavePath,
       the116theCongress,
-      updateMissingMemberValue
+      updateMissingMemberValue,
+      updateInOfficeValue,
     } = this.props;
     const { TabPane } = Tabs;
     return (
@@ -52,6 +53,7 @@ class MoCLookUpDashboard extends React.Component {
             <MocTable 
               mocs={the116theCongress}
               updateMissingMemberValue={updateMissingMemberValue}
+              updateInOfficeValue={updateInOfficeValue}
             />
           </TabPane>
           <TabPane tab="Candidates" key="candidates">
@@ -88,6 +90,7 @@ const mapDispatchToProps = dispatch => ({
     changeMode: (value) => dispatch(selectionStateBranch.actions.changeMode(value)),
     changeMocEndpoint: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
     updateMissingMemberValue: (id, missingMember) => dispatch(mocStateBranch.actions.updateMissingMember(id, missingMember)),
+    updateInOfficeValue: (id, inOffice) => dispatch(mocStateBranch.actions.updateInOffice(id, inOffice)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoCLookUpDashboard);

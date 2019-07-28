@@ -11,9 +11,14 @@ import {
   GET_CONGRESS_BY_SESSION_FAILED,
   UPDATE_MISSING_MEMBER,
   UPDATE_MISSING_MEMBER_FAIL,
-  UPDATE_MISSING_MEMBER_SUCCESS
+  UPDATE_MISSING_MEMBER_SUCCESS,
+  UPDATE_IN_OFFICE,
+  UPDATE_IN_OFFICE_SUCCESS,
+  UPDATE_IN_OFFICE_FAIL,
 } from "./constants";
-
+import {
+  updateInOfficeSuccess,
+} from './actions';
 import Candidate from './candidate-model';
 import { map } from "lodash";
 
@@ -79,20 +84,44 @@ const addCandidateLogic = createLogic({
 });
 
 const updateMissingMemberLogic = createLogic({
-    type: UPDATE_MISSING_MEMBER,
-      processOptions: {
-        successType: UPDATE_MISSING_MEMBER_SUCCESS,
-        failType: UPDATE_MISSING_MEMBER_FAIL,
-      },
-      process(deps) {
-        const {
-          action,
-          firebasedb,
-        } = deps;
-        return firebasedb.ref(`mocData/${action.payload.id}/missing_member`).update({
-          116: action.payload.missingMember,
-        }).then(() => action)
-      }
+  type: UPDATE_MISSING_MEMBER,
+  processOptions: {
+    successType: UPDATE_MISSING_MEMBER_SUCCESS,
+    failType: UPDATE_MISSING_MEMBER_FAIL,
+  },
+  process(deps) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    return firebasedb.ref(`mocData/${action.payload.id}/missing_member`).update({
+      116: action.payload.missingMember,
+    }).then(() => action)
+  }
+})
+
+const updateInOfficeLogic = createLogic({
+  type: UPDATE_IN_OFFICE,
+  processOptions: {
+    failType: UPDATE_IN_OFFICE_FAIL,
+  },
+  process(deps, dispatch, done) {
+    const {
+      action,
+      firebasedb,
+    } = deps;
+    const p1 = firebasedb.ref(`mocData/${action.payload.id}/in_office`)
+      .set(action.payload.inOffice);
+    const p2 = firebasedb.ref(`mocData/${action.payload.id}/last_updated`)
+      .update({
+        by: 'admin',
+        time: Date.now(),
+      });
+    Promise.all([p1, p2]).then(() => {
+      dispatch(updateInOfficeSuccess(action.payload.id, action.payload.inOffice));
+      done();
+    });
+  }
 })
 
 export default [
@@ -100,4 +129,5 @@ export default [
   addCandidateLogic,
   requestCongressLogic,
   updateMissingMemberLogic,
+  updateInOfficeLogic,
 ];
