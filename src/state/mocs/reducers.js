@@ -69,6 +69,12 @@ const mocReducer = (state = initialState, action) => {
             in_office: action.payload.inOffice,
           }: moc)
       }
+      case UPDATE_IN_OFFICE_FAIL:
+          console.log(`UPDATE_IN_OFFICE_FAIL: ${action.payload}`);
+          return {
+            ...state,
+            error: action.payload,
+          }
     case UPDATE_DISPLAY_NAME_SUCCESS:
       return {
         ...state,
@@ -76,6 +82,12 @@ const mocReducer = (state = initialState, action) => {
           {...moc, 
             displayName: action.payload.displayName,
           }: moc)
+      }
+    case UPDATE_DISPLAY_NAME_FAIL:
+      console.log(`UPDATE_DISPLAY_NAME_FAIL: ${action.payload}`);
+      return {
+        ...state,
+        error: action.payload,
       }
     default:
       return state;

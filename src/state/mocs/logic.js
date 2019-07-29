@@ -112,15 +112,15 @@ const updateInOfficeLogic = createLogic({
       action,
       firebasedb,
     } = deps;
-    const p1 = firebasedb.ref(`mocData/${action.payload.id}/in_office`)
-      .set(action.payload.inOffice);
-    const p2 = firebasedb.ref(`mocData/${action.payload.id}/last_updated`)
-      .update({
-        by: 'admin',
-        time: Date.now(),
-      });
+    const id = action.payload.id;
+    const inOffice = action.payload.inOffice;
+    const p1 = firebasedb.ref(`mocData/${id}/in_office`).set(inOffice);
+    const p2 = firebasedb.ref(`mocData/${id}/last_updated`).update({
+      by: 'admin',
+      time: Date.now(),
+    });
     Promise.all([p1, p2]).then(() => {
-      dispatch(updateInOfficeSuccess(action.payload.id, action.payload.inOffice));
+      dispatch(updateInOfficeSuccess(id, inOffice));
       done();
     });
   }
@@ -136,12 +136,13 @@ const updateDisplayNameLogic = createLogic({
       action,
       firebasedb,
     } = deps;
-    const p1 = firebasedb.ref(`mocData/${action.payload.id}/displayName`)
-      .set(action.payload.displayName)
+    const id = action.payload.id;
+    const displayName = action.payload.displayName;
+    firebasedb.ref(`mocData/${id}/displayName`).set(displayName)
       .then(() => {
-        dispatch(updateDisplayNameSuccess(action.payload.id, action.payload.displayName));
+        dispatch(updateDisplayNameSuccess(id, displayName));
         done();
-    });
+      });
   }
 })
 
