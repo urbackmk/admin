@@ -87,7 +87,6 @@ export default class MocTable extends React.Component {
   };
 
   viewRecord = (record) => {
-    console.log(record);
     this.setState({ 
       modalVisible: true,
       modalRecord: record,
@@ -96,6 +95,10 @@ export default class MocTable extends React.Component {
 
   handleModalCancel = () => {
     this.setState({ modalVisible: false });
+  }
+
+  handleModalOk = () => {
+    this.handleModalCancel();
   }
   
   render() {
@@ -183,19 +186,29 @@ export default class MocTable extends React.Component {
         <Modal
           title={this.state.modalRecord.displayName + ' | ' + this.state.modalRecord.title}
           visible={this.state.modalVisible}
-          onOk={this.handleModalUpdate}
+          onOk={this.handleModalOk}
           onCancel={this.handleModalCancel}
-          width={800}
+          width={600}
+          footer={[
+            <Button key="submit" type="primary" onClick={this.handleModalOk}>
+              OK
+            </Button>,
+          ]}
         >
           <h2>Personal Details</h2>
           <table>
+            <tbody>
+            <tr>
+              <th>Party</th>
+              <td>{this.state.modalRecord.party}</td>
+            </tr>
+            <tr>
+              <th>State</th>
+              <td>{this.state.modalRecord.state}</td>
+            </tr>
             <tr>
               <th>Chamber</th>
               <td>{this.state.modalRecord.chamber}</td>
-            </tr>
-            <tr>
-              <th>Date of Birth</th>
-              <td>{this.state.modalRecord.date_of_birth}</td>
             </tr>
             <tr>
               <th>District</th>
@@ -206,8 +219,16 @@ export default class MocTable extends React.Component {
               <td>{this.state.modalRecord.next_election}</td>
             </tr>
             <tr>
-              <th>Party</th>
-              <td>{this.state.modalRecord.party}</td>
+              <th>Seniority</th>
+              <td>{this.state.modalRecord.seniority}</td>
+            </tr>
+            <tr>
+              <th>State Rank</th>
+              <td>{this.state.modalRecord.state_rank}</td>
+            </tr>
+            <tr>
+              <th>Date of Birth</th>
+              <td>{this.state.modalRecord.date_of_birth}</td>
             </tr>
             <tr>
               <th>Gender</th>
@@ -235,26 +256,12 @@ export default class MocTable extends React.Component {
               <th>FEC Candidate ID</th>
               <td>{this.state.modalRecord.fec_candidate_id}</td>
             </tr>
-            <tr>
-              <th>Senate Class</th>
-              <td>{this.state.modalRecord.senate_class}</td>
-            </tr>
-            <tr>
-              <th>Seniority</th>
-              <td>{this.state.modalRecord.seniority}</td>
-            </tr>
-            <tr>
-              <th>State</th>
-              <td>{this.state.modalRecord.state}</td>
-            </tr>
-            <tr>
-              <th>State Rank</th>
-              <td>{this.state.modalRecord.state_rank}</td>
-            </tr>
+            </tbody>
           </table>
 
           <h2>Contact Info</h2>
           <table>
+            <tbody>
             <tr>
               <th>Phone</th>
               <td>{this.state.modalRecord.phone}</td>
@@ -271,30 +278,33 @@ export default class MocTable extends React.Component {
               <th>Address</th>
               <td>{this.state.modalRecord.address}</td>
             </tr>
+            </tbody>
           </table>
 
           <h2>Media</h2>
           <table>
+            <tbody>
             <tr>
-              <th>Facebook Account</th>
-              <td>{this.state.modalRecord.facebook_account}</td>
+              <th>Website</th>
+              <td><a href={this.state.modalRecord.url}>{this.state.modalRecord.url}</a></td>
             </tr>
             <tr>
               <th>RSS URL</th>
               <td><a href={this.state.modalRecord.rss_url}>{this.state.modalRecord.rss_url}</a></td>
             </tr>
             <tr>
-              <th>Twitter Account</th>
-              <td>{this.state.modalRecord.twitter_account}</td>
+              <th>Facebook Account</th>
+              <td>{this.state.modalRecord.facebook_account}</td>
             </tr>
             <tr>
-              <th>Website</th>
-              <td><a href={this.state.modalRecord.url}>{this.state.modalRecord.url}</a></td>
+              <th>Twitter Account</th>
+              <td>{this.state.modalRecord.twitter_account}</td>
             </tr>
             <tr>
               <th>YouTube Account</th>
               <td>{this.state.modalRecord.youtube_account}</td>
             </tr>
+            </tbody>
           </table>
         </Modal>
       </div>
