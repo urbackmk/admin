@@ -8,6 +8,7 @@ import {
     Icon,
     Modal,
 } from 'antd';
+import debounce from 'lodash/debounce';
 
 export default class MocTable extends React.Component {
 
@@ -28,9 +29,13 @@ export default class MocTable extends React.Component {
   }
 
   updateDisplayName({target}, id) {
-    const { updateDisplayNameValue } = this.props;
-    updateDisplayNameValue(id, target.value);
+    this.debounceDisplayName(target.value, id);
   }
+
+  debounceDisplayName = debounce((value, id) => {
+    const { updateDisplayNameValue } = this.props;
+    updateDisplayNameValue(id, value);
+  }, 2000)
 
   getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
