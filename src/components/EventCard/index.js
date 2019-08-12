@@ -11,8 +11,8 @@ import {
 
 import MeetingTypeSelect from './MeetingTypeSelect.js';
 import IconFlagSelect from './IconFlagSelect.js';
+import EditableText from '../EditableInput';
 import './style.scss';
-
 const {
   Meta,
 } = Card;
@@ -119,11 +119,12 @@ export default class EventCard extends React.Component {
         const {
           townHall,
           pending,
+          updateEvent,
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
         const displayEditNotes = (<React.Fragment><span>{townHall.Notes}</span><Icon type="edit" onClick={this.setEditEventNotesTrue} /></React.Fragment>)
-        
+
         const selectMeetingType = (
             <Row type="flex" justify="start">
                 <MeetingTypeSelect meetingType={townHall.meetingType} selectMeetingType={this.selectMeetingType}/>
@@ -159,6 +160,19 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
+                <EditableText 
+                    content={townHall.link}
+                    updateEvent={updateEvent}
+                    fieldKey='link'
+                    label="link"
+                />
+                <EditableText 
+                    content={townHall.linkName}
+                    updateEvent={updateEvent}
+                    fieldKey='linkName'
+                    label="link name"
+                />
+
                 <Checkbox defaultChecked={townHall.ada_accessible} onChange={this.toggleAdaAccessible}>ADA Accessible</Checkbox>
                 <ul><h4>Meta data (not shown)</h4>
                     <li>Event id: {townHall.eventId}</li>
