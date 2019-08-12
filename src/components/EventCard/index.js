@@ -12,6 +12,7 @@ import {
 import MeetingTypeSelect from './MeetingTypeSelect.js';
 import IconFlagSelect from './IconFlagSelect.js';
 import EditableText from '../EditableInput';
+import EditAddressOrDateButton from '../EditAddressOrDateButton/index.js';
 import './style.scss';
 const {
   Meta,
@@ -148,7 +149,13 @@ export default class EventCard extends React.Component {
             <Card 
                 key={townHall.eventId}
                 className="event-card"
-                extra={(<Button icon="edit">Edit (coming soon)</Button>)}
+                extra={(<EditAddressOrDateButton 
+                            townHall={townHall}
+                            address={townHall.address}
+                            repeatingEvent={townHall.repeatingEvent}
+                            dateString={townHall.dateString}
+                            time={townHall.Time}
+                    />)}
                 actions={pending ? this.renderPendingActions() : this.renderLiveActions()}
                 title={`${townHall.displayName || townHall.Member} (${townHall.party}) ${townHall.state} ${townHall.district || ''}`}
             >

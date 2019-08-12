@@ -1,0 +1,95 @@
+import {
+  Modal,
+  Button
+} from 'antd';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import EditAddressOrDateModal from '../EditAddressOrDateModal';
+
+import './style.scss';
+
+class EditAddressOrDateButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.showModal = this.showModal.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.state = {
+      loading: false,
+      visible: false,
+    };
+  }
+
+  showModal() {
+    this.setState({
+      visible: true,
+    });
+  }
+
+  changeAddress(data) {
+    const {
+      eventId,
+    } = this.props;
+    this.setState({ loading: true });
+    const fullData = {
+      ...data,
+      eventId,
+    };
+
+    if (data.family_name && data.given_name && data.email_address) {
+  
+    }
+  }
+
+  handleClose(e) {
+    this.setState({
+      visible: false,
+    });
+  }
+
+  handleCloseOnSubmit(e) {
+    this.setState({
+      loading: false,
+      visible: false,
+    });
+  }
+
+  render() {
+    const {
+      address,
+      townHall,
+    } = this.props;
+
+    return (
+      <div>
+        <Button 
+          className="edit-btn" 
+          onClick={this.showModal} 
+          icon="edit"
+        >
+          Edit Address or Date
+        </Button>
+        <Modal
+          title="Edit Address or Date"
+          visible={this.state.visible}
+          onCancel={this.handleClose}
+          closable
+        >
+          <EditAddressOrDateModal
+            loading={this.state.loading}
+            currentTownHall={townHall}
+            address={address}
+            changeAddress={this.changeAddress}
+          />
+        </Modal>
+      </div>
+    );
+  }
+}
+
+EditAddressOrDateButton.propTypes = {
+  eventId: PropTypes.string.isRequired,
+  eventAddress: PropTypes.string.isRequired,
+};
+
+export default EditAddressOrDateButton;
