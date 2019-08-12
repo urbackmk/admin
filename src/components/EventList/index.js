@@ -25,6 +25,9 @@ class EventList extends React.Component {
             pathForEvents,
             pathForPublishing,
             updateEvent,
+            setTempAddress,
+            tempAddress,
+            clearTempAddress,
         } = this.props;
         const sameUser = townHall.userEmail === currentUserEmail || townHall.enteredBy === currentUserId;
         return (
@@ -33,6 +36,9 @@ class EventList extends React.Component {
                     townHall={townHall}
                     pending={pending}
                     canApprove={!sameUser || isAdmin}
+                    setTempAddress={setTempAddress}
+                    tempAddress={tempAddress}
+                    clearTempAddress={clearTempAddress}
                     approveEvent={() => {
                         return approveEvent(townHall, pathForEvents, pathForPublishing)
                     }}

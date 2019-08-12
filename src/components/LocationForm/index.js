@@ -4,6 +4,7 @@ import {
   Alert,
   Input,
   Form,
+  Switch,
 } from 'antd';
 import { includes } from 'lodash';
 
@@ -25,17 +26,19 @@ class LocationForm extends React.Component {
     this.handleSearch = this.handleSearch.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.clearAddressTimeout = this.clearAddressTimeout.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
+    this.receiveTempAddress = this.receiveTempAddress.bind(this);
+    this.toggleIncludeState = this.toggleIncludeState.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     const { tempAddress } = this.props;
     if (!prevProps.tempAddress && tempAddress) {
-      this.confirmingTime = setTimeout(this.handleSelect, 300);
+      this.confirmingTime = setTimeout(this.receiveTempAddress, 300);
     }
   }
 
   onKeyDown(e) {
+    e.preventDefault();
     if (e.keyCode === 13) {
       this.handleSearch();
     }
@@ -43,7 +46,24 @@ class LocationForm extends React.Component {
 
   clearAddressTimeout() {
     clearTimeout(this.confirmingTime);
-    this.setState(initialState);
+    const {
+      updateEvent,
+      tempAddressFullData,
+      tempAddress,
+      tempLat,
+      tempLng,
+      clearTempAddress,
+    } = this.props;
+
+    if (this.state.includeState && tempAddressFullData.state && tempAddressFullData.stateName) {
+      updateEvent(tempAddressFullData)
+    }
+    updateEvent({
+      lat: tempLat,
+      lng: tempLng,
+      address: tempAddress
+    })
+    clearTempAddress()
   }
 
 
@@ -74,27 +94,17 @@ class LocationForm extends React.Component {
     });
   }
 
-  handleSelect() {
-    const {
-      saveAddress,
-      clearTempAddress,
-      tempLat,
-      tempLng,
-      tempStateInfo,
-      tempAddress,
-      setFieldsValue,
-    } = this.props;
-    saveAddress({
-      ...tempStateInfo,
-      address: tempAddress,
-      lat: tempLat,
-      lng: tempLng,
-    });
+  receiveTempAddress() {
     this.setState({
       validating: false,
     });
-    clearTempAddress();
-    setFieldsValue({ address: tempAddress });
+  }
+
+  toggleIncludeState(value) {
+    console.log(value)
+    this.setState({
+      includeState: value,
+    })
   }
 
   renderTeleInputs() {
@@ -138,6 +148,12 @@ class LocationForm extends React.Component {
             />,
           )}
         </FormItem>
+        <FormItem 
+          label="is a presidental event"
+          help="switch on if the event should be stored by the event location and not the MOC state/district"
+          >
+          <Switch onChange={this.toggleIncludeState} />
+        </FormItem>
         {meetingType === 'Tele-Town Hall' ? this.renderTeleInputs()
           : (
             <FormItem
@@ -166,12 +182,13 @@ class LocationForm extends React.Component {
             </FormItem>
           )}
         {
-          (tempAddress || address) && showResponse && (
+          (tempAddress) && showResponse && (
             <Alert
-              message={(<p>Address from geocoding: <br /><strong>{tempAddress || address}</strong></p>)}
+              message={(<p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>)}
               type="success"
               showIcon
               onClose={this.clearAddressTimeout}
+              closeText="Approve address"
             />
           )}
       </React.Fragment>

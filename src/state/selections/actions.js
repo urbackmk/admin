@@ -7,6 +7,9 @@ import {
   CHANGE_STATE_FILTERS,
   TOGGLE_INCLUDE_LIVE_EVENTS,
   CHANGE_MOC_END_POINT,
+  SET_TEMP_ADDRESS,
+  CLEAR_ADDRESS,
+  GEOCODE_TEMP_ADDRESS,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -46,4 +49,13 @@ export const changeStateFilters = (states) => ({
 export const toggleIncludeLiveEventsInLookup = (include) => ({
   type: TOGGLE_INCLUDE_LIVE_EVENTS,
   payload: include,
+});
+
+export const setTempAddress = payload => ({
+  payload,
+  type: GEOCODE_TEMP_ADDRESS,
+});
+
+export const clearTempAddress = () => ({
+  type: CLEAR_ADDRESS,
 });

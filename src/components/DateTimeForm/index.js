@@ -11,6 +11,7 @@ import {
 } from 'antd';
 
 const FormItem = Form.Item;
+const timeFormats = ['hh:mm A', 'h:mm A'];
 
 class DateTimeForm extends React.Component {
   constructor(props) {
@@ -35,22 +36,40 @@ class DateTimeForm extends React.Component {
   }
 
   onChangeDate(date) {
-    const { setDate } = this.props;
-    setDate(date);
+    const {
+      updateEvent,
+    } = this.props;
+    const updateObject = {
+          yearMonthDay: moment(date).format('YYYY-MM-DD'),
+            dateString: moment(date).format('ddd, MMM D YYYY'),
+    }
+    updateEvent(updateObject);
   }
 
   onChangeStartTime(time, timeString) {
     const {
-      setStartTime,
+      updateEvent,
     } = this.props;
-    setStartTime(timeString);
+    const updateObject = {
+      timeStart24: moment(timeString, timeFormats).format('HH:mm:ss'),
+      Time: moment(timeString, timeFormats).format('h:mm A'),
+      timeEnd24: moment(timeString, timeFormats).add(2, 'h').format('HH:mm:ss'),
+      timeEnd: moment(timeString, timeFormats).add(2, 'h').format('h:mm A'),
+    }
+    updateEvent(updateObject);
   }
 
   onChangeEndTime(time, timeString) {
     const {
-      setEndTime,
+      updateEvent,
     } = this.props;
-    setEndTime(timeString);
+    const updateObject = {
+
+      timeEnd24: moment(timeString, timeFormats).format('HH:mm:ss'),
+      timeEnd: moment(timeString, timeFormats).format('h:mm A'),
+    }
+    updateEvent(updateObject);
+
   }
 
   closeTimeStart() {

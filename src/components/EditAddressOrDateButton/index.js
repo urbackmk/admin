@@ -14,6 +14,7 @@ class EditAddressOrDateButton extends React.Component {
     super(props);
     this.showModal = this.showModal.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.checkData = this.checkData.bind(this);
     this.state = {
       loading: false,
       visible: false,
@@ -54,10 +55,28 @@ class EditAddressOrDateButton extends React.Component {
     });
   }
 
+  checkData() {
+    const {
+      tempAddress
+    } = this.props;
+    if (tempAddress.address) {
+      console.log('still have address')
+      return;
+    }
+    this.setState({
+      loading: false,
+      visible: false,
+    });
+  }
+
   render() {
     const {
       address,
+      updateEvent,
       townHall,
+      setTempAddress,
+      tempAddress,
+      clearTempAddress,
     } = this.props;
 
     return (
@@ -72,6 +91,7 @@ class EditAddressOrDateButton extends React.Component {
         <Modal
           title="Edit Address or Date"
           visible={this.state.visible}
+          onOk={this.checkData}
           onCancel={this.handleClose}
           closable
         >
@@ -80,6 +100,10 @@ class EditAddressOrDateButton extends React.Component {
             currentTownHall={townHall}
             address={address}
             changeAddress={this.changeAddress}
+            updateEvent={updateEvent}
+            setTempAddress={setTempAddress}
+            tempAddress={tempAddress}
+            clearTempAddress={clearTempAddress}
           />
         </Modal>
       </div>

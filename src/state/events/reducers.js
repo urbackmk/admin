@@ -36,7 +36,6 @@ const initialState = {
   loading: false,
 };
 
-const timeFormats = ['hh:mm A', 'h:mm A'];
 
 const eventReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -111,42 +110,6 @@ const eventReducer = (state = initialState, { type, payload }) => {
           return ele
         })
       }
-      case SET_START_TIME:
-      return {
-        ...state,
-        timeStart24: moment(payload, timeFormats).format('HH:mm:ss'),
-        Time: moment(payload, timeFormats).format('h:mm A'),
-        timeEnd24: moment(payload, timeFormats).add(2, 'h').format('HH:mm:ss'),
-        timeEnd: moment(payload, timeFormats).add(2, 'h').format('h:mm A'),
-      };
-      case SET_END_TIME:
-      return {
-        ...state,
-        timeEnd24: moment(payload, timeFormats).format('HH:mm:ss'),
-        timeEnd: moment(payload, timeFormats).format('h:mm A'),
-      };
-      case SET_DATE:
-      return {
-        ...state,
-        yearMonthDay: moment(payload).format('YYYY-MM-DD'),
-        dateString: moment(payload).format('ddd, MMM D YYYY'),
-      };
-      case SET_LAT_LNG:
-      return {
-        ...state,
-        lat: payload.lat,
-        lng: payload.lng,
-        address: payload.address,
-        state: state.state || payload.state || null,
-        stateName: state.stateName || payload.stateName || null,
-      };
-      case SET_TIME_ZONE:
-      return {
-        ...state,
-        zoneString: payload.zoneString,
-        timeZone: payload.timeZone,
-        dateObj: payload.dateObj,
-      };
     case REQUEST_EVENTS_COUNTS_SUCCESS:
       return {
         ...state,

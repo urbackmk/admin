@@ -21,13 +21,9 @@ class EditAddressOrDateForm extends React.Component {
   }
 
   handleSubmit(e) {
-    const {
-      submitRsvp,
-    } = this.props;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        submitRsvp(values);
       }
     });
   }
@@ -42,16 +38,13 @@ class EditAddressOrDateForm extends React.Component {
     address,
     currentTownHall,
     clearTempAddress,
-    geoCodeLocation,
     setLatLng,
     setDate,
     setStartTime,
     setEndTime,
     tempAddress,
-    tempLat,
-    tempLng,
-    tempStateName,
-    tempState,
+    updateEvent,
+    setTempAddress,
   } = this.props;
   const {
     getFieldDecorator,
@@ -78,24 +71,27 @@ class EditAddressOrDateForm extends React.Component {
               setEndTime={setEndTime}
               getFieldDecorator={getFieldDecorator}
               currentTownHall={currentTownHall}
+              updateEvent={updateEvent}
             />
             <LocationForm
               currentTownHall={currentTownHall}
-              geoCodeLocation={geoCodeLocation}
-              tempAddress={tempAddress}
+              geoCodeLocation={setTempAddress}
+              tempAddress={tempAddress.address}
+              tempAddressFullData={tempAddress}
               address={address}
               clearTempAddress={clearTempAddress}
-              tempLat={tempLat}
-              tempLng={tempLng}
+              tempLat={tempAddress.lat}
+              tempLng={tempAddress.lng}
               tempStateInfo={{
-                state: tempState,
-                stateName: tempStateName,
+                state: tempAddress.state,
+                stateName: tempAddress.stateName,
               }}
               saveAddress={setLatLng}
               handleInputBlur={this.handleInputBlur}
               getFieldDecorator={getFieldDecorator}
               setFieldsValue={setFieldsValue}
               getFieldValue={getFieldValue}
+              updateEvent={updateEvent}
             />
       </Form>
     );

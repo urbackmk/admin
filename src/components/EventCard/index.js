@@ -121,6 +121,9 @@ export default class EventCard extends React.Component {
           townHall,
           pending,
           updateEvent,
+          setTempAddress,
+          tempAddress,
+          clearTempAddress,
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
@@ -155,6 +158,11 @@ export default class EventCard extends React.Component {
                             repeatingEvent={townHall.repeatingEvent}
                             dateString={townHall.dateString}
                             time={townHall.Time}
+                            updateEvent={updateEvent}
+                            setTempAddress={setTempAddress}
+                            tempAddress={tempAddress}
+                            clearTempAddress={clearTempAddress}
+
                     />)}
                 actions={pending ? this.renderPendingActions() : this.renderLiveActions()}
                 title={`${townHall.displayName || townHall.Member} (${townHall.party}) ${townHall.state} ${townHall.district || ''}`}
