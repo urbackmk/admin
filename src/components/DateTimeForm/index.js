@@ -93,6 +93,7 @@ class DateTimeForm extends React.Component {
       getFieldDecorator,
       currentTownHall,
     } = this.props;
+    console.log(moment(currentTownHall.dateString));
     const { repeatingEvent } = this.state;
     return repeatingEvent ? (
       <FormItem
@@ -115,7 +116,7 @@ class DateTimeForm extends React.Component {
         <FormItem>
           {
             getFieldDecorator('date', {
-              initialValue: moment(currentTownHall.dateString, 'L'),
+              initialValue: moment(currentTownHall.dateString),
               rules: [{
                 message: 'Please enter a valid date',
                 required: true,

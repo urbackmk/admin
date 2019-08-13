@@ -45,6 +45,7 @@ class EditAddressOrDateForm extends React.Component {
     tempAddress,
     updateEvent,
     setTempAddress,
+    passFormData,
   } = this.props;
   const {
     getFieldDecorator,
@@ -73,6 +74,7 @@ class EditAddressOrDateForm extends React.Component {
               getFieldDecorator={getFieldDecorator}
               currentTownHall={currentTownHall}
               updateEvent={updateEvent}
+              passFormData={passFormData}
             />
             <LocationForm
               currentTownHall={currentTownHall}
@@ -94,6 +96,7 @@ class EditAddressOrDateForm extends React.Component {
               getFieldValue={getFieldValue}
               resetFields={resetFields}
               updateEvent={updateEvent}
+              passFormData={passFormData}
             />
       </Form>
     );

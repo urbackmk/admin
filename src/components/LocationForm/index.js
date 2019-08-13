@@ -55,6 +55,7 @@ class LocationForm extends React.Component {
       tempLat,
       tempLng,
       clearTempAddress,
+      passFormData,
     } = this.props;
 
     if (this.state.includeState && tempAddressFullData.state && tempAddressFullData.stateName) {
@@ -64,8 +65,11 @@ class LocationForm extends React.Component {
       lat: tempLat,
       lng: tempLng,
       address: tempAddress
-    })
-    clearTempAddress()
+    });
+    passFormData({
+      address: tempAddress
+    });
+    clearTempAddress();
   }
 
   discardTempAddress() {

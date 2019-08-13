@@ -18,6 +18,7 @@ class EditAddressOrDateButton extends React.Component {
     this.state = {
       loading: false,
       visible: false,
+      formValues: {},
     };
   }
 
@@ -25,6 +26,13 @@ class EditAddressOrDateButton extends React.Component {
     this.setState({
       visible: true,
     });
+  }
+
+  passFormData(data) {
+    this.setState({
+      formValues: {...this.state.formValues, ...data},
+    });
+    console.log(this.state.formValues);
   }
 
   changeAddress(data) {
@@ -67,6 +75,7 @@ class EditAddressOrDateButton extends React.Component {
       loading: false,
       visible: false,
     });
+    console.log(this.state.formValues);
   }
 
   render() {
@@ -104,6 +113,7 @@ class EditAddressOrDateButton extends React.Component {
             setTempAddress={setTempAddress}
             tempAddress={tempAddress}
             clearTempAddress={clearTempAddress}
+            passFormData={this.passFormData}
           />
         </Modal>
       </div>
