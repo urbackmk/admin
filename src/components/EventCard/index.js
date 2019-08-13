@@ -161,7 +161,7 @@ export default class EventCard extends React.Component {
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
                 <EditableText 
-                    content={townHall.link}
+                    content={<a href={townHall.link} target="_blank">{townHall.link}</a>}
                     updateEvent={updateEvent}
                     fieldKey='link'
                     label="link"
