@@ -50,6 +50,7 @@ class EditAddressOrDateForm extends React.Component {
     getFieldDecorator,
     getFieldValue,
     setFieldsValue,
+    resetFields,
   } = this.props.form;
 
     const formItemLayout = {
@@ -91,6 +92,7 @@ class EditAddressOrDateForm extends React.Component {
               getFieldDecorator={getFieldDecorator}
               setFieldsValue={setFieldsValue}
               getFieldValue={getFieldValue}
+              resetFields={resetFields}
               updateEvent={updateEvent}
             />
       </Form>

@@ -5,6 +5,7 @@ import {
   Input,
   Form,
   Switch,
+  Button,
 } from 'antd';
 import { includes } from 'lodash';
 
@@ -28,6 +29,7 @@ class LocationForm extends React.Component {
     this.clearAddressTimeout = this.clearAddressTimeout.bind(this);
     this.receiveTempAddress = this.receiveTempAddress.bind(this);
     this.toggleIncludeState = this.toggleIncludeState.bind(this);
+    this.discardTempAddress = this.discardTempAddress.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -64,6 +66,18 @@ class LocationForm extends React.Component {
       address: tempAddress
     })
     clearTempAddress()
+  }
+
+  discardTempAddress() {
+    const {
+      clearTempAddress,
+      resetFields,
+    } = this.props;
+    this.setState({
+      showResponse: false,
+    });
+    clearTempAddress();
+    resetFields(['address']);
   }
 
 
@@ -183,13 +197,22 @@ class LocationForm extends React.Component {
           )}
         {
           (tempAddress) && showResponse && (
-            <Alert
-              message={(<p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>)}
-              type="success"
-              showIcon
-              onClose={this.clearAddressTimeout}
-              closeText="Approve address"
-            />
+            <div>
+            <p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>
+            <Button size="small" onClick={this.clearAddressTimeout} type="primary" >
+              Approve
+            </Button>
+            <Button size="small" onClick={this.discardTempAddress}>
+              Discard
+            </Button>
+            </div>
+            // <Alert
+            //   message={(<p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>)}
+            //   type="success"
+            //   showIcon
+            //   onClose={this.clearAddressTimeout}
+            //   closeText="Approve address"
+            // />
           )}
       </React.Fragment>
     );
