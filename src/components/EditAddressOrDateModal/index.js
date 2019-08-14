@@ -109,7 +109,6 @@ EditAddressOrDateForm.propTypes = {
     validateFieldsAndScroll: PropTypes.func.isRequired,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
-  submitRsvp: PropTypes.func.isRequired,
 };
 
 const WrappedEditAddressOrDateForm = Form.create({ name: 'address-form' })(EditAddressOrDateForm);

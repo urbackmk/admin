@@ -172,7 +172,7 @@ class LocationForm extends React.Component {
           : (
             <FormItem
               className="general-inputs"
-              id="location-form-group"
+              htmlFor="location-form-group"
               hasFeedback
               validateStatus={validating && !tempAddress ? 'validating' : ''}
               label="Full Street Address"
@@ -198,21 +198,14 @@ class LocationForm extends React.Component {
         {
           (tempAddress) && showResponse && (
             <div>
-            <p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>
-            <Button size="small" onClick={this.clearAddressTimeout} type="primary" >
-              Approve
-            </Button>
-            <Button size="small" onClick={this.discardTempAddress}>
-              Discard
-            </Button>
+              <p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>
+              <Button size="small" onClick={this.clearAddressTimeout} type="primary" >
+                Approve
+              </Button>
+              <Button size="small" onClick={this.discardTempAddress}>
+                Discard
+              </Button>
             </div>
-            // <Alert
-            //   message={(<p>Address from geocoding: <br /><strong>{tempAddress}</strong></p>)}
-            //   type="success"
-            //   showIcon
-            //   onClose={this.clearAddressTimeout}
-            //   closeText="Approve address"
-            // />
           )}
       </React.Fragment>
     );
@@ -225,7 +218,6 @@ LocationForm.propTypes = {
   geoCodeLocation: PropTypes.func.isRequired,
   getFieldDecorator: PropTypes.func.isRequired,
   getFieldValue: PropTypes.func.isRequired,
-  saveAddress: PropTypes.func.isRequired,
   setFieldsValue: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
   tempAddress: PropTypes.string,

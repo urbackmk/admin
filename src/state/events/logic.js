@@ -18,11 +18,6 @@ import {
   UPDATE_EXISTING_EVENT,
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
-  ADDRESS_CHANGE,
-  GENERAL_FAIL,
-  CHANGE_TIME_ZONE,
-  SET_LAT_LNG,
-  SET_TIME_ZONE,
 } from "./constants";
 import { 
   EVENTS_PATHS,
@@ -169,9 +164,6 @@ const approveEventLogic = createLogic({
 
 const archiveEventLogic = createLogic({
   type: ARCHIVE_EVENT,
-  processOptions: {
-    // successType: ARCHIVE_EVENT_SUCCESS,
-  },
   process(deps, dispatch, done) {
       const {
         action,

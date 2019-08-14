@@ -115,7 +115,7 @@ class DateTimeForm extends React.Component {
         <FormItem>
           {
             getFieldDecorator('date', {
-              initialValue: moment(currentTownHall.dateString),
+              initialValue: moment(currentTownHall.dateString, 'ddd, MMM DD YYYY'),
               rules: [{
                 message: 'Please enter a valid date',
                 required: true,
@@ -210,12 +210,7 @@ class DateTimeForm extends React.Component {
 }
 
 DateTimeForm.propTypes = {
-  getError: PropTypes.func.isRequired,
   getFieldDecorator: PropTypes.func.isRequired,
-  requiredFields: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setDate: PropTypes.func.isRequired,
-  setEndTime: PropTypes.func.isRequired,
-  setStartTime: PropTypes.func.isRequired,
 };
 
 export default DateTimeForm;

@@ -9,7 +9,6 @@ import {
   CHANGE_DATE_LOOKUP,
   GENERAL_FAIL,
   CHANGE_TIME_ZONE,
-  SET_TIME_ZONE,
   SET_TEMP_ADDRESS,
   GEOCODE_TEMP_ADDRESS,
 } from "./constants";
@@ -106,7 +105,6 @@ const requestTimeZoneLogic = createLogic({
         if (!response.timeZoneName) {
           return Error('no timezone results', response);
         }
-        const zoneString = response.timeZoneId;
         const timezoneAb = response.timeZoneName.split(' ');
         const timeZone = timezoneAb.reduce((acc, cur) => {
           acc += cur[0];

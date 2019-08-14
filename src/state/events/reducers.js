@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import {
   DELETE_EVENT_SUCCESS,
   REQUEST_EVENTS_SUCCESS,
@@ -19,11 +17,6 @@ import {
   DECREMENT_TOTAL_EVENTS,
   REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
   GENERAL_FAIL,
-  SET_LAT_LNG,
-  SET_START_TIME,
-  SET_END_TIME,
-  SET_DATE,
-  SET_TIME_ZONE,
 } from "./constants";
 import { filter, map } from "lodash";
 

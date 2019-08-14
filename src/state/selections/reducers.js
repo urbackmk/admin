@@ -10,7 +10,6 @@ import {
   GENERAL_FAIL,
   CLEAR_ADDRESS,
   SET_TEMP_ADDRESS,
-  CHANGE_TIME_ZONE,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -92,10 +91,6 @@ const selectionReducer = (state = initialState, action) => {
         ...state,
         tempAddress: initialState.tempAddress
       };
-    // case CHANGE_TIME_ZONE:
-    //   return {
-    //     ...state,
-    //   }
     case GENERAL_FAIL:
       console.error(action.payload)
       return {

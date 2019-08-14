@@ -15,11 +15,9 @@ class EditAddressOrDateButton extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.checkData = this.checkData.bind(this);
-    this.passFormData = this.passFormData.bind(this);
     this.state = {
       loading: false,
       visible: false,
-      formValues: {},
     };
   }
 
@@ -27,29 +25,6 @@ class EditAddressOrDateButton extends React.Component {
     this.setState({
       visible: true,
     });
-  }
-
-  passFormData(data) {
-    this.setState({
-      formValues: {...this.state.formValues, ...data},
-    });
-    console.log(this.state.formValues);
-    console.log(this.props.townHall);
-  }
-
-  changeAddress(data) {
-    const {
-      eventId,
-    } = this.props;
-    this.setState({ loading: true });
-    const fullData = {
-      ...data,
-      eventId,
-    };
-
-    if (data.family_name && data.given_name && data.email_address) {
-  
-    }
   }
 
   handleClose(e) {
@@ -120,22 +95,15 @@ class EditAddressOrDateButton extends React.Component {
             loading={this.state.loading}
             currentTownHall={townHall}
             address={address}
-            changeAddress={this.changeAddress}
             updateEvent={updateEvent}
             setTempAddress={setTempAddress}
             tempAddress={tempAddress}
             clearTempAddress={clearTempAddress}
-            passFormData={this.passFormData}
           />
         </Modal>
       </div>
     );
   }
 }
-
-EditAddressOrDateButton.propTypes = {
-  eventId: PropTypes.string.isRequired,
-  eventAddress: PropTypes.string.isRequired,
-};
 
 export default EditAddressOrDateButton;
