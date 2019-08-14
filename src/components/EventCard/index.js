@@ -160,6 +160,8 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
+                {townHall.disclaimer && <p>{townHall.disclaimer}</p>}
+
                 <EditableText 
                     content={<a href={townHall.link} target="_blank">{townHall.link}</a>}
                     updateEvent={updateEvent}
