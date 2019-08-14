@@ -8,6 +8,7 @@ import {
   DatePicker,
   Form,
   TimePicker,
+  Alert,
 } from 'antd';
 
 const FormItem = Form.Item;
@@ -28,6 +29,7 @@ class DateTimeForm extends React.Component {
       repeatingEvent: false,
       startOpen: false,
       endTimeOpen: false,
+      pastDateWarning: moment().isAfter(moment(this.props.currentTownHall.dateString, 'ddd, MMM D YYYY')),
     };
   }
 
@@ -42,6 +44,11 @@ class DateTimeForm extends React.Component {
     const updateObject = {
           yearMonthDay: moment(date).format('YYYY-MM-DD'),
             dateString: moment(date).format('ddd, MMM D YYYY'),
+    }
+    if (moment().isAfter(date)) {
+      this.setState({ pastDateWarning: true });
+    } else {
+      this.setState({ pastDateWarning: false });
     }
     updateEvent(updateObject);
   }
@@ -64,12 +71,10 @@ class DateTimeForm extends React.Component {
       updateEvent,
     } = this.props;
     const updateObject = {
-
       timeEnd24: moment(timeString, timeFormats).format('HH:mm:ss'),
       timeEnd: moment(timeString, timeFormats).format('h:mm A'),
     }
     updateEvent(updateObject);
-
   }
 
   closeTimeStart() {
@@ -93,7 +98,10 @@ class DateTimeForm extends React.Component {
       getFieldDecorator,
       currentTownHall,
     } = this.props;
-    const { repeatingEvent } = this.state;
+    const { 
+      repeatingEvent,
+      pastDateWarning,
+    } = this.state;
     return repeatingEvent ? (
       <FormItem
         className="repeating"
@@ -126,6 +134,15 @@ class DateTimeForm extends React.Component {
                 format='L'
               />,
             )}
+            {
+              pastDateWarning && (
+                <Alert
+                  description="The selected date has already passed"
+                  type="warning"
+                  closable
+                ></Alert>
+              )
+            }
         </FormItem>
       );
   }
