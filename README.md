@@ -162,8 +162,8 @@ This step makes your testing database behave the same as the production database
 
 - Navigate to the firebase console (https://console.firebase.google.com)
 - `Left side nav` --> `develop` --> `database` --> `realtime database` --> `rules`
-- In your local files, the rules to use are saved here: `lib/dbconfig.txt`
-- Open `lib/dbconfig.txt` and copy the contents in to the Firebase rules window, replacing everything that is there already
+- In your local files, the rules to use are saved here: `lib/dbrules.txt`
+- Open `lib/dbrules.txt` and copy the contents in to the Firebase rules window, replacing everything that is there already
 - Don't forget to Scroll back to the top of the page and press `publish`
 - You're done
 ---
