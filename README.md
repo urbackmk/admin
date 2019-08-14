@@ -145,7 +145,8 @@ This indicates that you are not a user who has permissions on Firebase. Make you
 
 - Now, you need to approve yourself as an admin
   - Go to the `firebase console` --> `develop` --> `Database` --> `realtime database`
-    - Note: you should see a `pending_access_request`, and a `users` group with yourself as a user. If not, something is wrong.
+  - Expand the database until you see 'users' and then find your user id
+  - ![Firebase Users](public/assets/img/firebaseScreenshotUsers.png)
   - Hover over the long random ID number for your user entry
   - Click on the `+` icon
   - In the `Name` field enter (exactly): `isAdmin`
