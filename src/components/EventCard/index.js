@@ -13,6 +13,7 @@ import MeetingTypeSelect from './MeetingTypeSelect.js';
 import IconFlagSelect from './IconFlagSelect.js';
 import EditableText from '../EditableInput';
 import EditAddressOrDateButton from '../EditAddressOrDateButton/index.js';
+
 import './style.scss';
 const {
   Meta,
@@ -126,6 +127,7 @@ export default class EventCard extends React.Component {
           clearTempAddress,
           setTimeZone,
           pathForEvents,
+
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
@@ -178,8 +180,9 @@ export default class EventCard extends React.Component {
                 <p>{townHall.repeatingEvent ? `${townHall.repeatingEvent}` : `${townHall.dateString} at ${townHall.Time} ${townHall.timeZone}`}</p>
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
+                {townHall.disclaimer && <p>{townHall.disclaimer}</p>}
                 <EditableText 
-                    content={townHall.link}
+                    content={<a href={townHall.link} target="_blank">{townHall.link}</a>}
                     updateEvent={updateEvent}
                     fieldKey='link'
                     label="link"
