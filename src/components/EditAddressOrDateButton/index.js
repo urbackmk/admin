@@ -15,6 +15,7 @@ class EditAddressOrDateButton extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.checkData = this.checkData.bind(this);
+    this.passFormData = this.passFormData.bind(this);
     this.state = {
       loading: false,
       visible: false,
@@ -33,6 +34,7 @@ class EditAddressOrDateButton extends React.Component {
       formValues: {...this.state.formValues, ...data},
     });
     console.log(this.state.formValues);
+    console.log(this.props.townHall);
   }
 
   changeAddress(data) {
@@ -65,7 +67,10 @@ class EditAddressOrDateButton extends React.Component {
 
   checkData() {
     const {
-      tempAddress
+      tempAddress,
+      setTimeZone,
+      townHall,
+      pathForEvents,
     } = this.props;
     if (tempAddress.address) {
       console.log('still have address')
@@ -75,7 +80,14 @@ class EditAddressOrDateButton extends React.Component {
       loading: false,
       visible: false,
     });
-    console.log(this.state.formValues);
+    setTimeZone({
+      date: townHall.dateString,
+      time: townHall.Time,
+      lat: townHall.lat,
+      lng: townHall.lng,
+      eventId: townHall.eventId,
+      pathForEvents: pathForEvents,
+    })
   }
 
   render() {

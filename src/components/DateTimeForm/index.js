@@ -93,7 +93,6 @@ class DateTimeForm extends React.Component {
       getFieldDecorator,
       currentTownHall,
     } = this.props;
-    console.log(moment(currentTownHall.dateString));
     const { repeatingEvent } = this.state;
     return repeatingEvent ? (
       <FormItem

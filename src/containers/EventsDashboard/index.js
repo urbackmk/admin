@@ -78,6 +78,7 @@ class EventsDashBoard extends React.Component {
             setTempAddress,
             tempAddress,
             clearTempAddress,
+            setTimeZone,
         } = this.props;
         return (
             <React.Fragment>
@@ -110,6 +111,7 @@ class EventsDashBoard extends React.Component {
                     currentUserEmail={currentUserEmail}
                     tempAddress={tempAddress}
                     clearTempAddress={clearTempAddress}
+                    setTimeZone={setTimeZone}
                 />}
             </React.Fragment>
         )
@@ -141,6 +143,7 @@ const mapDispatchToProps = dispatch => ({
     setTempAddress: (address) => dispatch(selectionStateBranch.actions.setTempAddress(address)),
     updateEvent: (newData, path, eventId) => dispatch(eventsStateBranch.actions.updateExistingEvent(newData, path, eventId)),
     requestEventsCounts: (path) => dispatch(eventsStateBranch.actions.requestEventsCounts(path)),
+    setTimeZone: (payload) => dispatch(selectionStateBranch.actions.getTimeZone(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsDashBoard);

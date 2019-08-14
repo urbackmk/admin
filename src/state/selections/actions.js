@@ -10,6 +10,7 @@ import {
   SET_TEMP_ADDRESS,
   CLEAR_ADDRESS,
   GEOCODE_TEMP_ADDRESS,
+  CHANGE_TIME_ZONE,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -58,4 +59,9 @@ export const setTempAddress = payload => ({
 
 export const clearTempAddress = () => ({
   type: CLEAR_ADDRESS,
+});
+
+export const getTimeZone = (payload) => ({
+  type: CHANGE_TIME_ZONE,
+  payload,
 });

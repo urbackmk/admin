@@ -28,6 +28,7 @@ class EventList extends React.Component {
             setTempAddress,
             tempAddress,
             clearTempAddress,
+            setTimeZone,
         } = this.props;
         const sameUser = townHall.userEmail === currentUserEmail || townHall.enteredBy === currentUserId;
         return (
@@ -39,6 +40,8 @@ class EventList extends React.Component {
                     setTempAddress={setTempAddress}
                     tempAddress={tempAddress}
                     clearTempAddress={clearTempAddress}
+                    setTimeZone={setTimeZone}
+                    pathForEvents={pathForEvents}
                     approveEvent={() => {
                         return approveEvent(townHall, pathForEvents, pathForPublishing)
                     }}

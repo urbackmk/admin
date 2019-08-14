@@ -124,6 +124,8 @@ export default class EventCard extends React.Component {
           setTempAddress,
           tempAddress,
           clearTempAddress,
+          setTimeZone,
+          pathForEvents,
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
@@ -162,7 +164,8 @@ export default class EventCard extends React.Component {
                             setTempAddress={setTempAddress}
                             tempAddress={tempAddress}
                             clearTempAddress={clearTempAddress}
-
+                            setTimeZone={setTimeZone}
+                            pathForEvents={pathForEvents}
                     />)}
                 actions={pending ? this.renderPendingActions() : this.renderLiveActions()}
                 title={`${townHall.displayName || townHall.Member} (${townHall.party}) ${townHall.state} ${townHall.district || ''}`}
