@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert,
   Input,
   Form,
   Switch,
   Button,
 } from 'antd';
-import { includes } from 'lodash';
+import { includes, debounce } from 'lodash';
 
 
 const { Search } = Input;
@@ -23,7 +22,7 @@ class LocationForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = initialState;
-    this.handleChange = this.handleChange.bind(this);
+    this.handleAddressChange = this.handleAddressChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
     this.clearAddressTimeout = this.clearAddressTimeout.bind(this);
@@ -80,7 +79,6 @@ class LocationForm extends React.Component {
     resetFields(['address']);
   }
 
-
   handleSearch() {
     const {
       geoCodeLocation,
@@ -99,7 +97,7 @@ class LocationForm extends React.Component {
     });
   }
 
-  handleChange({ target }) {
+  handleAddressChange({ target }) {
     if (!target) {
       this.setState(initialState);
     }
@@ -107,6 +105,15 @@ class LocationForm extends React.Component {
       value: target.value,
     });
   }
+
+  handleLocationChange({ target }) {
+    this.debounceLocationChange(target.value);
+  }
+
+  debounceLocationChange = debounce((value) => {
+    const { updateEvent } = this.props;
+    updateEvent({ Location: value });
+  }, 2000);
 
   receiveTempAddress() {
     this.setState({
@@ -159,6 +166,7 @@ class LocationForm extends React.Component {
               className="input-underline"
               id="Location"
               placeholder="Name of location (eg. Gary Recreation Center)"
+              onChange={(el) => this.handleLocationChange(el)}
             />,
           )}
         </FormItem>
@@ -189,7 +197,7 @@ class LocationForm extends React.Component {
                   onSearch={this.handleSearch}
                   placeholder="address"
                   style={style}
-                  onChange={this.handleChange}
+                  onChange={this.handleAddressChange}
                   onBlur={this.handleSearch}
                 />,
               )}
