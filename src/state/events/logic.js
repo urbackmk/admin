@@ -84,38 +84,51 @@ const fetchOldEventsLogic = createLogic({
   process({
       getState,
       action,
-      firebasedb
+      firestore
     }, dispatch, done) {
     const {
       payload
     } = action;
     console.log('startAt', payload.dates[0], 'endtAt', payload.dates[1], `${payload.path}/${payload.date}`)
-    const ref = firebasedb.ref(`${payload.path}/${payload.date}`);
+    let fsRef = firestore.collection('archived_town_halls');
+
     dispatch(setLoading(true))
     const allEvents = [];
     const allUids = [];
-    ref.orderByChild('dateObj').startAt(payload.dates[0]).endAt(payload.dates[1]).on('child_added', (snapshot) => {
-      const event = snapshot.val();
-      const researcher = event.enteredBy;
-      if (researcher && !includes(researcher, '@')) {
-        if (!includes(allUids, researcher)) {
-          dispatch(requestResearcherById(researcher))
+
+    let fsQueryRef = fsRef
+      .where('dateObj', '>=', payload.dates[0])
+      .where('dateObj', '<=', payload.dates[1])
+      .orderBy('dateObj')
+      
+    fsQueryRef.get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log('No matching events.');
+          return;
         }
-        allUids.push(researcher);
-      }
-      allEvents.push(event);
-    })
-    ref.once('value')
-      .then(() => {
-        dispatch(addOldEventToState(allEvents));
+
+        snapshot.forEach(event => {
+          const eventData = event.data();
+          const researcher = eventData.enteredBy;
+          if (researcher && !includes(researcher, '@')) {
+            if (!includes(allUids, researcher)) {
+              dispatch(requestResearcherById(researcher))
+            }
+            allUids.push(researcher);
+          }
+          allEvents.push(eventData);
+        });
       })
       .then(() => {
-        if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-MM'), 'month')) {
-          dispatch(setLoading(false))
-        }
-        done()
+          dispatch(addOldEventToState(allEvents));
+          dispatch(setLoading(false));
+          done();
       })
-  }
+      .catch(err => {
+        console.log('Error fetching events.');
+      });
+    }
 });
 
 const approveEventLogic = createLogic({
