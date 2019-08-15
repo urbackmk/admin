@@ -28,7 +28,7 @@ import {
   PENDING_EVENTS_TAB,
 } from '../../constants'
 import {
-  addOldEventToState,
+  addAllOldEventsToState,
   setLoading,
   storeEventsInState,
   clearEventsCounts,
@@ -121,7 +121,7 @@ const fetchOldEventsLogic = createLogic({
         });
       })
       .then(() => {
-          dispatch(addOldEventToState(allEvents));
+          dispatch(addAllOldEventsToState(allEvents));
           dispatch(setLoading(false));
           done();
       })

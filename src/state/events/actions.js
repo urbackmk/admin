@@ -56,7 +56,7 @@ export const requestOldEvents = (path, date, dates) => ({
     }
 })
   
-export const addOldEventToState = events => ({
+export const addAllOldEventsToState = events => ({
   type: REQUEST_OLD_EVENTS_SUCCESS,
   payload: events
 });
