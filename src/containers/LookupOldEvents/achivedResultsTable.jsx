@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
     Table,
+    Form,
 } from 'antd';
+
+import EditableCell from './editableCell';
 
 import activism from '../../assets/img/icon-flags/activism.svg';
 import campaign from '../../assets/img/icon-flags/campaign.svg';
@@ -12,6 +15,16 @@ import mfol from '../../assets/img/icon-flags/mfol.svg';
 import nextGen from '../../assets/img/icon-flags/next-gen.svg';
 import phoneIn from '../../assets/img/icon-flags/phone-in.svg';
 import staff from '../../assets/img/icon-flags/staff.svg';
+
+const EditableContext = React.createContext();
+
+const EditableRow = ({ form, index, ...props }) => (
+  <EditableContext.Provider value={form}>
+    <tr {...props} />
+  </EditableContext.Provider>
+);
+
+const EditableFormRow = Form.create()(EditableRow);
 
 const iconFlagMap = {
     activism: activism,
@@ -24,8 +37,9 @@ const iconFlagMap = {
     staff: staff,
 };
 
-const ResultsTable = ({ allOldEvents }) => {
-    const columns = [
+class ResultsTable extends React.Component {
+
+    columns = [
         {
             title: 'Name',
             dataIndex: 'displayName',
@@ -35,6 +49,7 @@ const ResultsTable = ({ allOldEvents }) => {
             title: 'Meeting Type',
             dataIndex: 'meetingType',
             key: 'meetingType',
+            editable: true,
         },
         {
             title: 'Icon',
@@ -72,6 +87,7 @@ const ResultsTable = ({ allOldEvents }) => {
             title: 'ADA',
             dataIndex: 'ada_accessible',
             key: 'ada_accessible',
+            editable: true,
         },
         {
             title: 'Verified?',
@@ -79,12 +95,49 @@ const ResultsTable = ({ allOldEvents }) => {
             // display as a checkbox in the future?
             dataIndex: 'verified',
             key: 'verified',
+            editable: true,
         },
     ];
 
-    return (
-        <Table dataSource={allOldEvents} columns={columns}/>
-    );
+
+    handleSave() {}
+
+    render() {
+
+        const components = {
+            body: {
+            row: EditableFormRow,
+            cell: EditableCell,
+            },
+        };
+
+
+        const columns = this.columns.map(col => {
+            if (!col.editable) {
+                return col;
+            }
+            return {
+                ...col,
+                onCell: record => ({
+                record,
+                editable: col.editable,
+                dataIndex: col.dataIndex,
+                title: col.title,
+                handleSave: this.handleSave,
+                }),
+            };
+        });
+
+        return (
+            <Table
+                components={components}
+                rowClassName={() => 'editable-row'}
+                bordered
+                dataSource={this.props.allOldEvents}
+                columns={columns}
+            />
+        );
+    };
 };
     
 function mapStateToProps(state) {
