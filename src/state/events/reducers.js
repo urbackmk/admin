@@ -1,6 +1,5 @@
 import {
   DELETE_EVENT_SUCCESS,
-  DELETE_EVENT_FAIL,
   REQUEST_EVENTS_SUCCESS,
   REQUEST_EVENTS_FAILED,
   ARCHIVE_EVENT_SUCCESS,
@@ -17,6 +16,7 @@ import {
   DECREMENT_EVENTS,
   DECREMENT_TOTAL_EVENTS,
   REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS,
+  GENERAL_FAIL,
 } from "./constants";
 import { filter, map } from "lodash";
 
@@ -29,35 +29,36 @@ const initialState = {
   loading: false,
 };
 
-const eventReducer = (state = initialState, action) => {
-  switch (action.type) {
+
+const eventReducer = (state = initialState, { type, payload }) => {
+  switch (type) {
     case REQUEST_EVENTS_SUCCESS:
       return {
         ...state,
-        allEvents: action.payload,
+        allEvents: payload,
         error: null
       };
     case REQUEST_OLD_EVENTS_SUCCESS:
       return {
         ...state,
-        allOldEvents: [...state.allOldEvents, ...action.payload],
+        allOldEvents: [...state.allOldEvents, ...payload],
         error: null
       };
     case GET_USER_EMAIL_FOR_EVENT_SUCCESS:
       return {
         ...state,
-        allEvents: state.allEvents.map((event) => event.eventId === action.payload.eventId ? {
+        allEvents: state.allEvents.map((event) => event.eventId === payload.eventId ? {
           ...event,
-          userEmail: action.payload.email
+          userEmail: payload.email
         } : event)
     };
     case GET_USER_EMAIL_FOR_OLD_EVENT_SUCCESS:
-      console.log(action.payload)
+      console.log(payload)
       return {
         ...state,
-        allOldEvents: state.allOldEvents.map((event) => event.eventId === action.payload.eventId ? {
+        allOldEvents: state.allOldEvents.map((event) => event.eventId === payload.eventId ? {
           ...event,
-          userEmail: action.payload.email
+          userEmail: payload.email
         } : event)
       };
     case RESET_OLD_EVENTS:
@@ -67,41 +68,37 @@ const eventReducer = (state = initialState, action) => {
         error: null,
       }
     case REQUEST_EVENTS_FAILED:
-      console.log(`GET_EVENTS_FAILED: ${action.payload}`);
+      console.log(`GET_EVENTS_FAILED: ${payload}`);
       return {
         ...state,
-        error: action.payload
+        error: payload
       };
     case DELETE_EVENT_SUCCESS:
       return {
         ...state,
-        allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
+        allEvents: filter(state.allEvents, (ele) => ele.eventId !== payload)
       }
     case ARCHIVE_EVENT_SUCCESS:
       return {
         ...state,
-        allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
+        allEvents: filter(state.allEvents, (ele) => ele.eventId !== payload)
       }
     case APPROVE_EVENT_SUCCESS:
       return {
         ...state,
-        allEvents: filter(state.allEvents, (ele) => ele.eventId !== action.payload)
-      }
-    case DELETE_EVENT_FAIL: 
-      return {
-        ...state,
+        allEvents: filter(state.allEvents, (ele) => ele.eventId !== payload)
       }
     case SET_LOADING:
       return {
         ...state,
-        loading: action.payload,
+        loading: payload,
       }
     case UPDATE_EVENT_SUCCESS:
       return {
         ...state,
         allEvents: map(state.allEvents, (ele) => {
-          if(ele.eventId === action.payload.eventId) {
-            return {...ele, ...action.payload}
+          if(ele.eventId === payload.eventId) {
+            return {...ele, ...payload}
           }
           return ele
         })
@@ -109,12 +106,12 @@ const eventReducer = (state = initialState, action) => {
     case REQUEST_EVENTS_COUNTS_SUCCESS:
       return {
         ...state,
-        eventsCounts: action.payload,
+        eventsCounts: payload,
       }
     case REQUEST_TOTAL_EVENTS_COUNTS_SUCCESS:
       return {
         ...state,
-        totalEventsCounts: action.payload
+        totalEventsCounts: payload
       }
     case CLEAR_EVENTS_COUNTS:
       return {
@@ -127,7 +124,7 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         eventsCounts: {
           ...state.eventsCounts,
-          [action.payload]: state.eventsCounts[action.payload] -= 1,
+          [payload]: state.eventsCounts[payload] -= 1,
         }
       }
     case DECREMENT_TOTAL_EVENTS:
@@ -135,14 +132,20 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         totalEventsCounts: {
           ...state.totalEventsCounts,
-          [action.payload]: state.totalEventsCounts[action.payload] -= 1,
+          [payload]: state.totalEventsCounts[payload] -= 1,
         }
       }
     case REQUEST_EVENTS_COUNTS_FAIL:
-      console.log(action);
+      console.log(payload);
       return {
         ...state,
-        error: action.payload
+        error: payload
+      };
+    case GENERAL_FAIL:
+      console.log(payload);
+      return {
+        ...state,
+        error: payload
       };
     default:
       return state;

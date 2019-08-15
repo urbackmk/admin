@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore, combineReducers } from 'redux';
 import { createLogicMiddleware } from 'redux-logic';
-import axios from "axios";
+import request from 'superagent';
 
 import events from './events';
 import mocs from './mocs';
@@ -43,7 +43,7 @@ const reduxLogicDependencies = {
   firebaseUrl: firebaseUrl,
   firebasedb,
   firestore,
-  httpClient: axios,
+  httpClient: request,
 };
 
 const logicMiddleware = createLogicMiddleware(logics, reduxLogicDependencies);
