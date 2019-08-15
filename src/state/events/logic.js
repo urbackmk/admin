@@ -105,7 +105,6 @@ const fetchOldEventsLogic = createLogic({
       .then(snapshot => {
         if (snapshot.empty) {
           console.log('No matching events.');
-          dispatch(setLoading(false));
           return;
         }
 
