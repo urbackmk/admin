@@ -75,6 +75,10 @@ class EventsDashBoard extends React.Component {
             radioButtonValue,
             currentUserId,
             currentUserEmail,
+            setTempAddress,
+            tempAddress,
+            clearTempAddress,
+            setTimeZone,
         } = this.props;
         return (
             <React.Fragment>
@@ -102,8 +106,12 @@ class EventsDashBoard extends React.Component {
                     pathForPublishing={pathForPublishing}
                     userSubmissionPath={userSubmissionPath}
                     updateEvent={updateEvent}
+                    setTempAddress={setTempAddress}
                     currentUserId={currentUserId}
                     currentUserEmail={currentUserEmail}
+                    tempAddress={tempAddress}
+                    clearTempAddress={clearTempAddress}
+                    setTimeZone={setTimeZone}
                 />}
             </React.Fragment>
         )
@@ -122,16 +130,20 @@ const mapStateToProps = state => ({
     pathForPublishing: selectionStateBranch.selectors.getLiveEventUrl(state),
     userSubmissionPath: selectionStateBranch.selectors.getSubmissionUrl(state),
     eventsCounts: eventsStateBranch.selectors.getEventsCounts(state),
+    tempAddress: selectionStateBranch.selectors.getTempAddress(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     archiveEvent: (townHall, path, archivePath) => dispatch(eventsStateBranch.actions.archiveEvent(townHall, path, archivePath)),
     approveEvent: (townHall, path, livePath) => dispatch(eventsStateBranch.actions.approveEvent(townHall, path, livePath)),
+    clearTempAddress: () => dispatch(selectionStateBranch.actions.clearTempAddress()),
     deleteEvent: (townHall, path) => dispatch(eventsStateBranch.actions.deleteEvent(townHall, path)),
     changeRadioButton: (value) => dispatch(selectionStateBranch.actions.changeFederalStateRadio(value)),
     requestEvents: (path) => dispatch(eventsStateBranch.actions.requestEvents(path)),
+    setTempAddress: (address) => dispatch(selectionStateBranch.actions.setTempAddress(address)),
     updateEvent: (newData, path, eventId) => dispatch(eventsStateBranch.actions.updateExistingEvent(newData, path, eventId)),
     requestEventsCounts: (path) => dispatch(eventsStateBranch.actions.requestEventsCounts(path)),
+    setTimeZone: (payload) => dispatch(selectionStateBranch.actions.getTimeZone(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventsDashBoard);
