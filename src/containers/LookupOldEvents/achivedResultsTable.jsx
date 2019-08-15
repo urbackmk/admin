@@ -22,13 +22,37 @@ const ResultsTable = ({ allOldEvents }) => {
             key: 'iconFlag',
         },
         {
+            title: 'State',
+            render: (text, record) => {
+                // record.state is required
+                if (record.district) {
+                    return `${record.state}-${record.district === 'At-Large' ? '00' : record.district}`;
+                }
+                return record.state;
+            },
+            key: 'state',
+        },
+        {
             title: 'Address',
             dataIndex: 'address',
             key: 'address',
         },
         {
             title: 'Date',
-            dataIndex: 'dateString',
+            render: (text, record) => `${record.dateString} ${record.Time}`,
+            key: 'dateString',
+        },
+        {
+            title: 'ADA',
+            dataIndex: 'ada_accessible',
+            key: 'ada_accessible',
+        },
+        {
+            title: 'Verified?',
+            // this data doesn't exist yet
+            // display as a checkbox in the future?
+            dataIndex: 'verified',
+            key: 'verified',
         },
     ];
 
