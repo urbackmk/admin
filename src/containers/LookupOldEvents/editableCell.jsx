@@ -24,7 +24,7 @@ export default class EditableCell extends React.Component {
         return;
       }
       this.toggleEdit();
-      handleSave({ ...record, ...values });
+      handleSave(record.eventId, values);
     });
   };
 

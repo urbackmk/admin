@@ -102,7 +102,8 @@ class ResultsTable extends React.Component {
     ];
 
 
-    handleSave = row => {
+    handleSave = (eventId, editedData) => {
+        this.props.updateOldEvent(editedData, eventId);
     };
 
     render() {
