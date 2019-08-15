@@ -16,6 +16,20 @@ const ResultsTable = ({ allOldEvents }) => {
             dataIndex: 'meetingType',
             key: 'meetingType',
         },
+        {
+            title: 'Icon',
+            dataIndex: 'iconFlag',
+            key: 'iconFlag',
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Date',
+            dataIndex: 'dateString',
+        },
     ];
 
     return (
