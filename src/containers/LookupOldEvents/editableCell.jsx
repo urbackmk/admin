@@ -1,7 +1,6 @@
 import React from 'react';
 import { Input, Form } from 'antd';
-
-const EditableContext = React.createContext();
+import { EditableContext } from './achivedResultsTable';
 
 
 export default class EditableCell extends React.Component {
@@ -70,7 +69,7 @@ export default class EditableCell extends React.Component {
     return (
       <td {...restProps}>
         {editable ? (
-          <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>
+          <EditableContext.Consumer>{(form) => this.renderCell(form)}</EditableContext.Consumer>
         ) : (
           children
         )}

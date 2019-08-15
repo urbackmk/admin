@@ -6,6 +6,7 @@ import {
 } from 'antd';
 
 import EditableCell from './editableCell';
+import eventsStateBranch from '../../state/events';
 
 import activism from '../../assets/img/icon-flags/activism.svg';
 import campaign from '../../assets/img/icon-flags/campaign.svg';
@@ -16,15 +17,16 @@ import nextGen from '../../assets/img/icon-flags/next-gen.svg';
 import phoneIn from '../../assets/img/icon-flags/phone-in.svg';
 import staff from '../../assets/img/icon-flags/staff.svg';
 
-const EditableContext = React.createContext();
+export const EditableContext = React.createContext();
 
-const EditableRow = ({ form, index, ...props }) => (
-  <EditableContext.Provider value={form}>
-    <tr {...props} />
-  </EditableContext.Provider>
-);
-
-const EditableFormRow = Form.create()(EditableRow);
+const EditableRow = ({ form, index, ...props }) => {
+    return (
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    );
+  }
+  const EditableFormRow = Form.create()(EditableRow);
 
 const iconFlagMap = {
     activism: activism,
@@ -100,7 +102,8 @@ class ResultsTable extends React.Component {
     ];
 
 
-    handleSave() {}
+    handleSave = row => {
+    };
 
     render() {
 
@@ -146,4 +149,9 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(ResultsTable);
+const mapDispatchToProps = dispatch => ({
+    updateOldEvent: (updateData, eventId) => dispatch(eventsStateBranch.actions.updateOldEvent(updateData, eventId)),
+});
+  
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResultsTable);
