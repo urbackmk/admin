@@ -17,6 +17,8 @@ import {
   getAllOldEventsWithUserEmails,
 } from '../events/selectors';
 import { get116thCongress } from '../mocs/selectors';
+import { statesAb } from '../../assets/data/states'
+
 
 export const getPendingOrLiveTab = state => state.selections.selectedEventTab;
 export const getActiveFederalOrState = state => state.selections.federalOrState;
@@ -103,17 +105,17 @@ export const getEventsAsDownloadObjects= createSelector([getFilteredArchivedEven
    return map(allEvents, eventData => {
 
         const convertedTownHall = {};
-        convertedTownHall.Entered_By = eventData.userEmail;
+        convertedTownHall.Entered_By = eventData.enteredBy || eventData.userEmail;
         convertedTownHall.Member = eventData.displayName || eventData.Member;
         convertedTownHall.Event_Name = eventData.eventName ? eventData.eventName : ' ';
-        convertedTownHall.Location = eventData.Location ? eventData.Location : ' ';
+        convertedTownHall.Location = eventData.Location ? eventData.Location : eventData.location ? eventData.location : ' ';
         convertedTownHall.Meeting_Type = eventData.meetingType;
         let district = eventData.district ? '-' + eventData.district : ' ';
         convertedTownHall.District = eventData.state + district;
         convertedTownHall.govtrack_id = eventData.govtrack_id || ' ';
         convertedTownHall.Party = eventData.party;
         convertedTownHall.State = eventData.state;
-        convertedTownHall.State_name = eventData.stateName ? eventData.stateName : eventData.State;
+        convertedTownHall.State_name = eventData.stateName ? eventData.stateName : statesAb[eventData.state] ? statesAb[eventData.state] : eventData.state;
         if (eventData.repeatingEvent) {
           convertedTownHall.Repeating_Event = eventData.repeatingEvent;
           convertedTownHall.Date = ' ';
@@ -122,18 +124,28 @@ export const getEventsAsDownloadObjects= createSelector([getFilteredArchivedEven
           convertedTownHall.Date = eventData.dateString;
         } else {
           convertedTownHall.Repeating_Event = ' ';
-          convertedTownHall.Date = moment(eventData.dateObj).format('ddd, MMM D YYYY');
+          convertedTownHall.Date = eventData.dateObj ? 
+            moment(eventData.dateObj).format('ddd, MMM D YYYY') :
+            moment(eventData.timestamp).format('ddd, MMM D YYYY');
         }
-        convertedTownHall.Time_Start = eventData.Time;
+        convertedTownHall.Time_Start = eventData.Time ? eventData.Time : moment(eventData.timestamp).format('H A');
         convertedTownHall.Time_End = eventData.timeEnd || ' ';
         convertedTownHall.Time_Zone = eventData.timeZone || ' ';
         convertedTownHall.Zone_ID = eventData.zoneString || ' ';
         convertedTownHall.Address = eventData.address;
-        convertedTownHall.Notes = eventData.Notes ? eventData.Notes.replace(/"/g, '\'') : ' ';
+        convertedTownHall.Notes = (() => {
+          if (eventData.Notes) {
+            return eventData.Notes.replace(/"/g, '\'');
+          }
+          if (eventData.notes) {
+            return eventData.notes.replace(/"/g, '\'');
+          }
+          return ' ';
+        })();
         convertedTownHall.Map_Icon = eventData.iconFlag;
         convertedTownHall.Link = eventData.link || 'https://townhallproject.com/?eventId=' + eventData.eventId;
         convertedTownHall.Link_Name = eventData.linkName || ' ';
-        convertedTownHall.dateNumber = eventData.yearMonthDay;
+        convertedTownHall.dateNumber = eventData.yearMonthDay || moment(eventData.timestamp).format('YYYY-MM-DD');
         return convertedTownHall;
     })
 })
