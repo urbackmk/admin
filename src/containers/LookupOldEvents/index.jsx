@@ -23,6 +23,7 @@ import { statesAb } from '../../assets/data/states';
 import "./style.scss";
 
 import OldEventsResults from './results';
+import ResultsTable from './achivedResultsTable';
 
 const {
   RangePicker,
@@ -157,14 +158,17 @@ class LookupOldEvents extends React.Component {
         
             </Row>
             {filteredOldEvents.length > 0 &&
-                <OldEventsResults
-                    archiveUrl={archiveUrl}
-                    dataForChart={dataForChart}
-                    oldEventsForDownload={oldEventsForDownload}
-                    getMocReport={getMocReport}
-                    missingMemberReport116={missingMemberReport116}
-                    missingMemberCongressData={missingMemberCongressData}
-                />
+                <div>
+                    <ResultsTable />
+                    <OldEventsResults
+                        archiveUrl={archiveUrl}
+                        dataForChart={dataForChart}
+                        oldEventsForDownload={oldEventsForDownload}
+                        getMocReport={getMocReport}
+                        missingMemberReport116={missingMemberReport116}
+                        missingMemberCongressData={missingMemberCongressData}
+                    />
+                </div>
             }
         </React.Fragment>)
     }
