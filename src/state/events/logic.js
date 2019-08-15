@@ -122,12 +122,8 @@ const fetchOldEventsLogic = createLogic({
       })
       .then(() => {
           dispatch(addOldEventToState(allEvents));
-      })
-      .then(() => {
-        if (moment(payload.dates[1]).isSame(moment(payload.date, 'YYYY-MM'), 'month')) {
           dispatch(setLoading(false));
-        }
-        done();
+          done();
       })
       .catch(err => {
         console.log('Error fetching events.');
