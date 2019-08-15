@@ -15,6 +15,7 @@ import {
   RESET_OLD_EVENTS,
   SET_LOADING,
   UPDATE_EXISTING_EVENT,
+  UPDATE_OLD_EVENT,
   GET_USER_EMAIL_FOR_EVENT,
   REQUEST_EVENTS_SUCCESS,
   REQUEST_EVENTS_COUNTS,
@@ -128,6 +129,14 @@ export const updateExistingEvent = (updateData, path, eventId) => ({
   payload: {
     updateData,
     path,
+    eventId,
+  }
+});
+
+export const updateOldEvent = (updateData, eventId) => ({
+  type: UPDATE_OLD_EVENT,
+  payload: {
+    updateData,
     eventId,
   }
 });

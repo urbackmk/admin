@@ -4,6 +4,7 @@ import {
 } from 'lodash';
 import moment from 'moment';
 import { 
+  ARCHIVE_COLLECTION,
   DELETE_EVENT,
   DELETE_EVENT_FAIL,
   REQUEST_EVENTS, 
@@ -18,6 +19,7 @@ import {
   UPDATE_EXISTING_EVENT,
   UPDATE_EVENT_SUCCESS,
   UPDATE_EVENT_FAIL,
+  UPDATE_OLD_EVENT,
 } from "./constants";
 import { 
   EVENTS_PATHS,
@@ -88,7 +90,7 @@ const fetchOldEventsLogic = createLogic({
       payload
     } = action;
     console.log('startAt', payload.dates[0], 'endtAt', payload.dates[1], `${payload.path}/${payload.date}`)
-    let fsRef = firestore.collection('archived_town_halls');
+    let fsRef = firestore.collection(ARCHIVE_COLLECTION);
 
     dispatch(setLoading(true))
     const allEvents = [];
@@ -124,7 +126,7 @@ const fetchOldEventsLogic = createLogic({
           done();
       })
       .catch(err => {
-        console.log('Error fetching events.');
+        console.log(`Error fetching events: ${err}`);
       });
     }
 });
@@ -281,6 +283,35 @@ const updateEventLogic = createLogic({
   }
 })
 
+const updateOldEventLogic = createLogic({
+  type: UPDATE_OLD_EVENT,
+  processOptions: {
+    successType: UPDATE_EVENT_SUCCESS,
+    failType: UPDATE_EVENT_FAIL,
+  },
+  process(deps) {
+    const {
+      action,
+      firestore,
+    } = deps;
+    const {
+      updateData,
+      eventId
+    } = action.payload;
+    if (!eventId) {
+      return
+    }
+
+    let eventRef = firestore.collection(ARCHIVE_COLLECTION).doc(eventId);
+    eventRef.update(updateData).then(() => {
+      return {...updateData, eventId}
+    })
+    .catch(err => {
+      console.log(`Error updating old event: ${err}`);
+    });
+  }
+})
+
 const requestEventsCounts = createLogic({
   type: REQUEST_EVENTS_COUNTS,
   processOptions: {
@@ -351,6 +382,7 @@ export default [
   fetchEvents,
   deleteEvent,
   updateEventLogic,
+  updateOldEventLogic,
   requestEventsCounts,
   requestTotalEventsCounts,
 ];
