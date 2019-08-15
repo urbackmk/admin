@@ -12,6 +12,8 @@ import {
 import MeetingTypeSelect from './MeetingTypeSelect.js';
 import IconFlagSelect from './IconFlagSelect.js';
 import EditableText from '../EditableInput';
+import EditAddressOrDateButton from '../EditAddressOrDateButton/index.js';
+
 import './style.scss';
 const {
   Meta,
@@ -120,6 +122,12 @@ export default class EventCard extends React.Component {
           townHall,
           pending,
           updateEvent,
+          setTempAddress,
+          tempAddress,
+          clearTempAddress,
+          setTimeZone,
+          pathForEvents,
+
         } = this.props;
         const displayMeetingType = (<React.Fragment><span>{townHall.meetingType}</span><Icon type="edit" onClick={this.setEditMeetingTypeTrue} /></React.Fragment>)
         const displayIconFlag = (<React.Fragment><span>{townHall.iconFlag}</span><Icon type="edit" onClick={this.setEditIconFlagTrue} /></React.Fragment>)
@@ -148,7 +156,19 @@ export default class EventCard extends React.Component {
             <Card 
                 key={townHall.eventId}
                 className="event-card"
-                extra={(<Button icon="edit">Edit (coming soon)</Button>)}
+                extra={(<EditAddressOrDateButton 
+                            townHall={townHall}
+                            address={townHall.address}
+                            repeatingEvent={townHall.repeatingEvent}
+                            dateString={townHall.dateString}
+                            time={townHall.Time}
+                            updateEvent={updateEvent}
+                            setTempAddress={setTempAddress}
+                            tempAddress={tempAddress}
+                            clearTempAddress={clearTempAddress}
+                            setTimeZone={setTimeZone}
+                            pathForEvents={pathForEvents}
+                    />)}
                 actions={pending ? this.renderPendingActions() : this.renderLiveActions()}
                 title={`${townHall.displayName || townHall.Member} (${townHall.party}) ${townHall.state} ${townHall.district || ''}`}
             >
@@ -161,7 +181,6 @@ export default class EventCard extends React.Component {
                 <p>{townHall.Location || ''}</p>
                 <p>{townHall.address}</p>
                 {townHall.disclaimer && <p>{townHall.disclaimer}</p>}
-
                 <EditableText 
                     content={<a href={townHall.link} target="_blank">{townHall.link}</a>}
                     updateEvent={updateEvent}

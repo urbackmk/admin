@@ -5,7 +5,6 @@ import {
 import moment from 'moment';
 import { 
   DELETE_EVENT,
-  DELETE_EVENT_SUCCESS,
   DELETE_EVENT_FAIL,
   REQUEST_EVENTS, 
   REQUEST_EVENTS_FAILED,
@@ -25,7 +24,6 @@ import {
 } from '../constants';
 import {
   PENDING_EVENTS_TAB,
-  LIVE_EVENTS_TAB,
 } from '../../constants'
 import {
   addOldEventToState,
@@ -166,9 +164,6 @@ const approveEventLogic = createLogic({
 
 const archiveEventLogic = createLogic({
   type: ARCHIVE_EVENT,
-  processOptions: {
-    // successType: ARCHIVE_EVENT_SUCCESS,
-  },
   process(deps, dispatch, done) {
       const {
         action,
@@ -334,6 +329,7 @@ const requestTotalEventsCounts = createLogic({
     });
   }
 })
+
 
 export default [
   archiveEventLogic,
