@@ -29,10 +29,17 @@ const getResearcherByIdLogic = createLogic({
     } = action;
     const ref = firebasedb.ref(`users/${payload.uid}`);
     return ref.once('value').then((snapshot) => {
-      const user = {
-        email: snapshot.val().email,
-        uid: snapshot.key,
+      let user = {
+        email: '',
+        uid: '',
       };
+      if (snapshot.exists()) {
+        user = {
+          email: snapshot.val().email,
+          uid: snapshot.key,
+        };
+      }
+
       return { user };
     })
   },
