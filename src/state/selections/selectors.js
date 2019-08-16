@@ -109,7 +109,7 @@ export const getFilteredArchivedEvents = createSelector(
       });
     }
 
-    if (events !== []) {
+    if (events.length > 0) {
       filteredEvents = filter(filteredEvents, (event) => {
         return includes(events, event.meetingType);
       });
