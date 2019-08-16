@@ -129,7 +129,7 @@ class ResultsTable extends React.Component {
 
 
         const columns = this.columns.map(col => {
-            if (!col.editable) {
+            if (this.props.includeLiveEventsInLookup || !col.editable) {
                 return col;
             }
             return {
@@ -159,6 +159,7 @@ class ResultsTable extends React.Component {
 function mapStateToProps(state) {
     return {
         filteredOldEvents: selectionStateBranch.selectors.getFilteredEvents(state),
+        includeLiveEventsInLookup: selectionStateBranch.selectors.includeLiveEventsInLookup(state),
     };
 }
 
