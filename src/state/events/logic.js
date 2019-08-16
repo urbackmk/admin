@@ -98,9 +98,9 @@ const fetchOldEventsLogic = createLogic({
     const allUids = [];
 
     let fsQueryRef = fsRef
-      .where('dateObj', '>=', payload.dates[0])
-      .where('dateObj', '<=', payload.dates[1])
-      .orderBy('dateObj')
+      .where('timestamp', '>=', payload.dates[0])
+      .where('timestamp', '<=', payload.dates[1])
+      .orderBy('timestamp')
       
     fsQueryRef.get()
       .then(snapshot => {
