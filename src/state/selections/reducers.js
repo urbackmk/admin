@@ -10,6 +10,7 @@ import {
   GENERAL_FAIL,
   CLEAR_ADDRESS,
   SET_TEMP_ADDRESS,
+  CHANGE_CHAMBER_FILTER,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -32,11 +33,17 @@ const initialState = {
     address: null,
     state: null,
     stateName: null,
-  }
+  },
+  chamber: null,
 };
 
 const selectionReducer = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_CHAMBER_FILTER:
+      return {
+        ...state,
+        chamber: action.payload,
+      }
     case CHANGE_EVENTS_TAB:
       return {
         ...state,

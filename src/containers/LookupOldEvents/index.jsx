@@ -84,7 +84,7 @@ class LookupOldEvents extends React.Component {
     }
 
     handleChamberChange = (value) => {
-        this.props.changeChamberFilter(value === 'all' ? '' : value);
+        this.props.changeChamberFilter(value === 'all' ? null : value);
     }
 
     render() {
@@ -200,6 +200,7 @@ const mapStateToProps = state => ({
     emailCoverage: eventStateBranch.selectors.getEmailCoverage(state),
     missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
     missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
+    chamber: selectionStateBranch.selectors.getChamber(state),
 });
 
 const mapDispatchToProps = dispatch => ({
