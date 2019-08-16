@@ -119,7 +119,9 @@ class LookupOldEvents extends React.Component {
         } = this.props;
         return (    
             <React.Fragment>
-            <Row className="lookup-form">
+            <Row className="lookup-form" style={{
+                marginBottom: 50,
+            }}>
                 <Col span={12} offset={6}>
                     <Row type="flex">Search archived events by date range:</Row>
                     <Row
@@ -211,7 +213,7 @@ class LookupOldEvents extends React.Component {
                             />
                         </Col>
                     </Row>
-                    <Row
+                    {/* <Row
                         type="flex"
                     >   <Col>
                             <span>Download complete</span>
@@ -219,11 +221,16 @@ class LookupOldEvents extends React.Component {
                         <Col span={12}>
                             <Progress percent={emailCoverage} />
                         </Col>
-
-                    </Row>
+                    </Row> */}
                 </Col>
-        
             </Row>
+            <Row
+                style={{
+                    borderTopColor: 'lightgray',
+                    borderTopStyle: 'solid',
+                    BorderTopWidth: 2,
+                }}
+            >
             {filteredOldEvents.length > 0 &&
                 <div>
                     <ResultsTable />
@@ -237,6 +244,7 @@ class LookupOldEvents extends React.Component {
                     />
                 </div>
             }
+            </Row>
         </React.Fragment>)
     }
 }
