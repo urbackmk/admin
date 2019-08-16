@@ -68,6 +68,11 @@ class ResultsTable extends React.Component {
             key: 'iconFlag',
         },
         {
+            title: 'Level',
+            dataIndex: 'level',
+            key: 'level',
+        },
+        {
             title: 'State',
             render: (text, record) => {
                 // record.state is required
