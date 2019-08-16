@@ -28,7 +28,7 @@ export const getStatesToFilterArchiveBy = state => state.selections.filterByStat
 export const includeLiveEventsInLookup = state => state.selections.includeLiveEvents;
 export const getTempAddress = state => state.selections.tempAddress;
 export const getChamber = state => state.selections.chamber === null ? 'all' : state.selections.chamber;
-export const getEvent = state => state.selections.event === null ? 'all' : state.selections.event;
+export const getEventType = state => state.selections.event === null ? 'all' : state.selections.event;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
@@ -87,18 +87,35 @@ export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode
 export const getFilteredArchivedEvents = createSelector(
   [
     includeLiveEventsInLookup, 
-    getStatesToFilterArchiveBy, 
+    getStatesToFilterArchiveBy,
     getAllOldEventsWithUserEmails,
-    getAllEventsAsList
+    getAllEventsAsList,
+    getChamber,
+    getEventType,
   ], 
-  (includeLive, states, oldEvents, liveEvents) => {
-    const allEvents = includeLive ? [...oldEvents, ...liveEvents] : oldEvents;
-    if (!states.length) {
-      return allEvents;
+  (includeLive, states, oldEvents, liveEvents, chamber, iconFlag) => {
+    let filteredEvents = includeLive ? [...oldEvents, ...liveEvents] : oldEvents;
+
+    // Filter by State
+    if (states.length) { 
+      filteredEvents = filter(filteredEvents, (event) => {
+        return includes(states, event.state);
+      });
     }
-    return filter(allEvents, (event) => {
-      return includes(states, event.state);
-    })
+
+    if (chamber !== "all") {
+      filteredEvents = filter(filteredEvents, (event) => {
+        return includes(chamber, event.chamber);
+      });
+    }
+
+    if (iconFlag !== "all") {
+      filteredEvents = filter(filteredEvents, (event) => {
+        return includes(iconFlag, event.iconFlag);
+      });
+    }
+
+    return filteredEvents;
 });
 
 export const getEventsAsDownloadObjects= createSelector([getFilteredArchivedEvents], (allEvents) => {

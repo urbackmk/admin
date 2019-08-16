@@ -232,7 +232,7 @@ const mapStateToProps = state => ({
     missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
     missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
     chamber: selectionStateBranch.selectors.getChamber(state),
-    event: selectionStateBranch.selectors.getEvent(state),
+    event: selectionStateBranch.selectors.getEventType(state),
 });
 
 const mapDispatchToProps = dispatch => ({
