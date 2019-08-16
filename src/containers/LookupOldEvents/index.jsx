@@ -83,6 +83,10 @@ class LookupOldEvents extends React.Component {
         })
     }
 
+    handleChamberChange = (value) => {
+        this.props.changeChamberFilter(value === 'all' ? '' : value);
+    }
+
     render() {
         const {
             filteredOldEvents,
@@ -107,6 +111,16 @@ class LookupOldEvents extends React.Component {
                             onChange={this.onDateRangeChange} 
                             format = "MMM D, YYYY"
                         />
+                    </Row>
+                    <Row type="flex">
+                        <Select defaultValue="all" onChange={this.handleChamberChange}>
+                            <Option value="all">All chambers</Option>
+                            <Option value="upper">Upper</Option>
+                            <Option value="lower">Lower</Option>
+                            <Option value="statewide">Statewide</Option>
+                            <Option value="nationwide">Nationwide</Option>
+                            <Option value="citywide">Citywide</Option>
+                        </Select>
                     </Row>
                     <Row
                         type="flex" 
@@ -191,6 +205,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     requestOldEvents: (path, date, dates) => dispatch(eventStateBranch.actions.requestOldEvents(path, date, dates)),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
+    changeChamberFilter: (chamber) => dispatch(selectionStateBranch.actions.changeChamberFilter(chamber)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
     toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),
