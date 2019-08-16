@@ -87,7 +87,8 @@ export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode
 });
 
 export const normalizeEventSchema = eventData => {
-  const normalizedEvent = {};
+  let normalizedEvent = {};
+
   normalizedEvent.eventId = eventData.eventId;
   normalizedEvent.enteredBy = eventData.enteredBy || eventData.userEmail;  
   normalizedEvent.eventName = eventData.eventName ? eventData.eventName : ' ';
@@ -106,9 +107,6 @@ export const normalizeEventSchema = eventData => {
   normalizedEvent.chamber = eventData.chamber || ' ';
   normalizedEvent.state = eventData.state || ' ';
   normalizedEvent.district = eventData.district;
-
-  // The raw schema stores state and district as distinct fields.
-  // These are concatenated here for display in results table or CSV
   
   normalizedEvent.timestamp = eventData.timestamp || eventData.dateObj;
   normalizedEvent.timeStart = eventData.timeStart || moment(eventData.dateObj).toISOString();
@@ -131,9 +129,10 @@ export const normalizeEventSchema = eventData => {
 
   normalizedEvent.iconFlag = eventData.iconFlag || ' ';
   normalizedEvent.dateCreated = eventData.dateCreated || ' ';
-  // Live events in Firebase store lastUpdated as a timestampe. Archived events in Firestore use ISO-8601.
+  // Live events in Firebase store lastUpdated as a timestamp. Archived events in Firestore use ISO-8601.
   normalizedEvent.lastUpdated = moment(eventData.lastUpdated).toISOString();
   normalizedEvent.internalNotes = eventData.internalNotes || ' ';
+
   return normalizedEvent;
 } 
 
