@@ -28,6 +28,7 @@ export const getStatesToFilterArchiveBy = state => state.selections.filterByStat
 export const includeLiveEventsInLookup = state => state.selections.includeLiveEvents;
 export const getTempAddress = state => state.selections.tempAddress;
 export const getChamber = state => state.selections.chamber === null ? 'all' : state.selections.chamber;
+export const getEvent = state => state.selections.event === null ? 'all' : state.selections.event;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {

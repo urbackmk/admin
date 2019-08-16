@@ -11,6 +11,7 @@ import {
   CLEAR_ADDRESS,
   SET_TEMP_ADDRESS,
   CHANGE_CHAMBER_FILTER,
+  CHANGE_EVENT_FILTER,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -35,6 +36,7 @@ const initialState = {
     stateName: null,
   },
   chamber: null,
+  event: null,
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -44,6 +46,11 @@ const selectionReducer = (state = initialState, action) => {
         ...state,
         chamber: action.payload,
       }
+    case CHANGE_EVENT_FILTER:
+        return {
+          ...state,
+          event: action.payload,
+        }
     case CHANGE_EVENTS_TAB:
       return {
         ...state,

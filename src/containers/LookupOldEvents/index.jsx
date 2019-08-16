@@ -74,6 +74,7 @@ class LookupOldEvents extends React.Component {
             archiveUrl,
             dateLookupRange,
             chamber,
+            event,
         } = this.props;
         const dateStart = moment(dateLookupRange[0]).startOf('day').valueOf();
         const dateEnd = moment(dateLookupRange[1]).endOf('day').valueOf();
@@ -83,6 +84,7 @@ class LookupOldEvents extends React.Component {
             requestOldEvents({
                 date,
                 chamber,
+                event,
                 path: archiveUrl,
                 dates: [dateStart, dateEnd],
             });
@@ -91,6 +93,10 @@ class LookupOldEvents extends React.Component {
 
     handleChamberChange = (value) => {
         this.props.changeChamberFilter(value === 'all' ? null : value);
+    }
+
+    handleEventTypeChange = (value) => {
+        this.props.changeEventFilter(value === 'all' ? null : value);
     }
 
     render() {
@@ -119,13 +125,32 @@ class LookupOldEvents extends React.Component {
                         />
                     </Row>
                     <Row type="flex">
-                        <Select defaultValue="all" onChange={this.handleChamberChange}>
+                        <Select
+                            defaultValue="all"
+                            onChange={this.handleChamberChange}
+                            style={{ width: 200, paddingRight: 20 }}
+                        >
                             <Option value="all">All chambers</Option>
                             <Option value="upper">Upper</Option>
                             <Option value="lower">Lower</Option>
                             <Option value="statewide">Statewide</Option>
                             <Option value="nationwide">Nationwide</Option>
                             <Option value="citywide">Citywide</Option>
+                        </Select>
+                        <Select
+                            defaultValue="all"
+                            onChange={this.handleEventTypeChange}
+                            style={{ width: 200 }}
+                        >
+                            <Option value="all">All event types</Option>
+                            <Option value="in-person">In person town halls</Option>
+                            <Option value="staff">Events by staff</Option>
+                            <Option value="activism">Events held by activists</Option>
+                            <Option value="tele">Online or phone events</Option>
+                            <Option value="campaign">Campaign events</Option>
+                            <Option value="mfol">MFOL events</Option>
+                            <Option value="hr-one">HR 1 Events</Option>
+                            <Option value="next-gen">Next-Gen</Option>
                         </Select>
                     </Row>
                     <Row
@@ -207,12 +232,14 @@ const mapStateToProps = state => ({
     missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
     missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
     chamber: selectionStateBranch.selectors.getChamber(state),
+    event: selectionStateBranch.selectors.getEvent(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     requestOldEvents: ({ path, date, dates, chamber } ) => dispatch(eventStateBranch.actions.requestOldEvents({ path, date, dates, chamber })),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     changeChamberFilter: (chamber) => dispatch(selectionStateBranch.actions.changeChamberFilter(chamber)),
+    changeEventFilter: (event) => dispatch(selectionStateBranch.actions.changeEventFilter(event)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
     toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),

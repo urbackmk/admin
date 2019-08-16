@@ -25,3 +25,4 @@ export const SET_DATE = makeConstant(STATE_BRANCH, "SET_DATE");
 export const SET_TIME_ZONE = makeConstant(STATE_BRANCH, "SET_TIME_ZONE");
 export const CLEAR_ADDRESS = makeConstant(STATE_BRANCH, "CLEAR_ADDRESS");
 export const CHANGE_CHAMBER_FILTER = makeConstant(STATE_BRANCH, "CHANGE_CHAMBER_FILTER");
+export const CHANGE_EVENT_FILTER = makeConstant(STATE_BRANCH, "CHANGE_EVENT_FILTER");

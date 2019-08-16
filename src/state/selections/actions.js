@@ -11,6 +11,7 @@ import {
   GEOCODE_TEMP_ADDRESS,
   CHANGE_TIME_ZONE,
   CHANGE_CHAMBER_FILTER,
+  CHANGE_EVENT_FILTER,
 } from "./constants";
 
 export const changeActiveEventTab = tab => ({
@@ -45,6 +46,11 @@ export const changeDateLookup = (dates) => ({
 export const changeChamberFilter = (chamber) => ({
   type: CHANGE_CHAMBER_FILTER,
   payload: chamber,
+});
+
+export const changeEventFilter = (event) => ({
+  type: CHANGE_EVENT_FILTER,
+  payload: event,
 });
 
 export const changeStateFilters = (states) => ({
