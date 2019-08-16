@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import EditableCell from './editableCell';
 import eventsStateBranch from '../../state/events';
+import selectionStateBranch from '../../state/selections';
 
 import activism from '../../assets/img/icon-flags/activism.svg';
 import campaign from '../../assets/img/icon-flags/campaign.svg';
@@ -143,7 +144,7 @@ class ResultsTable extends React.Component {
                 components={components}
                 rowClassName={() => 'editable-row'}
                 bordered
-                dataSource={this.props.allOldEvents}
+                dataSource={this.props.filteredOldEvents}
                 columns={columns}
             />
         );
@@ -152,7 +153,7 @@ class ResultsTable extends React.Component {
     
 function mapStateToProps(state) {
     return {
-        allOldEvents: state.events.allOldEvents,
+        filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
     };
 }
 
