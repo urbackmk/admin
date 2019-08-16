@@ -73,13 +73,19 @@ class LookupOldEvents extends React.Component {
             requestOldEvents,
             archiveUrl,
             dateLookupRange,
+            chamber,
         } = this.props;
         const dateStart = moment(dateLookupRange[0]).startOf('day').valueOf();
         const dateEnd = moment(dateLookupRange[1]).endOf('day').valueOf();
 
         const dateArray = getDateArray(dateLookupRange);
         dateArray.forEach(date => {
-            requestOldEvents(archiveUrl, date, [dateStart, dateEnd])
+            requestOldEvents({
+                date,
+                chamber,
+                path: archiveUrl,
+                dates: [dateStart, dateEnd],
+            });
         })
     }
 
@@ -204,7 +210,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    requestOldEvents: (path, date, dates) => dispatch(eventStateBranch.actions.requestOldEvents(path, date, dates)),
+    requestOldEvents: ({ path, date, dates, chamber } ) => dispatch(eventStateBranch.actions.requestOldEvents({ path, date, dates, chamber })),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     changeChamberFilter: (chamber) => dispatch(selectionStateBranch.actions.changeChamberFilter(chamber)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
