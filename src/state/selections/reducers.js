@@ -12,6 +12,7 @@ import {
   SET_TEMP_ADDRESS,
   CHANGE_CHAMBER_FILTER,
   CHANGE_EVENT_FILTER,
+  CHANGE_LEGISLATIVE_BODY_FILTER,
 } from "./constants";
 import { 
   PENDING_EVENTS_TAB, 
@@ -37,6 +38,7 @@ const initialState = {
   },
   chamber: null,
   events: [],
+  legislativeBody: 'federal',
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -45,6 +47,11 @@ const selectionReducer = (state = initialState, action) => {
       return {
         ...state,
         chamber: action.payload,
+      }
+    case CHANGE_LEGISLATIVE_BODY_FILTER:
+      return {
+        ...state,
+        legislativeBody: action.payload,
       }
     case CHANGE_EVENT_FILTER:
         return {

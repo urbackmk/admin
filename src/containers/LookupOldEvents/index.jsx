@@ -24,6 +24,7 @@ import "./style.scss";
 
 import OldEventsResults from './results';
 import ResultsTable from './achivedResultsTable';
+import { LEGISLATIVE_BODIES } from '../../constants';
 
 const {
   RangePicker,
@@ -99,6 +100,10 @@ class LookupOldEvents extends React.Component {
         this.props.changeEventFilter(value);
     }
 
+    handleLegislativeBodyChange = (value) => {
+        this.props.changeLegislativeBodyFilter(value);
+    }
+
     render() {
         const {
             filteredOldEvents,
@@ -126,9 +131,18 @@ class LookupOldEvents extends React.Component {
                     </Row>
                     <Row type="flex">
                         <Select
+                            defaultValue="federal"
+                            style={{ width: 300, paddingRight: 20 }}
+                            onChange={this.handleLegislativeBodyChange}
+                        >
+                            {LEGISLATIVE_BODIES.map((legBody) => 
+                                <Option value={legBody}>{`${legBody} legislative body`}</Option>
+                            )}
+                        </Select>
+                        <Select
                             defaultValue="all"
                             onChange={this.handleChamberChange}
-                            style={{ width: 200, paddingRight: 20 }}
+                            style={{ width: 200 }}
                         >
                             <Option value="all">All chambers</Option>
                             <Option value="upper">Upper</Option>
@@ -137,6 +151,8 @@ class LookupOldEvents extends React.Component {
                             <Option value="nationwide">Nationwide</Option>
                             <Option value="citywide">Citywide</Option>
                         </Select>
+                    </Row>
+                    <Row type="flex">
                         <Select
                             placeholder="Filter by event type"
                             defaultValue={[]}
@@ -168,6 +184,7 @@ class LookupOldEvents extends React.Component {
                             placeholder="Select a state to filter"
                             onChange={this.handleAddState}
                             style={{ width: '100%' }}
+                            disabled={this.props.legislativeBody !== 'federal'}
                         >
                             {children}
                         </Select>
@@ -240,6 +257,7 @@ const mapStateToProps = state => ({
     missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
     chamber: selectionStateBranch.selectors.getChamber(state),
     events: selectionStateBranch.selectors.getEventTypes(state),
+    legislativeBody: selectionStateBranch.selectors.getLegislativeBody(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -247,6 +265,7 @@ const mapDispatchToProps = dispatch => ({
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     changeChamberFilter: (chamber) => dispatch(selectionStateBranch.actions.changeChamberFilter(chamber)),
     changeEventFilter: (events) => dispatch(selectionStateBranch.actions.changeEventFilter(events)),
+    changeLegislativeBodyFilter: (legislativeBody) => dispatch(selectionStateBranch.actions.changeLegislativeBodyFilter(legislativeBody)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
     toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),

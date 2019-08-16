@@ -29,6 +29,7 @@ export const includeLiveEventsInLookup = state => state.selections.includeLiveEv
 export const getTempAddress = state => state.selections.tempAddress;
 export const getChamber = state => state.selections.chamber === null ? 'all' : state.selections.chamber;
 export const getEventTypes = state => state.selections.events;
+export const getLegislativeBody = state => state.selections.legislativeBody;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
