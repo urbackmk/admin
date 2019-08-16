@@ -129,6 +129,16 @@ class LookupOldEvents extends React.Component {
                             format = "MMM D, YYYY"
                         />
                     </Row>
+                    <Row
+                        type="flex" 
+                    >
+                        <Button
+                            onClick={this.handleRequestOldEvents}
+                            loading={loading}
+                            type="primary"
+                            block
+                        >Request events</Button>     
+                    </Row>
                     <Row type="flex">
                         <Select
                             defaultValue="federal"
@@ -202,16 +212,6 @@ class LookupOldEvents extends React.Component {
 
                             />
                         </Col>
-                    </Row>
-                    <Row
-                        type="flex" 
-                    >
-                        <Button
-                            onClick={this.handleRequestOldEvents}
-                            loading={loading}
-                            type="primary"
-                            block
-                        >Request events</Button>     
                     </Row>
                     <Row
                         type="flex"
