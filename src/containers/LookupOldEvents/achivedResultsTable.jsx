@@ -158,7 +158,7 @@ class ResultsTable extends React.Component {
     
 function mapStateToProps(state) {
     return {
-        filteredOldEvents: selectionStateBranch.selectors.getFilteredArchivedEvents(state),
+        filteredOldEvents: selectionStateBranch.selectors.getFilteredEvents(state),
     };
 }
 

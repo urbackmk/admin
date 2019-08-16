@@ -3,6 +3,7 @@ import {
   includes,
   filter,
   map, 
+  orderBy,
   reduce,
   uniq,
 } from 'lodash';
@@ -85,7 +86,58 @@ export const getPeopleDataUrl = createSelector([getActiveFederalOrState, getMode
   return 'mocData';
 });
 
-export const getFilteredArchivedEvents = createSelector(
+export const normalizeEventSchema = eventData => {
+  const normalizedEvent = {};
+  normalizedEvent.eventId = eventData.eventId;
+  normalizedEvent.enteredBy = eventData.enteredBy || eventData.userEmail;  
+  normalizedEvent.eventName = eventData.eventName ? eventData.eventName : ' ';
+  normalizedEvent.displayName = eventData.displayName || eventData.Member;
+  normalizedEvent.officePersonId = eventData.officePersonId || ' ';
+  normalizedEvent.meetingType = eventData.meetingType || ' ';
+
+  normalizedEvent.location = eventData.location ? eventData.location : eventData.Location ? eventData.Location : ' ';
+  normalizedEvent.address = eventData.address || ' ';
+  normalizedEvent.lat = eventData.lat || ' ';
+  normalizedEvent.lng = eventData.lng || ' ';
+
+  normalizedEvent.govtrack_id = eventData.govtrack_id || ' ';
+  normalizedEvent.party = eventData.party || ' ';
+  normalizedEvent.level = eventData.level || ' ';
+  normalizedEvent.chamber = eventData.chamber || ' ';
+  normalizedEvent.state = eventData.state || ' ';
+  normalizedEvent.district = eventData.district;
+
+  // The raw schema stores state and district as distinct fields.
+  // These are concatenated here for display in results table or CSV
+  
+  normalizedEvent.timestamp = eventData.timestamp || eventData.dateObj;
+  normalizedEvent.timeStart = eventData.timeStart || moment(eventData.dateObj).toISOString();
+  // Live events in Firebase currently store timeEnd as human-readable strings, e.g. "12:00 PM", instead of ISO-8601
+  normalizedEvent.timeEnd = eventData.timeEnd || ' ';  
+  normalizedEvent.dateValid = eventData.dateValid || false;
+  normalizedEvent.validated = eventData.validated || false;
+
+  normalizedEvent.notes = (() => {
+    if (eventData.Notes) {
+      return eventData.Notes.replace(/"/g, '\'');
+    }
+    if (eventData.notes) {
+      return eventData.notes.replace(/"/g, '\'');
+    }
+    return ' ';
+  })();
+
+  normalizedEvent.link = eventData.link || 'https://townhallproject.com/?eventId=' + eventData.eventId;
+
+  normalizedEvent.iconFlag = eventData.iconFlag || ' ';
+  normalizedEvent.dateCreated = eventData.dateCreated || ' ';
+  // Live events in Firebase store lastUpdated as a timestampe. Archived events in Firestore use ISO-8601.
+  normalizedEvent.lastUpdated = moment(eventData.lastUpdated).toISOString();
+  normalizedEvent.internalNotes = eventData.internalNotes || ' ';
+  return normalizedEvent;
+} 
+
+export const getFilteredEvents = createSelector(
   [
     includeLiveEventsInLookup, 
     getStatesToFilterArchiveBy,
@@ -98,7 +150,8 @@ export const getFilteredArchivedEvents = createSelector(
   (includeLive, states, oldEvents, liveEvents, chamber, events, legislativeBody) => {
     let filteredEvents = includeLive ? [...oldEvents, ...liveEvents] : oldEvents;
 
-    // Filter by State
+    filteredEvents = map(filteredEvents, normalizeEventSchema);
+
     if (states.length) { 
       filteredEvents = filter(filteredEvents, (event) => {
         return includes(states, event.state);
@@ -123,51 +176,21 @@ export const getFilteredArchivedEvents = createSelector(
       }
       return event.level === 'state' && event.state === legislativeBody;
     })
+    
+    filteredEvents = orderBy(filteredEvents, ['timestamp'], ['desc']);
 
     return filteredEvents;
 });
 
-export const getEventsAsDownloadObjects= createSelector([getFilteredArchivedEvents], (allEvents) => {
-   return map(allEvents, eventData => {
-
-        const convertedTownHall = {};
-        convertedTownHall.entered_by = eventData.enteredBy || eventData.userEmail;
-        convertedTownHall.member = eventData.displayName || eventData.Member;
-        convertedTownHall.event_name = eventData.eventName ? eventData.eventName : ' ';
-        convertedTownHall.location = eventData.Location ? eventData.Location : eventData.location ? eventData.location : ' ';
-        convertedTownHall.meeting_type = eventData.meetingType;
-
-        let district = eventData.district ? '-' + eventData.district : ' ';
-        convertedTownHall.district = eventData.state + district;
-        convertedTownHall.govtrack_id = eventData.govtrack_id || ' ';
-        convertedTownHall.party = eventData.party;
-        convertedTownHall.state = eventData.state;
-
-        convertedTownHall.date = eventData.dateObj ? 
-          moment(eventData.dateObj).format('ddd, MMM D YYYY') :
-          moment(eventData.timeStart).format('ddd, MMM D YYYY');
-    
-        convertedTownHall.time_start = eventData.timeStart ? eventData.timeStart : eventData.Time ? eventData.Time : ' ';
-        convertedTownHall.time_end = eventData.timeEnd || ' ';
-  
-        convertedTownHall.address = eventData.address;
-        convertedTownHall.notes = (() => {
-          if (eventData.Notes) {
-            return eventData.Notes.replace(/"/g, '\'');
-          }
-          if (eventData.notes) {
-            return eventData.notes.replace(/"/g, '\'');
-          }
-          return ' ';
-        })();
-        convertedTownHall.map_icon = eventData.iconFlag;
-        convertedTownHall.link = eventData.link || 'https://townhallproject.com/?eventId=' + eventData.eventId;
-        return convertedTownHall;
-    })
+export const getEventsAsDownloadObjects= createSelector([getFilteredEvents], (allEvents) => {
+  return map(allEvents, (eventData) => {
+    // Future: Customize normalizedEvent > CSV field mappings if desired
+    return eventData;
+  });
 })
 
 export const getDataForArchiveChart = createSelector(
-  [getFilteredArchivedEvents],
+  [getFilteredEvents],
   (allEvents) => {
     if (!allEvents) {
       return [];
@@ -192,7 +215,7 @@ export const getDataForArchiveChart = createSelector(
   }
 )
 
-export const get116MissingMemberReport = createSelector([getFilteredArchivedEvents, get116thCongress], (events, mocs) => {
+export const get116MissingMemberReport = createSelector([getFilteredEvents, get116thCongress], (events, mocs) => {
     return map(mocs, (moc) => {
     
       const eventsForMoc = filter(events, { govtrack_id: moc.govtrack_id });
