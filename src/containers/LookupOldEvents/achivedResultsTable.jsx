@@ -5,6 +5,8 @@ import {
     Form,
 } from 'antd';
 
+import moment from 'moment';
+
 import EditableCell from './editableCell';
 import eventsStateBranch from '../../state/events';
 
@@ -35,7 +37,7 @@ const iconFlagMap = {
     'in-person': inPerson,
     mfol: mfol,
     'next-gen': nextGen,
-    'phone-in': phoneIn,
+    'tele': phoneIn,
     staff: staff,
 };
 
@@ -82,8 +84,12 @@ class ResultsTable extends React.Component {
         },
         {
             title: 'Date',
-            render: (text, record) => `${record.dateString} ${record.Time}`,
-            key: 'dateString',
+            render: (text, record) => {
+                 let dateString = moment(record.timeStart).format('ddd, MMM D YYYY');
+                 let timeString = moment(record.timeStart).format('h a')
+                return `${dateString} ${timeString}`
+            },
+            key: 'timeStart',
         },
         {
             title: 'ADA',
