@@ -28,7 +28,7 @@ export const getStatesToFilterArchiveBy = state => state.selections.filterByStat
 export const includeLiveEventsInLookup = state => state.selections.includeLiveEvents;
 export const getTempAddress = state => state.selections.tempAddress;
 export const getChamber = state => state.selections.chamber === null ? 'all' : state.selections.chamber;
-export const getEventType = state => state.selections.event === null ? 'all' : state.selections.event;
+export const getEventTypes = state => state.selections.events;
 
 export const getLiveEventUrl = createSelector([getActiveFederalOrState], (federalOrState) => {
   if (includes(STATES_LEGS, federalOrState)) {
@@ -91,9 +91,9 @@ export const getFilteredArchivedEvents = createSelector(
     getAllOldEventsWithUserEmails,
     getAllEventsAsList,
     getChamber,
-    getEventType,
+    getEventTypes,
   ], 
-  (includeLive, states, oldEvents, liveEvents, chamber, iconFlag) => {
+  (includeLive, states, oldEvents, liveEvents, chamber, events) => {
     let filteredEvents = includeLive ? [...oldEvents, ...liveEvents] : oldEvents;
 
     // Filter by State
@@ -105,13 +105,13 @@ export const getFilteredArchivedEvents = createSelector(
 
     if (chamber !== "all") {
       filteredEvents = filter(filteredEvents, (event) => {
-        return includes(chamber, event.chamber);
+        return chamber === event.chamber;
       });
     }
 
-    if (iconFlag !== "all") {
+    if (events !== []) {
       filteredEvents = filter(filteredEvents, (event) => {
-        return includes(iconFlag, event.iconFlag);
+        return includes(events, event.meetingType);
       });
     }
 

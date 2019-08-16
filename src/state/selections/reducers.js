@@ -36,7 +36,7 @@ const initialState = {
     stateName: null,
   },
   chamber: null,
-  event: null,
+  events: [],
 };
 
 const selectionReducer = (state = initialState, action) => {
@@ -49,7 +49,7 @@ const selectionReducer = (state = initialState, action) => {
     case CHANGE_EVENT_FILTER:
         return {
           ...state,
-          event: action.payload,
+          events: action.payload,
         }
     case CHANGE_EVENTS_TAB:
       return {

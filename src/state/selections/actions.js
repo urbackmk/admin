@@ -48,9 +48,9 @@ export const changeChamberFilter = (chamber) => ({
   payload: chamber,
 });
 
-export const changeEventFilter = (event) => ({
+export const changeEventFilter = (events) => ({
   type: CHANGE_EVENT_FILTER,
-  payload: event,
+  payload: events,
 });
 
 export const changeStateFilters = (states) => ({
