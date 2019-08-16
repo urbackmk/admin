@@ -121,6 +121,7 @@ class LookupOldEvents extends React.Component {
             <React.Fragment>
             <Row className="lookup-form">
                 <Col span={12} offset={6}>
+                    <Row type="flex">Search archived events by date range:</Row>
                     <Row
                         type="flex" 
                     >
@@ -128,21 +129,18 @@ class LookupOldEvents extends React.Component {
                             onChange={this.onDateRangeChange} 
                             format = "MMM D, YYYY"
                         />
-                    </Row>
-                    <Row
-                        type="flex" 
-                    >
                         <Button
                             onClick={this.handleRequestOldEvents}
                             loading={loading}
                             type="primary"
-                            block
+                            style={{ marginLeft: 10 }}
                         >Request events</Button>     
                     </Row>
-                    <Row type="flex">
+                    <Row type="flex">Filter your results:</Row>
+                    <Row type="flex" style={{ justifyContent: 'space-between' }}>
                         <Select
                             defaultValue="federal"
-                            style={{ width: 300, paddingRight: 20 }}
+                            style={{ width: '48%' }}
                             onChange={this.handleLegislativeBodyChange}
                         >
                             {LEGISLATIVE_BODIES.map((legBody) => 
@@ -152,7 +150,7 @@ class LookupOldEvents extends React.Component {
                         <Select
                             defaultValue="all"
                             onChange={this.handleChamberChange}
-                            style={{ width: 200 }}
+                            style={{ width: '48%' }}
                         >
                             <Option value="all">All chambers</Option>
                             <Option value="upper">Upper</Option>
@@ -167,7 +165,7 @@ class LookupOldEvents extends React.Component {
                             placeholder="Filter by event type"
                             defaultValue={[]}
                             onChange={this.handleEventTypeChange}
-                            style={{ width: 350 }}
+                            style={{ width: '100%' }}
                             mode="multiple"
                         >
                             <Option value='No events'>No Events</Option>
@@ -191,7 +189,7 @@ class LookupOldEvents extends React.Component {
                     >
                         <Select
                             mode="multiple"
-                            placeholder="Select a state to filter"
+                            placeholder="Filter by state"
                             onChange={this.handleAddState}
                             style={{ width: '100%' }}
                             disabled={this.props.legislativeBody !== 'federal'}

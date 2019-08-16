@@ -93,8 +93,9 @@ export const getFilteredArchivedEvents = createSelector(
     getAllEventsAsList,
     getChamber,
     getEventTypes,
+    getLegislativeBody,
   ], 
-  (includeLive, states, oldEvents, liveEvents, chamber, events) => {
+  (includeLive, states, oldEvents, liveEvents, chamber, events, legislativeBody) => {
     let filteredEvents = includeLive ? [...oldEvents, ...liveEvents] : oldEvents;
 
     // Filter by State
@@ -115,6 +116,13 @@ export const getFilteredArchivedEvents = createSelector(
         return includes(events, event.meetingType);
       });
     }
+
+    filteredEvents = filter(filteredEvents, (event) => {
+      if (legislativeBody === 'federal') {
+        return event.level === 'federal';
+      }
+      return event.level === 'state' && event.state === legislativeBody;
+    })
 
     return filteredEvents;
 });
