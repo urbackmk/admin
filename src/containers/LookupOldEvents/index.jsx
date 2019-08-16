@@ -96,7 +96,7 @@ class LookupOldEvents extends React.Component {
     }
 
     handleEventTypeChange = (value) => {
-        this.props.changeEventFilter(value === 'all' ? null : value);
+        this.props.changeEventFilter(value);
     }
 
     render() {
@@ -138,19 +138,26 @@ class LookupOldEvents extends React.Component {
                             <Option value="citywide">Citywide</Option>
                         </Select>
                         <Select
-                            defaultValue="all"
+                            placeholder="Filter by event type"
+                            defaultValue={[]}
                             onChange={this.handleEventTypeChange}
-                            style={{ width: 200 }}
+                            style={{ width: 350 }}
+                            mode="multiple"
                         >
-                            <Option value="all">All event types</Option>
-                            <Option value="in-person">In person town halls</Option>
-                            <Option value="staff">Events by staff</Option>
-                            <Option value="activism">Events held by activists</Option>
-                            <Option value="tele">Online or phone events</Option>
-                            <Option value="campaign">Campaign events</Option>
-                            <Option value="mfol">MFOL events</Option>
-                            <Option value="hr-one">HR 1 Events</Option>
-                            <Option value="next-gen">Next-Gen</Option>
+                            <Option value='No events'>No Events</Option>
+                            <Option value='Town Hall'>Town Hall</Option>
+                            <Option value='Tele-Town Hall'>Tele-Town Hall</Option>
+                            <Option value='Empty Chair Town Hall'>Empty Chair Town Hall</Option>
+                            <Option value='Campaign Town Hall'>Campaign Town Hall</Option>
+                            <Option value='Other'>Other</Option>
+                            <Option value='Ticketed Event'>Ticketed Event</Option>
+                            <Option value='Adopt-A-District/State'>Adopt-A-District/State</Option>
+                            <Option value='DC Event'>DC Event</Option>
+                            <Option value='Office Hours'>Office Hours</Option>
+                            <Option value='Hearing'>Hearing</Option>
+                            <Option value='H.R. 1 Activist Event'>H.R. 1 Activist Event</Option>
+                            <Option value='H.R. 1 Town Hall'>H.R. 1 Town Hall</Option>
+                            <Option value='Gun Safety Activist Event'>Gun Safety Activist Event</Option>
                         </Select>
                     </Row>
                     <Row
@@ -232,14 +239,14 @@ const mapStateToProps = state => ({
     missingMemberReport116: selectionStateBranch.selectors.get116MissingMemberReport(state),
     missingMemberCongressData: selectionStateBranch.selectors.getCongressReport(state),
     chamber: selectionStateBranch.selectors.getChamber(state),
-    event: selectionStateBranch.selectors.getEventType(state),
+    events: selectionStateBranch.selectors.getEventTypes(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     requestOldEvents: ({ path, date, dates, chamber } ) => dispatch(eventStateBranch.actions.requestOldEvents({ path, date, dates, chamber })),
     changeDataLookupRange: (dates) => dispatch(selectionStateBranch.actions.changeDateLookup(dates)),
     changeChamberFilter: (chamber) => dispatch(selectionStateBranch.actions.changeChamberFilter(chamber)),
-    changeEventFilter: (event) => dispatch(selectionStateBranch.actions.changeEventFilter(event)),
+    changeEventFilter: (events) => dispatch(selectionStateBranch.actions.changeEventFilter(events)),
     handleChangeStateFilters: (states) => dispatch(selectionStateBranch.actions.changeStateFilters(states)),
     requestLiveEvents: (path) => dispatch(eventStateBranch.actions.requestEvents(path)),
     toggleIncludeLiveEventsInLookup: (checked) => dispatch(selectionStateBranch.actions.toggleIncludeLiveEventsInLookup(checked)),
